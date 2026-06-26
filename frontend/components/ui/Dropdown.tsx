@@ -55,7 +55,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       {/* Options Panel */}
       {isOpen && (
-        <div className="absolute bottom-full mb-1.5 left-0 w-full bg-white border border-gray-300 rounded-md shadow-lg z-50 overflow-hidden">
+        <div className="absolute top-full mt-1.5 left-0 w-full bg-white border border-gray-300 rounded-md shadow-lg z-50 overflow-hidden">
           <ul className="flex flex-col m-0 p-0 list-none">
             {options.map((option, idx) => (
               <li key={idx} className="m-0 p-0 border-b border-gray-100 last:border-b-0">

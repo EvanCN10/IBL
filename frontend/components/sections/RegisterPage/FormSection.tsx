@@ -53,7 +53,7 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
   return (
     <div 
       onClick={handleClick}
-      className={`p-6 flex flex-col items-center justify-center gap-2 select-none cursor-pointer group hover:bg-[#D1EAE5]/20 transition-all duration-300 ease-out ${className}`}
+      className={`p-3 sm:p-4 md:p-5 lg:p-6 flex flex-col items-center justify-center gap-1 sm:gap-1.5 md:gap-2 select-none cursor-pointer group hover:bg-[#D1EAE5]/20 transition-all duration-300 ease-out ${className}`}
     >
       <input
         type="file"
@@ -61,15 +61,15 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
         onChange={handleFileChange}
         className="hidden"
       />
-      <h4 className="font-crosner text-[44px] font-normal text-black uppercase tracking-widest mb-3 group-hover:-translate-y-1 group-hover:scale-105 transition-all duration-300 ease-out">
+      <h4 className="font-crosner text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-normal text-black uppercase tracking-widest mb-1 sm:mb-2 lg:mb-3 group-hover:-translate-y-0.5 group-hover:scale-103 transition-all duration-300 ease-out">
         {title}
       </h4>
-      <div className="flex flex-col items-center justify-center gap-1.5">
+      <div className="flex flex-col items-center justify-center gap-1 sm:gap-1.5">
         {/* Green Circle Icon */}
-        <div className="w-12 h-12 rounded-full bg-[#D1EAE5] flex items-center justify-center border border-[#864B4D] group-hover:bg-[#2B918E] group-hover:border-black group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-12 lg:h-12 rounded-full bg-[#D1EAE5] flex items-center justify-center border border-[#864B4D] group-hover:bg-[#2B918E] group-hover:border-black group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out">
           {/* Cloud Upload Icon */}
           <svg
-            className="w-6 h-6 text-[#2B918E] group-hover:text-white group-hover:-translate-y-0.5 transition-all duration-300 ease-out"
+            className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#2B918E] group-hover:text-white group-hover:-translate-y-0.5 transition-all duration-300 ease-out"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -85,13 +85,13 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
         </div>
         
         {value ? (
-          <span className="font-body text-xs text-gray-700 font-semibold bg-white border border-gray-300 rounded px-2.5 py-1 max-w-[180px] truncate shadow-sm group-hover:border-gray-400 group-hover:shadow-md transition-all duration-300">
+          <span className="font-body text-[10px] sm:text-xs text-gray-700 font-semibold bg-white border border-gray-300 rounded px-2 py-0.5 max-w-[140px] sm:max-w-[180px] truncate shadow-sm group-hover:border-gray-400 group-hover:shadow-md transition-all duration-300">
             {value}
           </span>
         ) : (
           <div className="flex flex-col items-center">
-            <span className="font-body text-xs text-gray-500">Drop your files here</span>
-            <span className="font-body text-xs text-[#2B918E] group-hover:text-[#1e6664] underline font-semibold transition-colors duration-300">
+            <span className="font-body text-[9px] sm:text-xs text-gray-500">Drop your files here</span>
+            <span className="font-body text-[9px] sm:text-xs text-[#2B918E] group-hover:text-[#1e6664] underline font-semibold transition-colors duration-300">
               or click to upload
             </span>
           </div>
@@ -431,18 +431,22 @@ export const FormSection = () => {
             <div className="absolute top-[66.66%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center -rotate-[3deg] pointer-events-none z-10" />
             {/* Vertical Divider 1 (Row 1) - Slanted right */}
             <div 
-              className="absolute left-1/2 w-[8px] bg-[#B93310] origin-center -rotate-[6deg] pointer-events-none z-10"
+              className="absolute left-1/2 w-[8px] bg-[#B93310] origin-center pointer-events-none z-10"
               style={{
-                top: "-10px",
-                height: "calc(33.33% + 20px)",
+                top: "-4px",
+                height: "calc(33.33% + 8px)",
+                marginLeft: "-4px",
+                transform: "rotate(-6deg)",
               }}
             />
             {/* Vertical Divider 2 (Row 2) - Slanted left */}
             <div 
-              className="absolute left-1/2 w-[8px] bg-[#B93310] origin-center rotate-[6deg] pointer-events-none z-10"
+              className="absolute left-1/2 w-[8px] bg-[#B93310] origin-center pointer-events-none z-10"
               style={{
-                top: "calc(33.33% - 10px)",
-                height: "calc(33.33% + 20px)",
+                top: "calc(33.33% - 4px)",
+                height: "calc(33.33% + 8px)",
+                marginLeft: "-4px",
+                transform: "rotate(6deg)",
               }}
             />
 
