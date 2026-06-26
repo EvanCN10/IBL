@@ -180,3 +180,23 @@
     color: hsl(var(--foreground));
   }
 }
+
+@utility double-font-header {
+  font-family: var(--font-hollywood);
+  color: white;
+  -webkit-text-stroke: 2.5px #000;
+  text-shadow: 
+    1px 1px 0 #AC1F1A, 
+    2px 2px 0 #AC1F1A, 
+    3px 3px 0 #AC1F1A, 
+    4px 4px 0 #AC1F1A, 
+    5px 5px 0 #AC1F1A, 
+    6px 6px 0 #AC1F1A, 
+    7px 7px 0 #000, 
+    8px 8px 0 #000, 
+    9px 9px 0 #000, 
+    10px 10px 0 #000, 
+    11px 11px 0 #000, 
+    12px 12px 0 #000;
+}
+
