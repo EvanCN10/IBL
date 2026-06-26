@@ -391,22 +391,36 @@ export const FormSection = () => {
 
           {/* Navigation & Step Indicator Row */}
           <div
-            className="absolute left-1/2 z-20 flex h-16 -translate-x-1/2 items-center justify-between px-4"
+            className="absolute left-1/2 z-20 flex -translate-x-1/2 items-center justify-between"
             style={{
               top: "89%",
               width: "74%",
+              height: "var(--nav-height)",
+              paddingLeft: "var(--nav-padding)",
+              paddingRight: "var(--nav-padding)",
             }}
           >
-            <div className="w-40 flex justify-start">
+            <div 
+              className="flex justify-start"
+              style={{ width: "var(--btn-width)" }}
+            >
               {step > 1 ? (
                 <Button onClick={handleBack}>BACK</Button>
               ) : (
-                <div className="w-40 h-12" />
+                <div 
+                  style={{
+                    width: "var(--btn-width)",
+                    height: "var(--btn-height)",
+                  }} 
+                />
               )}
             </div>
 
             {/* Basketball Indicators */}
-            <div className="flex items-center justify-center gap-4">
+            <div 
+              className="flex items-center justify-center"
+              style={{ gap: "var(--nav-ball-gap)" }}
+            >
               {[1, 2, 3, 4].map((s) => {
                 const isActive = s === step;
                 return (
@@ -415,8 +429,8 @@ export const FormSection = () => {
                     onClick={() => setStep(s)}
                     className="relative cursor-pointer transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
                     style={{
-                      width: isActive ? "56px" : "36px",
-                      height: isActive ? "56px" : "36px",
+                      width: isActive ? "var(--nav-ball-active-size)" : "var(--nav-ball-inactive-size)",
+                      height: isActive ? "var(--nav-ball-active-size)" : "var(--nav-ball-inactive-size)",
                     }}
                   >
                     <Image
@@ -430,7 +444,10 @@ export const FormSection = () => {
               })}
             </div>
 
-            <div className="w-40 flex justify-end">
+            <div 
+              className="flex justify-end"
+              style={{ width: "var(--btn-width)" }}
+            >
               <Button onClick={handleNext}>
                 {step === 4 ? "SUBMIT" : "NEXT"}
               </Button>
@@ -538,18 +555,27 @@ export const FormSection = () => {
 
           {/* Navigation & Step Indicator Row */}
           <div
-            className="absolute left-1/2 z-20 flex h-16 -translate-x-1/2 items-center justify-between px-4"
+            className="absolute left-1/2 z-20 flex -translate-x-1/2 items-center justify-between"
             style={{
               top: "89%",
               width: "74%",
+              height: "var(--nav-height)",
+              paddingLeft: "var(--nav-padding)",
+              paddingRight: "var(--nav-padding)",
             }}
           >
-            <div className="w-40 flex justify-start">
+            <div 
+              className="flex justify-start"
+              style={{ width: "var(--btn-width)" }}
+            >
               <Button onClick={handleBack}>BACK</Button>
             </div>
 
             {/* Basketball Indicators */}
-            <div className="flex items-center justify-center gap-4">
+            <div 
+              className="flex items-center justify-center"
+              style={{ gap: "var(--nav-ball-gap)" }}
+            >
               {[1, 2, 3, 4].map((s) => {
                 const isActive = s === step;
                 return (
@@ -558,8 +584,8 @@ export const FormSection = () => {
                     onClick={() => setStep(s)}
                     className="relative cursor-pointer transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
                     style={{
-                      width: isActive ? "56px" : "36px",
-                      height: isActive ? "56px" : "36px",
+                      width: isActive ? "var(--nav-ball-active-size)" : "var(--nav-ball-inactive-size)",
+                      height: isActive ? "var(--nav-ball-active-size)" : "var(--nav-ball-inactive-size)",
                     }}
                   >
                     <Image
@@ -573,7 +599,10 @@ export const FormSection = () => {
               })}
             </div>
 
-            <div className="w-40 flex justify-end">
+            <div 
+              className="flex justify-end"
+              style={{ width: "var(--btn-width)" }}
+            >
               <Button onClick={handleNext}>SUBMIT</Button>
             </div>
           </div>

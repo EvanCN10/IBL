@@ -151,6 +151,30 @@
   --form-card-gap: 12px;
   --form-title-font-size: 44px;
   --form-error-font-size: 12px;
+
+  /* Responsive Navbar Variables */
+  --navbar-height: 91px;
+  --navbar-logo-width: 72.6px;
+  --navbar-logo-height: 76px;
+  --navbar-font-size: 24px;
+  --navbar-padding: 40px;
+  --navbar-gap: 12px;
+
+  /* Responsive Button Variables */
+  --btn-width: 160px;
+  --btn-height: 48px;
+  --btn-font-size: 30px;
+  --btn-shadow: 8px;
+  --btn-active-shadow: 6px;
+  --btn-active-translate: 2px;
+  --btn-border: 2px;
+
+  /* Responsive Navigation indicators Variables */
+  --nav-height: 64px;
+  --nav-padding: 16px;
+  --nav-ball-active-size: 56px;
+  --nav-ball-inactive-size: 36px;
+  --nav-ball-gap: 16px;
 }
 
 @media (min-width: 1024px) {
@@ -169,6 +193,27 @@
     --form-card-gap: calc(100vw * 12 / 1440);
     --form-title-font-size: calc(100vw * 44 / 1440);
     --form-error-font-size: calc(100vw * 12 / 1440);
+
+    --navbar-height: calc(100vw * 91 / 1440);
+    --navbar-logo-width: calc(100vw * 72.6 / 1440);
+    --navbar-logo-height: calc(100vw * 76 / 1440);
+    --navbar-font-size: calc(100vw * 24 / 1440);
+    --navbar-padding: calc(100vw * 40 / 1440);
+    --navbar-gap: calc(100vw * 12 / 1440);
+
+    --btn-width: calc(100vw * 160 / 1440);
+    --btn-height: calc(100vw * 48 / 1440);
+    --btn-font-size: calc(100vw * 30 / 1440);
+    --btn-shadow: calc(100vw * 8 / 1440);
+    --btn-active-shadow: calc(100vw * 6 / 1440);
+    --btn-active-translate: calc(100vw * 2 / 1440);
+    --btn-border: calc(100vw * 2 / 1440);
+
+    --nav-height: calc(100vw * 64 / 1440);
+    --nav-padding: calc(100vw * 16 / 1440);
+    --nav-ball-active-size: calc(100vw * 56 / 1440);
+    --nav-ball-inactive-size: calc(100vw * 36 / 1440);
+    --nav-ball-gap: calc(100vw * 16 / 1440);
   }
 }
 

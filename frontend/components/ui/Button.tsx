@@ -8,7 +8,16 @@ const Button: React.FC<ButtonProps> = ({ children, className = "", ...props }) =
   return (
     <button
       {...props}
-      className={`w-40 h-12 p-2.5 bg-tosca rounded-[100px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1.00)] outline outline-2 outline-black inline-flex justify-center items-center gap-2.5 font-hollywood text-3xl text-white cursor-pointer active:translate-y-[2px] active:shadow-[6px_6px_0px_0px_rgba(0,0,0,1.00)] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none transition-all ${className}`}
+      className={`bg-tosca outline outline-black inline-flex justify-center items-center font-hollywood text-white cursor-pointer active:translate-y-[var(--btn-active-translate)] active:shadow-[var(--btn-active-shadow)_var(--btn-active-shadow)_0px_0px_#000] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none transition-all ${className}`}
+      style={{
+        width: "var(--btn-width)",
+        height: "var(--btn-height)",
+        fontSize: "var(--btn-font-size)",
+        padding: "calc(var(--btn-height) * 10 / 48)", // proportional padding p-2.5 (10px)
+        borderRadius: "calc(var(--btn-height) * 2)", // large pill rounded
+        outlineWidth: "var(--btn-border)",
+        boxShadow: "var(--btn-shadow) var(--btn-shadow) 0px 0px #000",
+      }}
     >
       {children}
     </button>
