@@ -116,7 +116,10 @@ export const FormSection = () => {
             className="absolute left-1/2 z-20 -translate-x-1/2 -rotate-3"
             style={{ top: "4%" }}
           >
-            <h2 className="double-font-header text-[44px] tracking-widest uppercase text-center leading-[0.9] select-none">
+            <h2 
+              className="double-font-header tracking-widest uppercase text-center leading-[0.9] select-none"
+              style={{ fontSize: "var(--form-title-font-size)" }}
+            >
               UPLOAD<br/>BERKAS
             </h2>
           </div>
