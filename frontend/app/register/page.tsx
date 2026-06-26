@@ -28,7 +28,7 @@ export default function Register() {
       </div>
 
       {/* Form Section (y: 4500 to 6646 -> 32.29% of 6646) */}
-      <div className="w-full flex" style={{ height: "32.29%" }}>
+      <div className="w-full flex relative" style={{ height: "32.29%" }}>
         <FormSection />
       </div>
     </main>
