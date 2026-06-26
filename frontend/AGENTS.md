@@ -45,3 +45,10 @@ The normal form steps (Informasi Umum, Subdivisi 1, Subdivisi 2) follow the seco
 - For FormSection vertical placement, prefer section-height percentages (for example `top: "14%"`) over `100vw` math; `100vw` can exceed the fixed FormSection height on wide desktop screens.
 - The header badge should stay compact: red fill, black border, black offset shadow, Hollywood font, and tight line-height.
 - The form card and bottom navigation must remain inside the FormSection height on desktop; avoid flow-based vertical stacking (`py-*` + natural content height) for the main form layout.
+
+### 3. Responsive Scaling System (CSS Variables)
+To maintain the proportional design ratio on all desktop widths (resolving the vertical stretching and empty space issue inside the card container on widescreen/Samsung monitors), form elements are sized using dynamic CSS custom properties:
+- **Base variables**: Font-sizes (`--form-font-size`), paddings (`--form-padding-y`/`x`), textareas (`--form-textarea-min-height`), margins, and borders are defined globally in `globals.css`.
+- **Dynamic viewport scaling**: For viewports `>= 1024px`, these variables scale dynamically using the Figma-to-code viewport width formula `calc(100vw * pixelValue / 1440)`. This allows text, inputs, labels, active/inactive basketball indicators, buttons, and Navbar elements to resize at the same rate as the background graphics.
+- **Form Card Sizing**: The card container uses a fixed `height: "70%"` and `h-full`. Since the inputs and text inside scale proportionally with `vw`, the content fills the exact same ratio of the card on all monitor sizes without requiring vertical scrollbars.
+
