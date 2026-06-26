@@ -17,6 +17,6 @@ export const DROPDOWN_OPTIONS = [
 ]
 
 export const RADIO_OPTIONS = [
-  "The quick brown fox jumps over the lazy dog",
-  "The quick brown fox jumps over the lazy dog",
+  "The quick brown fox jumps over the lazy dog 1",
+  "The quick brown fox jumps over the lazy dog 2",
 ]
