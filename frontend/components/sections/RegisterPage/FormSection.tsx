@@ -51,25 +51,25 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
   };
 
   return (
-    <div className={`p-6 flex flex-col items-center justify-center gap-2 select-none ${className}`}>
+    <div 
+      onClick={handleClick}
+      className={`p-6 flex flex-col items-center justify-center gap-2 select-none cursor-pointer group hover:bg-[#D1EAE5]/20 transition-all duration-300 ease-out ${className}`}
+    >
       <input
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
         className="hidden"
       />
-      <h4 className="font-crosner text-[44px] font-normal text-black uppercase tracking-widest mb-3">
+      <h4 className="font-crosner text-[44px] font-normal text-black uppercase tracking-widest mb-3 group-hover:-translate-y-1 group-hover:scale-105 transition-all duration-300 ease-out">
         {title}
       </h4>
-      <div 
-        onClick={handleClick}
-        className="cursor-pointer flex flex-col items-center justify-center gap-1.5"
-      >
+      <div className="flex flex-col items-center justify-center gap-1.5">
         {/* Green Circle Icon */}
-        <div className="w-12 h-12 rounded-full bg-[#D1EAE5] flex items-center justify-center border border-[#864B4D] hover:bg-[#bde0da] transition-colors">
+        <div className="w-12 h-12 rounded-full bg-[#D1EAE5] flex items-center justify-center border border-[#864B4D] group-hover:bg-[#2B918E] group-hover:border-black group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out">
           {/* Cloud Upload Icon */}
           <svg
-            className="w-6 h-6 text-[#2B918E]"
+            className="w-6 h-6 text-[#2B918E] group-hover:text-white group-hover:-translate-y-0.5 transition-all duration-300 ease-out"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -85,13 +85,13 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
         </div>
         
         {value ? (
-          <span className="font-body text-xs text-gray-700 font-semibold bg-white border border-gray-300 rounded px-2.5 py-1 max-w-[180px] truncate shadow-sm">
+          <span className="font-body text-xs text-gray-700 font-semibold bg-white border border-gray-300 rounded px-2.5 py-1 max-w-[180px] truncate shadow-sm group-hover:border-gray-400 group-hover:shadow-md transition-all duration-300">
             {value}
           </span>
         ) : (
           <div className="flex flex-col items-center">
             <span className="font-body text-xs text-gray-500">Drop your files here</span>
-            <span className="font-body text-xs text-[#2B918E] underline font-semibold">
+            <span className="font-body text-xs text-[#2B918E] group-hover:text-[#1e6664] underline font-semibold transition-colors duration-300">
               or click to upload
             </span>
           </div>
@@ -111,14 +111,14 @@ const FormSectionBackdrop = () => (
       priority
       className="object-fill"
     />
-    <div className="absolute left-1/2 top-0 h-[18%] max-h-[180px] w-[70%] -translate-x-1/2">
+    <div className="absolute inset-x-0 top-0 h-[35%] w-full">
       <Image
         src="/images/Sinar Atas.svg"
         alt=""
         fill
-        sizes="70vw"
+        sizes="100vw"
         priority
-        className="object-contain object-top"
+        className="object-fill object-top"
       />
     </div>
   </div>
@@ -256,25 +256,27 @@ export const FormSection = () => {
         <div className="w-full h-full relative z-10">
           {/* Header Title Bubble */}
           <div
-            className="absolute left-1/2 z-20 -translate-x-1/2"
+            className="absolute left-1/2 z-20 -translate-x-1/2 -rotate-3"
             style={{
-              top: "10.25%",
+              top: step === 1 ? "4%" : "5.5%",
             }}
           >
-            <div className="bg-[#AC1F1A] border-[3px] border-black px-5 py-1.5 rounded-[10px] shadow-[4px_4px_0px_0px_#000] inline-flex justify-center items-center">
-              <h2 className="font-hollywood text-[42px] text-white tracking-widest uppercase leading-none">
-                {currentTitle}
-              </h2>
-            </div>
+            <h2 className="double-font-header text-[44px] tracking-widest uppercase text-center leading-[0.9] select-none">
+              {currentTitle === "INFORMASI UMUM" ? (
+                <>INFORMASI<br/>UMUM</>
+              ) : (
+                currentTitle
+              )}
+            </h2>
           </div>
 
           {/* Form Card/Grid Container */}
           <div
             className="absolute left-1/2 z-10 -translate-x-1/2"
             style={{
-              top: "15%",
+              top: "16.5%",
               width: "54%",
-              height: "72%",
+              height: "70%",
             }}
           >
             <div 
@@ -367,7 +369,8 @@ export const FormSection = () => {
                 return (
                   <div
                     key={s}
-                    className="relative transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
+                    onClick={() => setStep(s)}
+                    className="relative cursor-pointer transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
                     style={{
                       width: isActive ? "56px" : "36px",
                       height: isActive ? "56px" : "36px",
@@ -396,24 +399,22 @@ export const FormSection = () => {
         <div className="w-full h-full relative z-10">
           {/* Header Title Bubble for Upload Berkas */}
           <div
-            className="absolute left-1/2 z-20 -translate-x-1/2"
+            className="absolute left-1/2 z-20 -translate-x-1/2 -rotate-3"
             style={{
-              top: "10.25%",
+              top: "4%",
             }}
           >
-            <div className="bg-[#AC1F1A] border-[3px] border-black px-5 py-1.5 rounded-[10px] shadow-[4px_4px_0px_0px_#000] inline-flex justify-center items-center">
-              <h2 className="font-hollywood text-[42px] text-white tracking-widest uppercase leading-none">
-                UPLOAD BERKAS
-              </h2>
-            </div>
+            <h2 className="double-font-header text-[44px] tracking-widest uppercase text-center leading-[0.9] select-none">
+              UPLOAD<br/>BERKAS
+            </h2>
           </div>
 
           {/* Slanted border outer box */}
           <div
             style={{
               width: "54%",
-              height: "72%",
-              top: "15%",
+              height: "70%",
+              top: "16.5%",
               left: "50%",
               transform: "translateX(-50%)",
               position: "absolute",
@@ -428,7 +429,22 @@ export const FormSection = () => {
             {/* Slanted Dividers */}
             <div className="absolute top-[33.33%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center rotate-[3deg] pointer-events-none z-10" />
             <div className="absolute top-[66.66%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center -rotate-[3deg] pointer-events-none z-10" />
-            <div className="absolute top-0 bottom-[33.33%] left-1/2 w-[8px] bg-[#B93310] origin-center rotate-[7deg] pointer-events-none z-10" />
+            {/* Vertical Divider 1 (Row 1) - Slanted right */}
+            <div 
+              className="absolute left-1/2 w-[8px] bg-[#B93310] origin-center -rotate-[6deg] pointer-events-none z-10"
+              style={{
+                top: "-10px",
+                height: "calc(33.33% + 20px)",
+              }}
+            />
+            {/* Vertical Divider 2 (Row 2) - Slanted left */}
+            <div 
+              className="absolute left-1/2 w-[8px] bg-[#B93310] origin-center rotate-[6deg] pointer-events-none z-10"
+              style={{
+                top: "calc(33.33% - 10px)",
+                height: "calc(33.33% + 20px)",
+              }}
+            />
 
             {/* Row 1 - CV & KTM */}
             <div className="flex h-1/3 relative z-20">
@@ -492,7 +508,8 @@ export const FormSection = () => {
                 return (
                   <div
                     key={s}
-                    className="relative transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
+                    onClick={() => setStep(s)}
+                    className="relative cursor-pointer transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
                     style={{
                       width: isActive ? "56px" : "36px",
                       height: isActive ? "56px" : "36px",
