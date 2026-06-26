@@ -7,7 +7,7 @@ import { FormSection } from "@/components/sections/RegisterPage/FormSection";
 export default function Register() {
   return (
     <main
-      className="w-full flex flex-col"
+      className="w-full flex flex-col overflow-x-hidden items-center"
       style={{
         backgroundImage: "url('/images/Full_Page_Desktop.png')",
         backgroundSize: "100% auto",
