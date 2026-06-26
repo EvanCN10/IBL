@@ -15,10 +15,19 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
 }) => {
   return (
     <div className="flex flex-col w-full text-left">
-      <label className="font-bold text-[14px] text-[#2D2D2D] mb-2 font-sans">
+      <label 
+        className="font-bold text-[#2D2D2D] font-sans"
+        style={{ 
+          fontSize: "var(--form-font-size)",
+          marginBottom: "var(--form-margin-bottom)"
+        }}
+      >
         {label}
       </label>
-      <div className="flex flex-col gap-3">
+      <div 
+        className="flex flex-col"
+        style={{ gap: "calc(var(--form-field-gap) * 1.5)" }}
+      >
         {options.map((option, idx) => {
           const isSelected = selected === option;
           return (
@@ -26,15 +35,32 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
               key={idx}
               type="button"
               onClick={() => onChange(option)}
-              className="flex items-start gap-3 cursor-pointer text-left focus:outline-none"
+              className="flex items-start cursor-pointer text-left focus:outline-none"
+              style={{ gap: "var(--form-radio-gap)" }}
             >
               {/* Custom Radio Button */}
-              <div className="w-5 h-5 rounded-full border border-black flex items-center justify-center bg-white mt-0.5 flex-shrink-0">
+              <div 
+                className="rounded-full border border-black flex items-center justify-center bg-white flex-shrink-0"
+                style={{
+                  width: "var(--form-radio-size)",
+                  height: "var(--form-radio-size)",
+                  marginTop: "calc(var(--form-font-size) * 0.05)"
+                }}
+              >
                 {isSelected && (
-                  <div className="w-2.5 h-2.5 rounded-full bg-black" />
+                  <div 
+                    className="rounded-full bg-black"
+                    style={{
+                      width: "var(--form-radio-dot-size)",
+                      height: "var(--form-radio-dot-size)"
+                    }}
+                  />
                 )}
               </div>
-              <span className="font-body text-[14px] text-gray-800 leading-tight">
+              <span 
+                className="font-body text-gray-800 leading-tight"
+                style={{ fontSize: "var(--form-font-size)" }}
+              >
                 {option}
               </span>
             </button>

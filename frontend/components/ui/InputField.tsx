@@ -19,7 +19,13 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => {
   return (
     <div className="flex flex-col w-full text-left">
-      <label className="font-bold text-[14px] text-[#2D2D2D] mb-1 font-sans">
+      <label 
+        className="font-bold text-[#2D2D2D] font-sans"
+        style={{ 
+          fontSize: "var(--form-font-size)",
+          marginBottom: "var(--form-margin-bottom)"
+        }}
+      >
         {label}
       </label>
       <input
@@ -27,9 +33,24 @@ const InputField: React.FC<InputFieldProps> = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full bg-white border border-gray-300 rounded-md py-2.5 px-4 font-body text-[14px] text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner"
+        className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner"
+        style={{
+          fontSize: "var(--form-font-size)",
+          paddingTop: "var(--form-padding-y)",
+          paddingBottom: "var(--form-padding-y)",
+          paddingLeft: "var(--form-padding-x)",
+          paddingRight: "var(--form-padding-x)",
+          borderRadius: "calc(var(--form-font-size) * 0.43)" // proportional to ~6px rounded-md
+        }}
       />
-      {error && <span className="text-red-600 text-xs mt-1">{error}</span>}
+      {error && (
+        <span 
+          className="text-red-600 mt-1"
+          style={{ fontSize: "var(--form-error-font-size)" }}
+        >
+          {error}
+        </span>
+      )}
     </div>
   );
 };

@@ -261,7 +261,10 @@ export const FormSection = () => {
               top: step === 1 ? "4%" : "5.5%",
             }}
           >
-            <h2 className="double-font-header text-[44px] tracking-widest uppercase text-center leading-[0.9] select-none">
+            <h2 
+              className="double-font-header tracking-widest uppercase text-center leading-[0.9] select-none"
+              style={{ fontSize: "var(--form-title-font-size)" }}
+            >
               {currentTitle === "INFORMASI UMUM" ? (
                 <>INFORMASI<br/>UMUM</>
               ) : (
@@ -272,7 +275,7 @@ export const FormSection = () => {
 
           {/* Form Card/Grid Container */}
           <div
-            className="absolute left-1/2 z-10 -translate-x-1/2"
+            className="absolute left-1/2 z-30 -translate-x-1/2"
             style={{
               top: "16.5%",
               width: "54%",
@@ -280,15 +283,25 @@ export const FormSection = () => {
             }}
           >
             <div 
-              className="w-full h-full border-2 border-black shadow-[10px_10px_0px_0px_#000] rounded-xl px-10 py-5 flex flex-col gap-3 relative"
+              className="w-full h-full border border-black rounded-xl flex flex-col relative"
               style={{
                 backgroundColor: "#EFE8DE",
                 backgroundImage: noiseBg,
+                borderWidth: "calc(var(--form-font-size) * 0.14)", // proportional to border-2
+                boxShadow: "calc(var(--form-font-size) * 0.71) calc(var(--form-font-size) * 0.71) 0px 0px #000", // proportional shadow-brutal
+                paddingLeft: "var(--form-card-padding-x)",
+                paddingRight: "var(--form-card-padding-x)",
+                paddingTop: "var(--form-card-padding-y)",
+                paddingBottom: "var(--form-card-padding-y)",
+                gap: "var(--form-card-gap)"
               }}
             >
 
               {/* Form Fields List */}
-              <div className="flex flex-col gap-2">
+              <div 
+                className="flex flex-col"
+                style={{ gap: "var(--form-field-gap)" }}
+              >
                 <InputField
                   label={FORM_LABELS.shortAnswer}
                   value={(currentData as StepData).shortAnswer1}
@@ -306,26 +319,56 @@ export const FormSection = () => {
                 />
                 
                 <div className="flex flex-col w-full text-left">
-                  <label className="font-bold text-[14px] text-[#2D2D2D] mb-1 font-sans">
+                  <label 
+                    className="font-bold text-[#2D2D2D] font-sans"
+                    style={{ 
+                      fontSize: "var(--form-font-size)",
+                      marginBottom: "var(--form-margin-bottom)"
+                    }}
+                  >
                     {FORM_LABELS.longAnswer}
                   </label>
                   <textarea
                     value={(currentData as StepData).longAnswer1}
                     onChange={(e) => updateField("longAnswer1", e.target.value)}
                     placeholder="Content"
-                    className="w-full bg-white border border-gray-300 rounded-md py-2 px-4 font-body text-[14px] text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner min-h-[56px] resize-y"
+                    className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner resize-y"
+                    style={{
+                      fontSize: "var(--form-font-size)",
+                      paddingTop: "var(--form-padding-y)",
+                      paddingBottom: "var(--form-padding-y)",
+                      paddingLeft: "var(--form-padding-x)",
+                      paddingRight: "var(--form-padding-x)",
+                      minHeight: "var(--form-textarea-min-height)",
+                      borderRadius: "calc(var(--form-font-size) * 0.43)"
+                    }}
                   />
                 </div>
 
                 <div className="flex flex-col w-full text-left">
-                  <label className="font-bold text-[14px] text-[#2D2D2D] mb-1 font-sans">
+                  <label 
+                    className="font-bold text-[#2D2D2D] font-sans"
+                    style={{ 
+                      fontSize: "var(--form-font-size)",
+                      marginBottom: "var(--form-margin-bottom)"
+                    }}
+                  >
                     {FORM_LABELS.longAnswer}
                   </label>
                   <textarea
                     value={(currentData as StepData).longAnswer2}
                     onChange={(e) => updateField("longAnswer2", e.target.value)}
                     placeholder="Content"
-                    className="w-full bg-white border border-gray-300 rounded-md py-2 px-4 font-body text-[14px] text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner min-h-[56px] resize-y"
+                    className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner resize-y"
+                    style={{
+                      fontSize: "var(--form-font-size)",
+                      paddingTop: "var(--form-padding-y)",
+                      paddingBottom: "var(--form-padding-y)",
+                      paddingLeft: "var(--form-padding-x)",
+                      paddingRight: "var(--form-padding-x)",
+                      minHeight: "var(--form-textarea-min-height)",
+                      borderRadius: "calc(var(--form-font-size) * 0.43)"
+                    }}
                   />
                 </div>
 

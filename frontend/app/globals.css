@@ -135,6 +135,41 @@
   --bone: 33 30% 95%; /* Bone / Off-White */
   --brand-orange: 20 95% 55%; /* Brand Orange */
   --dark-red: 354 70% 35%; /* Dark Red */
+
+  /* Responsive Form Variables (based on 1440px Figma artboard width) */
+  --form-font-size: 14px;
+  --form-padding-y: 10px;
+  --form-padding-x: 16px;
+  --form-margin-bottom: 4px;
+  --form-textarea-min-height: 56px;
+  --form-field-gap: 8px;
+  --form-radio-size: 20px;
+  --form-radio-dot-size: 10px;
+  --form-radio-gap: 12px;
+  --form-card-padding-x: 40px;
+  --form-card-padding-y: 20px;
+  --form-card-gap: 12px;
+  --form-title-font-size: 44px;
+  --form-error-font-size: 12px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --form-font-size: calc(100vw * 14 / 1440);
+    --form-padding-y: calc(100vw * 10 / 1440);
+    --form-padding-x: calc(100vw * 16 / 1440);
+    --form-margin-bottom: calc(100vw * 4 / 1440);
+    --form-textarea-min-height: calc(100vw * 56 / 1440);
+    --form-field-gap: calc(100vw * 8 / 1440);
+    --form-radio-size: calc(100vw * 20 / 1440);
+    --form-radio-dot-size: calc(100vw * 10 / 1440);
+    --form-radio-gap: calc(100vw * 12 / 1440);
+    --form-card-padding-x: calc(100vw * 40 / 1440);
+    --form-card-padding-y: calc(100vw * 20 / 1440);
+    --form-card-gap: calc(100vw * 12 / 1440);
+    --form-title-font-size: calc(100vw * 44 / 1440);
+    --form-error-font-size: calc(100vw * 12 / 1440);
+  }
 }
 
 .dark {
