@@ -9,6 +9,8 @@ import RadioGroup from "@/components/ui/RadioGroup";
 import { FORM_LABELS, DROPDOWN_OPTIONS, RADIO_OPTIONS } from "@/constants/registerForm";
 import { RegisterFormData, StepData, UploadData } from "@/types/register";
 
+const noiseBg = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='1' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`;
+
 const initialStepData = (): StepData => ({
   shortAnswer1: "",
   shortAnswer2: "",
@@ -56,7 +58,7 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
         onChange={handleFileChange}
         className="hidden"
       />
-      <h4 className="font-crosner text-2xl text-black uppercase tracking-wider mb-1">
+      <h4 className="font-crosner text-[44px] font-normal text-black uppercase tracking-widest mb-3">
         {title}
       </h4>
       <div 
@@ -98,6 +100,29 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
     </div>
   );
 };
+
+const FormSectionBackdrop = () => (
+  <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+    <Image
+      src="/images/star bg.png"
+      alt=""
+      fill
+      sizes="100vw"
+      priority
+      className="object-fill"
+    />
+    <div className="absolute left-1/2 top-0 h-[18%] max-h-[180px] w-[70%] -translate-x-1/2">
+      <Image
+        src="/images/Sinar Atas.svg"
+        alt=""
+        fill
+        sizes="70vw"
+        priority
+        className="object-contain object-top"
+      />
+    </div>
+  </div>
+);
 
 export const FormSection = () => {
   const [step, setStep] = useState(1);
@@ -175,17 +200,18 @@ export const FormSection = () => {
 
   if (isSubmitted) {
     return (
-      <div className="w-full flex flex-col items-center justify-center py-12 px-4 relative select-none">
+      <div className="w-full h-full flex flex-col items-center justify-center py-12 px-4 relative overflow-hidden select-none">
+        <FormSectionBackdrop />
         
         {/* Header Banner */}
-        <div className="bg-[#AC1F1A] border-4 border-black px-10 py-2.5 rounded-[20px] shadow-[4px_4px_0px_0px_#000] inline-flex justify-center items-center z-10">
-          <h2 className="font-hollywood text-3xl md:text-4xl text-white tracking-wider uppercase">
+        <div className="bg-[#AC1F1A] border-[3px] border-black px-6 py-1.5 rounded-[10px] shadow-[4px_4px_0px_0px_#000] inline-flex justify-center items-center z-10">
+          <h2 className="font-hollywood text-[42px] text-white tracking-wider uppercase leading-none">
             FORM TERSUBMIT!
           </h2>
         </div>
 
         {/* GOOD LUCK Text Graphic */}
-        <div className="flex flex-col items-center gap-2 mt-12 font-crosner text-[#FBF5EC] text-7xl md:text-[100px] font-black uppercase tracking-wider relative drop-shadow-[4px_4px_0px_rgba(0,0,0,0.25)]">
+        <div className="flex flex-col items-center gap-2 mt-12 font-crosner text-[#FBF5EC] text-7xl md:text-[100px] font-black uppercase tracking-wider relative z-10 drop-shadow-[4px_4px_0px_rgba(0,0,0,0.25)]">
           <div className="flex items-center gap-3 select-none relative">
             <span>G</span>
             
@@ -224,184 +250,271 @@ export const FormSection = () => {
   }
 
   return (
-    <div className="w-full flex flex-col items-center justify-start py-20 px-4 select-none">
-      <div className="w-full max-w-[800px] flex flex-col items-center relative">
-        
-        {/* Form Card/Grid Container */}
-        {currentType === "form" ? (
-          <div className="w-full bg-bone border-2 border-black shadow-[10px_10px_0px_0px_#000] rounded-xl p-8 pt-12 pb-12 flex flex-col gap-6 relative">
-            {/* Header Title Bubble */}
-            <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 z-10">
-              <div className="bg-[#AC1F1A] border-4 border-black px-10 py-2.5 rounded-[20px] shadow-[4px_4px_0px_0px_#000] inline-flex justify-center items-center">
-                <h2 className="font-hollywood text-3xl md:text-4xl text-white tracking-wider uppercase">
-                  {currentTitle}
-                </h2>
-              </div>
-            </div>
-
-            {/* Form Fields List */}
-            <div className="flex flex-col gap-5 mt-4">
-              <InputField
-                label={FORM_LABELS.shortAnswer}
-                value={(currentData as StepData).shortAnswer1}
-                onChange={(val) => updateField("shortAnswer1", val)}
-              />
-              <InputField
-                label={FORM_LABELS.shortAnswer}
-                value={(currentData as StepData).shortAnswer2}
-                onChange={(val) => updateField("shortAnswer2", val)}
-              />
-              <InputField
-                label={FORM_LABELS.shortAnswer}
-                value={(currentData as StepData).shortAnswer3}
-                onChange={(val) => updateField("shortAnswer3", val)}
-              />
-              
-              <div className="flex flex-col w-full text-left">
-                <label className="font-bold text-[14px] text-[#2D2D2D] mb-1 font-sans">
-                  {FORM_LABELS.longAnswer}
-                </label>
-                <textarea
-                  value={(currentData as StepData).longAnswer1}
-                  onChange={(e) => updateField("longAnswer1", e.target.value)}
-                  placeholder="Content"
-                  className="w-full bg-white border border-gray-300 rounded-md py-2.5 px-4 font-body text-[14px] text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner min-h-[100px] resize-y"
-                />
-              </div>
-
-              <div className="flex flex-col w-full text-left">
-                <label className="font-bold text-[14px] text-[#2D2D2D] mb-1 font-sans">
-                  {FORM_LABELS.longAnswer}
-                </label>
-                <textarea
-                  value={(currentData as StepData).longAnswer2}
-                  onChange={(e) => updateField("longAnswer2", e.target.value)}
-                  placeholder="Content"
-                  className="w-full bg-white border border-gray-300 rounded-md py-2.5 px-4 font-body text-[14px] text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner min-h-[100px] resize-y"
-                />
-              </div>
-
-              <Dropdown
-                label={FORM_LABELS.dropdown}
-                options={DROPDOWN_OPTIONS}
-                selected={(currentData as StepData).dropdownVal}
-                onSelect={(val) => updateField("dropdownVal", val)}
-              />
-
-              <RadioGroup
-                label={FORM_LABELS.radio}
-                options={RADIO_OPTIONS}
-                selected={(currentData as StepData).radioVal}
-                onChange={(val) => updateField("radioVal", val)}
-              />
+    <div className="w-full h-full relative select-none">
+      <FormSectionBackdrop />
+      {currentType === "form" ? (
+        <div className="w-full h-full relative z-10">
+          {/* Header Title Bubble */}
+          <div
+            className="absolute left-1/2 z-20 -translate-x-1/2"
+            style={{
+              top: "10.25%",
+            }}
+          >
+            <div className="bg-[#AC1F1A] border-[3px] border-black px-5 py-1.5 rounded-[10px] shadow-[4px_4px_0px_0px_#000] inline-flex justify-center items-center">
+              <h2 className="font-hollywood text-[42px] text-white tracking-widest uppercase leading-none">
+                {currentTitle}
+              </h2>
             </div>
           </div>
-        ) : (
-          /* Step 4 - UPLOAD BERKAS grid container with slanted lines */
-          <div className="w-full relative">
-            {/* Header Title Bubble */}
-            <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 z-20">
-              <div className="bg-[#AC1F1A] border-4 border-black px-10 py-2.5 rounded-[20px] shadow-[4px_4px_0px_0px_#000] inline-flex justify-center items-center">
-                <h2 className="font-hollywood text-3xl md:text-4xl text-white tracking-wider uppercase">
-                  {currentTitle}
-                </h2>
-              </div>
-            </div>
 
-            {/* Slanted border outer box */}
-            <div className="w-full border-4 border-[#864B4D] bg-[#864B4D] rounded-xl overflow-hidden relative flex flex-col h-[520px] shadow-[10px_10px_0px_0px_#000] pt-6">
-              
-              {/* Row 1 - CV & KTM */}
-              <div className="flex h-1/3 border-b-4 border-[#864B4D] relative bg-[#EFE8DE]">
-                <UploadSlot
-                  title="CV"
-                  value={formData.uploadBerkas.cv}
-                  onChange={(v) => updateUploadField("cv", v)}
-                  className="w-1/2"
-                />
-                <UploadSlot
-                  title="KTM"
-                  value={formData.uploadBerkas.ktm}
-                  onChange={(v) => updateUploadField("ktm", v)}
-                  className="w-1/2"
-                />
-                {/* Slanted vertical line */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-1.5 bg-[#864B4D] origin-center rotate-[4deg] pointer-events-none" />
-              </div>
+          {/* Form Card/Grid Container */}
+          <div
+            className="absolute left-1/2 z-10 -translate-x-1/2"
+            style={{
+              top: "15%",
+              width: "54%",
+              height: "72%",
+            }}
+          >
+            <div 
+              className="w-full h-full border-2 border-black shadow-[10px_10px_0px_0px_#000] rounded-xl px-10 py-5 flex flex-col gap-3 relative"
+              style={{
+                backgroundColor: "#EFE8DE",
+                backgroundImage: noiseBg,
+              }}
+            >
 
-              {/* Row 2 - TWIBBON & BUKTI FOLLOW */}
-              <div className="flex h-1/3 border-b-4 border-[#864B4D] relative bg-[#EFE8DE]">
-                <UploadSlot
-                  title="TWIBBON"
-                  value={formData.uploadBerkas.twibbon}
-                  onChange={(v) => updateUploadField("twibbon", v)}
-                  className="w-1/2"
+              {/* Form Fields List */}
+              <div className="flex flex-col gap-2">
+                <InputField
+                  label={FORM_LABELS.shortAnswer}
+                  value={(currentData as StepData).shortAnswer1}
+                  onChange={(val) => updateField("shortAnswer1", val)}
                 />
-                <UploadSlot
-                  title="BUKTI FOLLOW"
-                  value={formData.uploadBerkas.buktiFollow}
-                  onChange={(v) => updateUploadField("buktiFollow", v)}
-                  className="w-1/2"
+                <InputField
+                  label={FORM_LABELS.shortAnswer}
+                  value={(currentData as StepData).shortAnswer2}
+                  onChange={(val) => updateField("shortAnswer2", val)}
                 />
-                {/* Slanted vertical line */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-1.5 bg-[#864B4D] origin-center -rotate-[4deg] pointer-events-none" />
-              </div>
-
-              {/* Row 3 - PORTOFOLIO */}
-              <div className="flex h-1/3 bg-[#EFE8DE] relative">
-                <UploadSlot
-                  title="PORTOFOLIO"
-                  value={formData.uploadBerkas.portofolio}
-                  onChange={(v) => updateUploadField("portofolio", v)}
-                  className="w-full"
+                <InputField
+                  label={FORM_LABELS.shortAnswer}
+                  value={(currentData as StepData).shortAnswer3}
+                  onChange={(val) => updateField("shortAnswer3", val)}
                 />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Navigation & Step Indicator Row */}
-        <div className="w-full flex items-center justify-between mt-8 px-4 h-16">
-          <div className="w-40 flex justify-start">
-            {step > 1 ? (
-              <Button onClick={handleBack}>BACK</Button>
-            ) : (
-              <div className="w-40 h-12" />
-            )}
-          </div>
-
-          {/* Basketball Indicators */}
-          <div className="flex items-center justify-center gap-4">
-            {[1, 2, 3, 4].map((s) => {
-              const isActive = s === step;
-              return (
-                <div
-                  key={s}
-                  className="relative transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
-                  style={{
-                    width: isActive ? "56px" : "36px",
-                    height: isActive ? "56px" : "36px",
-                  }}
-                >
-                  <Image
-                    src="/images/Basketball.svg"
-                    alt={`Step ${s}`}
-                    fill
-                    className="object-contain"
+                
+                <div className="flex flex-col w-full text-left">
+                  <label className="font-bold text-[14px] text-[#2D2D2D] mb-1 font-sans">
+                    {FORM_LABELS.longAnswer}
+                  </label>
+                  <textarea
+                    value={(currentData as StepData).longAnswer1}
+                    onChange={(e) => updateField("longAnswer1", e.target.value)}
+                    placeholder="Content"
+                    className="w-full bg-white border border-gray-300 rounded-md py-2 px-4 font-body text-[14px] text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner min-h-[56px] resize-y"
                   />
                 </div>
-              );
-            })}
+
+                <div className="flex flex-col w-full text-left">
+                  <label className="font-bold text-[14px] text-[#2D2D2D] mb-1 font-sans">
+                    {FORM_LABELS.longAnswer}
+                  </label>
+                  <textarea
+                    value={(currentData as StepData).longAnswer2}
+                    onChange={(e) => updateField("longAnswer2", e.target.value)}
+                    placeholder="Content"
+                    className="w-full bg-white border border-gray-300 rounded-md py-2 px-4 font-body text-[14px] text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner min-h-[56px] resize-y"
+                  />
+                </div>
+
+                <Dropdown
+                  label={FORM_LABELS.dropdown}
+                  options={DROPDOWN_OPTIONS}
+                  selected={(currentData as StepData).dropdownVal}
+                  onSelect={(val) => updateField("dropdownVal", val)}
+                />
+
+                <RadioGroup
+                  label={FORM_LABELS.radio}
+                  options={RADIO_OPTIONS}
+                  selected={(currentData as StepData).radioVal}
+                  onChange={(val) => updateField("radioVal", val)}
+                />
+              </div>
+            </div>
           </div>
 
-          <div className="w-40 flex justify-end">
-            <Button onClick={handleNext}>
-              {step === 4 ? "SUBMIT" : "NEXT"}
-            </Button>
+          {/* Navigation & Step Indicator Row */}
+          <div
+            className="absolute left-1/2 z-20 flex h-16 -translate-x-1/2 items-center justify-between px-4"
+            style={{
+              top: "89%",
+              width: "74%",
+            }}
+          >
+            <div className="w-40 flex justify-start">
+              {step > 1 ? (
+                <Button onClick={handleBack}>BACK</Button>
+              ) : (
+                <div className="w-40 h-12" />
+              )}
+            </div>
+
+            {/* Basketball Indicators */}
+            <div className="flex items-center justify-center gap-4">
+              {[1, 2, 3, 4].map((s) => {
+                const isActive = s === step;
+                return (
+                  <div
+                    key={s}
+                    className="relative transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
+                    style={{
+                      width: isActive ? "56px" : "36px",
+                      height: isActive ? "56px" : "36px",
+                    }}
+                  >
+                    <Image
+                      src="/images/Basketball.svg"
+                      alt={`Step ${s}`}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="w-40 flex justify-end">
+              <Button onClick={handleNext}>
+                {step === 4 ? "SUBMIT" : "NEXT"}
+              </Button>
+            </div>
           </div>
         </div>
+      ) : (
+        /* Step 4 - UPLOAD BERKAS grid container with slanted lines */
+        <div className="w-full h-full relative z-10">
+          {/* Header Title Bubble for Upload Berkas */}
+          <div
+            className="absolute left-1/2 z-20 -translate-x-1/2"
+            style={{
+              top: "10.25%",
+            }}
+          >
+            <div className="bg-[#AC1F1A] border-[3px] border-black px-5 py-1.5 rounded-[10px] shadow-[4px_4px_0px_0px_#000] inline-flex justify-center items-center">
+              <h2 className="font-hollywood text-[42px] text-white tracking-widest uppercase leading-none">
+                UPLOAD BERKAS
+              </h2>
+            </div>
+          </div>
 
-      </div>
+          {/* Slanted border outer box */}
+          <div
+            style={{
+              width: "54%",
+              height: "72%",
+              top: "15%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              position: "absolute",
+              border: "12px solid transparent",
+              backgroundImage: `${noiseBg}, linear-gradient(#EFE8DE, #EFE8DE), linear-gradient(to bottom, #F4631E, #B93310, #7E0202)`,
+              backgroundOrigin: "border-box",
+              backgroundClip: "padding-box, padding-box, border-box",
+            }}
+            className="rounded-[16px] overflow-hidden flex flex-col shadow-[10px_10px_0px_0px_#000]"
+          >
+
+            {/* Slanted Dividers */}
+            <div className="absolute top-[33.33%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center rotate-[3deg] pointer-events-none z-10" />
+            <div className="absolute top-[66.66%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center -rotate-[3deg] pointer-events-none z-10" />
+            <div className="absolute top-0 bottom-[33.33%] left-1/2 w-[8px] bg-[#B93310] origin-center rotate-[7deg] pointer-events-none z-10" />
+
+            {/* Row 1 - CV & KTM */}
+            <div className="flex h-1/3 relative z-20">
+              <UploadSlot
+                title="CV"
+                value={formData.uploadBerkas.cv}
+                onChange={(v) => updateUploadField("cv", v)}
+                className="w-1/2"
+              />
+              <UploadSlot
+                title="KTM"
+                value={formData.uploadBerkas.ktm}
+                onChange={(v) => updateUploadField("ktm", v)}
+                className="w-1/2"
+              />
+            </div>
+
+            {/* Row 2 - TWIBBON & BUKTI FOLLOW */}
+            <div className="flex h-1/3 relative z-20">
+              <UploadSlot
+                title="TWIBBON"
+                value={formData.uploadBerkas.twibbon}
+                onChange={(v) => updateUploadField("twibbon", v)}
+                className="w-1/2"
+              />
+              <UploadSlot
+                title="BUKTI FOLLOW"
+                value={formData.uploadBerkas.buktiFollow}
+                onChange={(v) => updateUploadField("buktiFollow", v)}
+                className="w-1/2"
+              />
+            </div>
+
+            {/* Row 3 - PORTOFOLIO */}
+            <div className="flex h-1/3 relative z-20">
+              <UploadSlot
+                title="PORTOFOLIO"
+                value={formData.uploadBerkas.portofolio}
+                onChange={(v) => updateUploadField("portofolio", v)}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          {/* Navigation & Step Indicator Row */}
+          <div
+            className="absolute left-1/2 z-20 flex h-16 -translate-x-1/2 items-center justify-between px-4"
+            style={{
+              top: "89%",
+              width: "74%",
+            }}
+          >
+            <div className="w-40 flex justify-start">
+              <Button onClick={handleBack}>BACK</Button>
+            </div>
+
+            {/* Basketball Indicators */}
+            <div className="flex items-center justify-center gap-4">
+              {[1, 2, 3, 4].map((s) => {
+                const isActive = s === step;
+                return (
+                  <div
+                    key={s}
+                    className="relative transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
+                    style={{
+                      width: isActive ? "56px" : "36px",
+                      height: isActive ? "56px" : "36px",
+                    }}
+                  >
+                    <Image
+                      src="/images/Basketball.svg"
+                      alt={`Step ${s}`}
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="w-40 flex justify-end">
+              <Button onClick={handleNext}>SUBMIT</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
