@@ -30,8 +30,8 @@ To ensure the form cards overlay correctly on the background court graphics acro
 #### Step 4: Upload Berkas Box Coordinates
 The upload container (CV, KTM, Twibbon, Bukti Follow, Portofolio grid) follows the exact same sizing and position coordinates as the normal form steps for visual consistency:
 - **Width**: `54%` (derived from Figma dimensions `863px` / `1600px` canvas reference)
-- **Height**: `72%`
-- **Top**: `15%`
+- **Height**: `70%`
+- **Top**: `16.5%`
 - **Left**: Centered horizontally (`left-1/2 -translate-x-1/2` or `left: 50%`, `transform: translateX(-50%)`)
 - **Border styling**: Linear Gradient: `#F4631E` -> `#893310` -> `#7E0202` (rendered dynamically using `background-clip` and `background-origin` to support rounded corners).
 - **Internal divider lines**: Slanted at 4 degrees using matching gradient-stop colors `#893310` and `#7E0202`.
