@@ -60,6 +60,7 @@ export const LandingSection = () => {
           alt="Deskripsi gambar"
           width={666}
           height={199}
+          priority
         />
         <Image
           src="/images/2K26.svg" // Ganti dengan path gambar aslimu nanti
