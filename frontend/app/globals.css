@@ -135,6 +135,86 @@
   --bone: 33 30% 95%; /* Bone / Off-White */
   --brand-orange: 20 95% 55%; /* Brand Orange */
   --dark-red: 354 70% 35%; /* Dark Red */
+
+  /* Responsive Form Variables (based on 1440px Figma artboard width) */
+  --form-font-size: 14px;
+  --form-padding-y: 10px;
+  --form-padding-x: 16px;
+  --form-margin-bottom: 4px;
+  --form-textarea-min-height: 56px;
+  --form-field-gap: 8px;
+  --form-radio-size: 20px;
+  --form-radio-dot-size: 10px;
+  --form-radio-gap: 12px;
+  --form-card-padding-x: 40px;
+  --form-card-padding-y: 20px;
+  --form-card-gap: 12px;
+  --form-title-font-size: 44px;
+  --form-error-font-size: 12px;
+
+  /* Responsive Navbar Variables */
+  --navbar-height: 91px;
+  --navbar-logo-width: 72.6px;
+  --navbar-logo-height: 76px;
+  --navbar-font-size: 24px;
+  --navbar-padding: 40px;
+  --navbar-gap: 12px;
+
+  /* Responsive Button Variables */
+  --btn-width: 160px;
+  --btn-height: 48px;
+  --btn-font-size: 30px;
+  --btn-shadow: 8px;
+  --btn-active-shadow: 6px;
+  --btn-active-translate: 2px;
+  --btn-border: 2px;
+
+  /* Responsive Navigation indicators Variables */
+  --nav-height: 64px;
+  --nav-padding: 16px;
+  --nav-ball-active-size: 56px;
+  --nav-ball-inactive-size: 36px;
+  --nav-ball-gap: 16px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --form-font-size: calc(100vw * 14 / 1440);
+    --form-padding-y: calc(100vw * 10 / 1440);
+    --form-padding-x: calc(100vw * 16 / 1440);
+    --form-margin-bottom: calc(100vw * 4 / 1440);
+    --form-textarea-min-height: calc(100vw * 56 / 1440);
+    --form-field-gap: calc(100vw * 8 / 1440);
+    --form-radio-size: calc(100vw * 20 / 1440);
+    --form-radio-dot-size: calc(100vw * 10 / 1440);
+    --form-radio-gap: calc(100vw * 12 / 1440);
+    --form-card-padding-x: calc(100vw * 40 / 1440);
+    --form-card-padding-y: calc(100vw * 20 / 1440);
+    --form-card-gap: calc(100vw * 12 / 1440);
+    --form-title-font-size: calc(100vw * 44 / 1440);
+    --form-error-font-size: calc(100vw * 12 / 1440);
+
+    --navbar-height: calc(100vw * 91 / 1440);
+    --navbar-logo-width: calc(100vw * 72.6 / 1440);
+    --navbar-logo-height: calc(100vw * 76 / 1440);
+    --navbar-font-size: calc(100vw * 24 / 1440);
+    --navbar-padding: calc(100vw * 40 / 1440);
+    --navbar-gap: calc(100vw * 12 / 1440);
+
+    --btn-width: calc(100vw * 160 / 1440);
+    --btn-height: calc(100vw * 48 / 1440);
+    --btn-font-size: calc(100vw * 30 / 1440);
+    --btn-shadow: calc(100vw * 8 / 1440);
+    --btn-active-shadow: calc(100vw * 6 / 1440);
+    --btn-active-translate: calc(100vw * 2 / 1440);
+    --btn-border: calc(100vw * 2 / 1440);
+
+    --nav-height: calc(100vw * 64 / 1440);
+    --nav-padding: calc(100vw * 16 / 1440);
+    --nav-ball-active-size: calc(100vw * 56 / 1440);
+    --nav-ball-inactive-size: calc(100vw * 36 / 1440);
+    --nav-ball-gap: calc(100vw * 16 / 1440);
+  }
 }
 
 .dark {
@@ -180,3 +260,23 @@
     color: hsl(var(--foreground));
   }
 }
+
+@utility double-font-header {
+  font-family: var(--font-hollywood);
+  color: white;
+  -webkit-text-stroke: 2.5px #000;
+  text-shadow: 
+    1px 1px 0 #AC1F1A, 
+    2px 2px 0 #AC1F1A, 
+    3px 3px 0 #AC1F1A, 
+    4px 4px 0 #AC1F1A, 
+    5px 5px 0 #AC1F1A, 
+    6px 6px 0 #AC1F1A, 
+    7px 7px 0 #000, 
+    8px 8px 0 #000, 
+    9px 9px 0 #000, 
+    10px 10px 0 #000, 
+    11px 11px 0 #000, 
+    12px 12px 0 #000;
+}
+
