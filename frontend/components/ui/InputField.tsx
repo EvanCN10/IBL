@@ -20,7 +20,7 @@ const InputField: React.FC<InputFieldProps> = ({
   return (
     <div className="flex flex-col w-full text-left">
       <label 
-        className="font-bold text-[#2D2D2D] font-sans"
+        className="font-bold text-[#2D2D2D] font-drowner tracking-widest"
         style={{ 
           fontSize: "var(--form-font-size)",
           marginBottom: "var(--form-margin-bottom)"
@@ -30,6 +30,7 @@ const InputField: React.FC<InputFieldProps> = ({
       </label>
       <input
         type={type}
+        suppressHydrationWarning
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

@@ -16,7 +16,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
   return (
     <div className="flex flex-col w-full text-left">
       <label 
-        className="font-bold text-[#2D2D2D] font-sans"
+        className="font-bold text-[#2D2D2D] font-drowner tracking-widest"
         style={{ 
           fontSize: "var(--form-font-size)",
           marginBottom: "var(--form-margin-bottom)"
@@ -34,6 +34,7 @@ const RadioGroup: React.FC<RadioGroupProps> = ({
             <button
               key={idx}
               type="button"
+              suppressHydrationWarning
               onClick={() => onChange(option)}
               className="flex items-start cursor-pointer text-left focus:outline-none"
               style={{ gap: "var(--form-radio-gap)" }}

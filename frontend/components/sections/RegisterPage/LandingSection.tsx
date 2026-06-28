@@ -128,7 +128,7 @@ export const LandingSection = () => {
         variants={vectorHitamVariants}
         className="absolute z-2 top-0"
       >
-        <Image src={vectorHitam} alt="" />
+        <Image src={vectorHitam} alt="Decorative Vector Hitam" />
       </motion.div>
 
       {/* Vector Biru */}
@@ -136,7 +136,7 @@ export const LandingSection = () => {
         variants={vectorBiruVariants}
         className="absolute z-1 top-0"
       >
-        <Image src={vectorBiru} alt="" />
+        <Image src={vectorBiru} alt="Decorative Vector Biru" />
       </motion.div>
 
       {/* Orang */}
@@ -147,7 +147,7 @@ export const LandingSection = () => {
           variants={orangKiriVariants}
           className="flex items-center justify-center"
         >
-          <Image src={orangKiri} alt="orang-kanan" />
+          <Image src={orangKiri} alt="Ilustrasi pemain basket kiri" />
         </motion.div>
         <motion.div
           initial="hidden"
@@ -155,7 +155,7 @@ export const LandingSection = () => {
           variants={orangKananVariants}
           className="flex items-center justify-center"
         >
-          <Image src={orangKanan} alt="orang-kanan" />
+          <Image src={orangKanan} alt="Ilustrasi pemain basket kanan" />
         </motion.div>
       </div>
 
@@ -169,7 +169,7 @@ export const LandingSection = () => {
         >
           <Image
             src="/texts/IBL.svg"
-            alt="Deskripsi gambar"
+            alt="IBL"
             width={666}
             height={199}
             priority
@@ -183,7 +183,7 @@ export const LandingSection = () => {
         >
           <Image
             src="/texts/2K26.svg" // Ganti dengan path gambar aslimu nanti
-            alt="Deskripsi gambar"
+            alt="2K26"
             width={666}
             height={199}
           />

@@ -43,7 +43,7 @@ export const MidSection = () => {
               </p>
             </div>
           </div>
-          <Image src={Hari} alt="Jam" />
+          <Image src={Hari} alt="Hari" />
         </div>
 
         {/* Column 2: Menit */}
@@ -68,7 +68,7 @@ export const MidSection = () => {
               </p>
             </div>
           </div>
-          <Image src={Jam} alt="Menit" />
+          <Image src={Jam} alt="Jam" />
         </div>
 
         {/* Column 3: Detik */}
@@ -93,7 +93,7 @@ export const MidSection = () => {
               </p>
             </div>
           </div>
-          <Image src={Menit} alt="Detik" />
+          <Image src={Menit} alt="Menit" />
         </div>
       </div>
     </motion.div>

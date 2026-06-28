@@ -75,15 +75,16 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
 interface UploadStepProps {
   uploadData: UploadData;
   updateUploadField: (field: keyof UploadData, value: string) => void;
+  style?: React.CSSProperties;
 }
 
-export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUploadField }) => {
+export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUploadField, style }) => {
   return (
     <div
       style={{
-        width: "54%",
-        height: "70%",
-        top: "16.5%",
+        width: "863px",
+        height: "1230px",
+        top: "1843px",
         left: "50%",
         transform: "translateX(-50%)",
         position: "absolute",
@@ -91,8 +92,9 @@ export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUpload
         backgroundImage: `${noiseBg}, linear-gradient(#EFE8DE, #EFE8DE), linear-gradient(to bottom, #F4631E, #B93310, #7E0202)`,
         backgroundOrigin: "border-box",
         backgroundClip: "padding-box, padding-box, border-box",
+        ...style,
       }}
-      className="rounded-[16px] overflow-hidden flex flex-col shadow-[10px_10px_0px_0px_#000]"
+      className="overflow-hidden flex flex-col shadow-[10px_10px_0px_0px_#000]/50"
     >
       {/* Slanted Dividers */}
       <div className="absolute top-[33.33%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center rotate-[3deg] pointer-events-none z-10" />
