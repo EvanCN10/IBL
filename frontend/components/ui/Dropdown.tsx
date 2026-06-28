@@ -36,7 +36,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   return (
     <div className="flex flex-col w-full text-left relative" ref={dropdownRef}>
       <label 
-        className="font-bold text-[#2D2D2D] font-sans"
+        className="font-bold text-[#2D2D2D] font-drowner tracking-widest"
         style={{ 
           fontSize: "var(--form-font-size)",
           marginBottom: "var(--form-margin-bottom)"
@@ -48,6 +48,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       {/* Selection Box */}
       <button
         type="button"
+        suppressHydrationWarning
         onClick={() => setIsOpen(!isOpen)}
         className="w-full bg-white border border-gray-300 text-gray-800 text-left outline-none flex justify-between items-center cursor-pointer shadow-sm"
         style={{
@@ -84,6 +85,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               <li key={idx} className="m-0 p-0 border-b border-gray-100 last:border-b-0">
                 <button
                   type="button"
+                  suppressHydrationWarning
                   onClick={() => {
                     onSelect(option);
                     setIsOpen(false);

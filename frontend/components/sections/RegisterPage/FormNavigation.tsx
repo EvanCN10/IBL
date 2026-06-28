@@ -1,6 +1,7 @@
-import React from "react";
+  import React from "react";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
+import { motion } from "framer-motion";
 
 interface FormNavigationProps {
   step: number;
@@ -16,11 +17,15 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
   handleBack,
 }) => {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.4 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
       className="absolute left-1/2 z-20 flex -translate-x-1/2 items-center justify-between"
       style={{
-        top: "89%",
-        width: "74%",
+        top: "3151px",
+        width: "1066px",
         height: "var(--nav-height)",
         paddingLeft: "var(--nav-padding)",
         paddingRight: "var(--nav-padding)",
@@ -78,6 +83,6 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
           {step === 4 ? "SUBMIT" : "NEXT"}
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
@@ -6,9 +7,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button: React.FC<ButtonProps> = ({ children, className = "", ...props }) => {
   return (
-    <button
+    <motion.button
       {...props}
-      className={`bg-tosca outline outline-black inline-flex justify-center items-center font-hollywood text-white cursor-pointer active:translate-y-[var(--btn-active-translate)] active:shadow-[var(--btn-active-shadow)_var(--btn-active-shadow)_0px_0px_#000] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none transition-all ${className}`}
+      suppressHydrationWarning
+      className={`bg-tosca outline outline-black inline-flex justify-center items-center font-hollywood text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none ${className}`}
       style={{
         width: "var(--btn-width)",
         height: "var(--btn-height)",
@@ -18,9 +20,19 @@ const Button: React.FC<ButtonProps> = ({ children, className = "", ...props }) =
         outlineWidth: "var(--btn-border)",
         boxShadow: "var(--btn-shadow) var(--btn-shadow) 0px 0px #000",
       }}
+      whileHover={{
+        scale: 1.05,
+        transition: { type: "spring", stiffness: 300, damping: 20 },
+      }}
+      whileTap={{
+        x: 6,
+        y: 6,
+        boxShadow: "2px 2px 0px 0px #000",
+        transition: { type: "spring", stiffness: 450, damping: 15 },
+      }}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
 

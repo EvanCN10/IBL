@@ -12,7 +12,7 @@ interface FormStepFieldsProps {
 
 export const FormStepFields: React.FC<FormStepFieldsProps> = ({ currentData, updateField }) => {
   return (
-    <div className="flex flex-col" style={{ gap: "var(--form-field-gap)" }}>
+    <div className="flex flex-col" style={{ gap: "24px" }}>
       <InputField
         label={FORM_LABELS.shortAnswer}
         value={currentData.shortAnswer1}
@@ -31,7 +31,7 @@ export const FormStepFields: React.FC<FormStepFieldsProps> = ({ currentData, upd
       
       <div className="flex flex-col w-full text-left">
         <label 
-          className="font-bold text-[#2D2D2D] font-sans"
+          className="font-bold text-[#2D2D2D] font-drowner tracking-widest"
           style={{ 
             fontSize: "var(--form-font-size)",
             marginBottom: "var(--form-margin-bottom)"
@@ -58,7 +58,7 @@ export const FormStepFields: React.FC<FormStepFieldsProps> = ({ currentData, upd
 
       <div className="flex flex-col w-full text-left">
         <label 
-          className="font-bold text-[#2D2D2D] font-sans"
+          className="font-bold text-[#2D2D2D] font-drowner tracking-widest"
           style={{ 
             fontSize: "var(--form-font-size)",
             marginBottom: "var(--form-margin-bottom)"

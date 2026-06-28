@@ -50,6 +50,7 @@
   --font-body: Literata, Georgia, serif;
   --font-hollywood: var(--font-hollywood);
   --font-crosner: var(--font-crosner);
+  --font-drowner: var(--font-drowner);
 
   /* Border Radiuses */
   --radius-lg: var(--radius);
@@ -137,20 +138,22 @@
   --dark-red: 354 70% 35%; /* Dark Red */
 
   /* Responsive Form Variables (based on 1440px Figma artboard width) */
-  --form-font-size: 14px;
-  --form-padding-y: 10px;
-  --form-padding-x: 16px;
-  --form-margin-bottom: 4px;
-  --form-textarea-min-height: 56px;
-  --form-field-gap: 8px;
-  --form-radio-size: 20px;
-  --form-radio-dot-size: 10px;
-  --form-radio-gap: 12px;
-  --form-card-padding-x: 40px;
-  --form-card-padding-y: 20px;
-  --form-card-gap: 12px;
-  --form-title-font-size: 44px;
-  --form-error-font-size: 12px;
+  --form-font-size: 26px;
+  --form-padding-y: 19px;
+  --form-padding-x: 30px;
+  --form-margin-bottom: 7.5px;
+  --form-textarea-min-height: 106px;
+  --form-field-gap: 24px;
+  --form-radio-size: 38px;
+  --form-radio-dot-size: 19px;
+  --form-radio-gap: 23px;
+  --form-card-padding-x: 75px;
+  --form-card-padding-y: 38px;
+  --form-card-gap: 23px;
+  --form-card-width: 778px;
+  --form-card-height: 1230px;
+  --form-title-font-size: 83px;
+  --form-error-font-size: 23px;
 
   /* Responsive Navbar Variables */
   --navbar-height: 91px;
@@ -179,20 +182,22 @@
 
 @media (min-width: 1024px) {
   :root {
-    --form-font-size: calc(100vw * 14 / 1440);
-    --form-padding-y: calc(100vw * 10 / 1440);
-    --form-padding-x: calc(100vw * 16 / 1440);
-    --form-margin-bottom: calc(100vw * 4 / 1440);
-    --form-textarea-min-height: calc(100vw * 56 / 1440);
-    --form-field-gap: calc(100vw * 8 / 1440);
-    --form-radio-size: calc(100vw * 20 / 1440);
-    --form-radio-dot-size: calc(100vw * 10 / 1440);
-    --form-radio-gap: calc(100vw * 12 / 1440);
-    --form-card-padding-x: calc(100vw * 40 / 1440);
-    --form-card-padding-y: calc(100vw * 20 / 1440);
-    --form-card-gap: calc(100vw * 12 / 1440);
-    --form-title-font-size: calc(100vw * 44 / 1440);
-    --form-error-font-size: calc(100vw * 12 / 1440);
+    --form-font-size: calc(100vw * 26 / 1440);
+    --form-padding-y: calc(100vw * 19 / 1440);
+    --form-padding-x: calc(100vw * 30 / 1440);
+    --form-margin-bottom: calc(100vw * 7.5 / 1440);
+    --form-textarea-min-height: calc(100vw * 106 / 1440);
+    --form-field-gap: calc(100vw * 24 / 1440);
+    --form-radio-size: calc(100vw * 38 / 1440);
+    --form-radio-dot-size: calc(100vw * 19 / 1440);
+    --form-radio-gap: calc(100vw * 23 / 1440);
+    --form-card-padding-x: calc(100vw * 75 / 1440);
+    --form-card-padding-y: calc(100vw * 38 / 1440);
+    --form-card-gap: calc(100vw * 23 / 1440);
+    --form-card-width: calc(100vw * 778 / 1440);
+    --form-card-height: calc(100vw * 1230 / 1440);
+    --form-title-font-size: calc(100vw * 83 / 1440);
+    --form-error-font-size: calc(100vw * 23 / 1440);
 
     --navbar-height: calc(100vw * 91 / 1440);
     --navbar-logo-width: calc(100vw * 72.6 / 1440);
@@ -279,4 +284,3 @@
     11px 11px 0 #000, 
     12px 12px 0 #000;
 }
-
