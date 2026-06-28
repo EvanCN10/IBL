@@ -24,7 +24,7 @@ export default function Register() {
 
     // Preload background image
     const img = new window.Image();
-    img.src = "/images/Full_Page_Desktop.png";
+    img.src = "/images/Full_Page_Desktop.webp";
     img.onload = () => {
       imageLoaded = true;
       checkFinished();
@@ -53,7 +53,7 @@ export default function Register() {
         <main
           className="w-full relative overflow-hidden"
           style={{
-            backgroundImage: "url('/images/Full_Page_Desktop.png')",
+            backgroundImage: "url('/images/Full_Page_Desktop.webp')",
             backgroundSize: "100% auto",
             backgroundPosition: "top center",
             backgroundRepeat: "no-repeat",

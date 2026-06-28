@@ -12,7 +12,7 @@ export default function RegisterLayout({
 }>) {
   return (
     <>
-      <link rel="preload" as="image" href="/images/Full_Page_Desktop.png" />
+      <link rel="preload" as="image" href="/images/Full_Page_Desktop.webp" />
       {children}
     </>
   );
