@@ -82,13 +82,22 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
 };
 
 interface UploadStepProps {
+  formData: any; // We use any or RegisterFormData to avoid circular/missing import type warnings
   uploadData: UploadData;
   updateUploadField: (field: keyof UploadData, value: string, fileData?: FileData) => void;
   submitError?: string | null;
   style?: React.CSSProperties;
 }
 
-export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUploadField, submitError, style }) => {
+export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, updateUploadField, submitError, style }) => {
+  const isPortfolioRequired = React.useMemo(() => {
+    if (!formData || !formData.informasiUmum) return false;
+    const p1 = formData.informasiUmum.subdivisi1;
+    const p2 = formData.informasiUmum.subdivisi2;
+    const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro", "Branding", "Front-End", "Back-End"];
+    return portfolioRequiredDivisions.includes(p1) || portfolioRequiredDivisions.includes(p2);
+  }, [formData]);
+
   return (
     <div
       style={{
@@ -135,43 +144,43 @@ export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUpload
           transform: "rotate(6deg)",
         }}
       />
-
+ 
       {/* Row 1 - CV & KTM */}
       <div className="flex h-1/3 relative z-20">
         <UploadSlot
-          title="CV"
+          title="CV *"
           value={uploadData.cv}
           onChange={(name, data) => updateUploadField("cv", name, data)}
           className="w-1/2"
         />
         <UploadSlot
-          title="KTM"
+          title="KTM *"
           value={uploadData.ktm}
           onChange={(name, data) => updateUploadField("ktm", name, data)}
           className="w-1/2"
         />
       </div>
-
+ 
       {/* Row 2 - TWIBBON & BUKTI FOLLOW */}
       <div className="flex h-1/3 relative z-20">
         <UploadSlot
-          title="TWIBBON"
+          title="TWIBBON *"
           value={uploadData.twibbon}
           onChange={(name, data) => updateUploadField("twibbon", name, data)}
           className="w-1/2"
         />
         <UploadSlot
-          title="BUKTI FOLLOW"
+          title="BUKTI FOLLOW *"
           value={uploadData.buktiFollow}
           onChange={(name, data) => updateUploadField("buktiFollow", name, data)}
           className="w-1/2"
         />
       </div>
-
+ 
       {/* Row 3 - PORTOFOLIO */}
       <div className="flex h-1/3 relative z-20">
         <UploadSlot
-          title="PORTOFOLIO"
+          title={isPortfolioRequired ? "PORTOFOLIO *" : "PORTOFOLIO (Opsional)"}
           value={uploadData.portofolio}
           onChange={(name, data) => updateUploadField("portofolio", name, data)}
           className="w-full"

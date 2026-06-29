@@ -296,6 +296,7 @@ export const FormSection = () => {
               <TitleHeader step={step} style={{ top: step === 1 ? "0px" : step === 4 ? "-48px" : "0px" }} />
 
               <UploadStep
+                  formData={formData}
                   uploadData={formData.uploadBerkas}
                   updateUploadField={updateUploadField}
                   submitError={submitError}

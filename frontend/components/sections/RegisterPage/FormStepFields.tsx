@@ -23,38 +23,38 @@ export const FormStepFields = ({
     return (
       <div className="flex flex-col" style={{ gap: "24px" }}>
         <InputField
-          label="Nama Lengkap"
+          label="Nama Lengkap *"
           value={currentData.nama || ""}
           onChange={(val: string) => updateField("nama", val)}
         />
         <InputField
-          label="NIM"
+          label="NIM *"
           value={currentData.nim || ""}
           onChange={(val: string) => updateField("nim", val)}
         />
         <InputField
-          label="No. WhatsApp"
+          label="No. WhatsApp *"
           value={currentData.whatsapp || ""}
           onChange={(val: string) => updateField("whatsapp", val)}
         />
         <InputField
-          label="ID Line"
+          label="ID Line *"
           value={currentData.lineId || ""}
           onChange={(val: string) => updateField("lineId", val)}
         />
         <InputField
-          label="Departemen"
+          label="Departemen *"
           value={currentData.departemen || ""}
           onChange={(val: string) => updateField("departemen", val)}
         />
         <InputField
-          label="Angkatan"
+          label="Angkatan *"
           value={currentData.angkatan || ""}
           onChange={(val: string) => updateField("angkatan", val)}
         />
         
         <Dropdown
-          label={FORM_LABELS.dropdown}
+          label={FORM_LABELS.dropdown + " *"}
           options={DROPDOWN_OPTIONS}
           selected={currentData.subdivisi1 || ""}
           onSelect={(val: string) => updateField("subdivisi1", val)}
@@ -117,7 +117,7 @@ export const FormStepFields = ({
           DIVISI: {divisionChoice}
         </h3>
         <p className="font-body text-[11px] text-gray-500 mt-1">
-          Jawablah pertanyaan di bawah ini dengan lengkap.
+          Jawablah pertanyaan di bawah ini dengan lengkap. (Semua pertanyaan wajib diisi *)
         </p>
       </div>
 
@@ -136,7 +136,7 @@ export const FormStepFields = ({
                   marginBottom: "var(--form-margin-bottom)"
                 }}
               >
-                {idx + 1}. {q}
+                {idx + 1}. {q} *
               </label>
               <textarea
                 value={currentData[q] || ""}
@@ -173,7 +173,7 @@ export const FormStepFields = ({
                   marginBottom: "var(--form-margin-bottom)"
                 }}
               >
-                {idx + 1}. {q}
+                {idx + 1}. {q} *
               </label>
               <textarea
                 value={currentData[q] || ""}
