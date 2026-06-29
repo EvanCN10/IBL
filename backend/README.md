@@ -30,14 +30,18 @@ Berikut adalah link aset Google yang telah terhubung ke backend:
 
 ---
 
-## 🚀 Panduan Deployment Ulang (Jika Diperlukan)
-Jika Anda perlu mengganti akun Google atau mendeploy ulang script:
-1. Buka [script.google.com](https://script.google.com/) dan buat project baru bernama `IBL 2K26 - Backend Oprec Staff`.
-2. Salin isi seluruh kode dari file [code.js](code.js) ke dalam editor script.
-3. Klik ikon **Save** (`Ctrl + S`).
-4. Klik tombol **Deploy** di kanan atas -> pilih **New deployment** -> Klik gerigi pilih **Web app**.
-5. Atur konfigurasi:
-   * **Execute as**: `Me (email-kamu@gmail.com)`
-   * **Who has access**: `Anyone` *(Penting agar pendaftar bisa submit).*
-6. Klik **Deploy** dan berikan otorisasi akses (Klik *Advanced* -> *Go to IBL 2K26 - Backend Oprec Staff (unsafe)* -> *Allow*).
-7. Salin **Web app URL** yang muncul dan masukkan ke file `.env` di frontend.
+## 🚀 Link Project Google Apps Script (GAS)
+Project Apps Script yang aktif dan digunakan bersama dapat diakses langsung oleh tim melalui link berikut:
+👉 [Google Apps Script Editor - IBL 2K26 Backend Oprec Staff](https://script.google.com/d/1OkDg-WfdqjHFcJHX6oIa1JSX8s6KTKh5hpuExoDnF65dbt_CE10O1VyS/edit?usp=sharing)
+
+Teman satu tim Anda tidak perlu membuat project baru dari awal, mereka cukup membuka link di atas untuk melihat kode atau melakukan deployment ulang jika diperlukan.
+
+---
+
+## ⚡ Panduan Deploy Ulang (Jika Ada Perubahan Kode)
+Jika tim melakukan perubahan pada script backend dan ingin menerapkannya ke web:
+1. Klik tombol **Deploy** di kanan atas editor Google Apps Script.
+2. Pilih **Manage deployments** (Kelola penerapan).
+3. Klik ikon pensil (Edit) di bagian kanan atas, ubah versi ke **New version** (Versi baru).
+4. Klik **Deploy** (Terapkan).
+*(Penting: Setiap kali kode di Apps Script diubah, Anda HARUS men-deploy ulang dengan membuat versi baru agar perubahan tersebut aktif di URL Web App).*
