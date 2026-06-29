@@ -7,10 +7,24 @@ interface UploadSlotProps {
   value: string;
   onChange: (fileName: string, fileData?: FileData) => void;
   className?: string;
+  accept?: string;
+  allowedExtensions?: string[];
+  allowedExtensionsLabel?: string;
+  maxSizeMB?: number;
 }
 
-const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, className = "" }) => {
+const UploadSlot: React.FC<UploadSlotProps> = ({ 
+  title, 
+  value, 
+  onChange, 
+  className = "", 
+  accept, 
+  allowedExtensions, 
+  allowedExtensionsLabel, 
+  maxSizeMB = 10 
+}) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [localError, setLocalError] = React.useState<string | null>(null);
 
   const handleClick = () => {
     fileInputRef.current?.click();
@@ -19,6 +33,26 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // 1. Validate File Size
+      const maxBytes = maxSizeMB * 1024 * 1024;
+      if (file.size > maxBytes) {
+        setLocalError(`Maksimal ukuran file: ${maxSizeMB}MB`);
+        // Reset file value to prevent leaving it set
+        if (fileInputRef.current) fileInputRef.current.value = "";
+        return;
+      }
+
+      // 2. Validate File Extension
+      if (allowedExtensions && allowedExtensions.length > 0) {
+        const fileExt = file.name.split('.').pop()?.toLowerCase();
+        if (!fileExt || !allowedExtensions.includes(fileExt)) {
+          setLocalError(`Harap upload format: ${allowedExtensionsLabel || allowedExtensions.join(', ')}`);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+          return;
+        }
+      }
+
+      setLocalError(null);
       const reader = new FileReader();
       reader.onload = () => {
         const base64 = (reader.result as string).split(",")[1];
@@ -42,11 +76,12 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
         ref={fileInputRef}
         onChange={handleFileChange}
         className="hidden"
+        accept={accept}
       />
       <h4 className="font-crosner text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-normal text-black uppercase tracking-widest mb-1 sm:mb-2 lg:mb-3 group-hover:-translate-y-0.5 group-hover:scale-103 transition-all duration-300 ease-out">
         {title}
       </h4>
-      <div className="flex flex-col items-center justify-center gap-1 sm:gap-1.5">
+      <div className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 text-center">
         <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 lg:w-12 lg:h-12 rounded-full bg-[#D1EAE5] flex items-center justify-center border border-[#864B4D] group-hover:bg-[#2B918E] group-hover:border-black group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 ease-out">
           <svg
             className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#2B918E] group-hover:text-white group-hover:-translate-y-0.5 transition-all duration-300 ease-out"
@@ -64,16 +99,22 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
           </svg>
         </div>
         
-        {value ? (
+        {localError ? (
+          <span className="font-body text-[10px] sm:text-xs text-red-600 font-semibold px-2 py-0.5 max-w-[140px] sm:max-w-[180px] bg-red-50 border border-red-200 rounded leading-snug">
+            {localError}
+          </span>
+        ) : value ? (
           <span className="font-body text-[10px] sm:text-xs text-gray-700 font-semibold bg-white border border-gray-300 rounded px-2 py-0.5 max-w-[140px] sm:max-w-[180px] truncate shadow-sm group-hover:border-gray-400 group-hover:shadow-md transition-all duration-300">
             {value}
           </span>
         ) : (
           <div className="flex flex-col items-center">
-            <span className="font-body text-[9px] sm:text-xs text-gray-500">Drop your files here</span>
-            <span className="font-body text-[9px] sm:text-xs text-[#2B918E] group-hover:text-[#1e6664] underline font-semibold transition-colors duration-300">
-              or click to upload
-            </span>
+            <span className="font-body text-[9px] sm:text-xs text-gray-500">Drop files here or click to upload</span>
+            {allowedExtensionsLabel && (
+              <span className="font-body text-[8px] sm:text-[10px] text-gray-400 mt-0.5">
+                Format: {allowedExtensionsLabel} (Max {maxSizeMB}MB)
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -94,7 +135,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
     if (!formData || !formData.informasiUmum) return false;
     const p1 = formData.informasiUmum.subdivisi1;
     const p2 = formData.informasiUmum.subdivisi2;
-    const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro"];
+    const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro", "Front-End", "Back-End", "Branding"];
     return portfolioRequiredDivisions.includes(p1) || portfolioRequiredDivisions.includes(p2);
   }, [formData]);
 
@@ -152,12 +193,18 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
           value={uploadData.cv}
           onChange={(name, data) => updateUploadField("cv", name, data)}
           className="w-1/2"
+          accept=".pdf,.doc,.docx"
+          allowedExtensions={["pdf", "doc", "docx"]}
+          allowedExtensionsLabel="PDF, DOC, DOCX"
         />
         <UploadSlot
           title="KTM *"
           value={uploadData.ktm}
           onChange={(name, data) => updateUploadField("ktm", name, data)}
           className="w-1/2"
+          accept=".pdf,.png,.jpg,.jpeg"
+          allowedExtensions={["pdf", "png", "jpg", "jpeg"]}
+          allowedExtensionsLabel="PDF, PNG, JPG, JPEG"
         />
       </div>
  
@@ -168,12 +215,18 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
           value={uploadData.twibbon}
           onChange={(name, data) => updateUploadField("twibbon", name, data)}
           className="w-1/2"
+          accept=".png,.jpg,.jpeg"
+          allowedExtensions={["png", "jpg", "jpeg"]}
+          allowedExtensionsLabel="PNG, JPG, JPEG"
         />
         <UploadSlot
           title="BUKTI FOLLOW *"
           value={uploadData.buktiFollow}
           onChange={(name, data) => updateUploadField("buktiFollow", name, data)}
           className="w-1/2"
+          accept=".png,.jpg,.jpeg"
+          allowedExtensions={["png", "jpg", "jpeg"]}
+          allowedExtensionsLabel="PNG, JPG, JPEG"
         />
       </div>
  
@@ -184,6 +237,9 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
           value={uploadData.portofolio}
           onChange={(name, data) => updateUploadField("portofolio", name, data)}
           className="w-full"
+          accept=".pdf,.doc,.docx,.zip,.rar"
+          allowedExtensions={["pdf", "doc", "docx", "zip", "rar"]}
+          allowedExtensionsLabel="PDF, DOC, DOCX, ZIP, RAR"
         />
       </div>
     </div>
