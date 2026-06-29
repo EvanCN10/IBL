@@ -8,7 +8,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button: React.FC<ButtonProps> = ({ children, className = "", ...props }) => {
   return (
     <motion.button
-      {...props}
+      {...(props as any)}
       suppressHydrationWarning
       className={`bg-tosca outline outline-black inline-flex justify-center items-center font-hollywood text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none ${className}`}
       style={{
