@@ -94,7 +94,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
     if (!formData || !formData.informasiUmum) return false;
     const p1 = formData.informasiUmum.subdivisi1;
     const p2 = formData.informasiUmum.subdivisi2;
-    const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro", "Branding", "Front-End", "Back-End"];
+    const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro"];
     return portfolioRequiredDivisions.includes(p1) || portfolioRequiredDivisions.includes(p2);
   }, [formData]);
 

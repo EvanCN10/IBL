@@ -156,7 +156,7 @@ export const useRegistrationForm = () => {
       // Dynamic portfolio check
       const p1 = formData.informasiUmum.subdivisi1;
       const p2 = formData.informasiUmum.subdivisi2;
-      const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro", "Branding", "Front-End", "Back-End"];
+      const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro"];
       const isPortfolioRequired = portfolioRequiredDivisions.includes(p1) || portfolioRequiredDivisions.includes(p2);
 
       if (isPortfolioRequired && !uploads.portofolio) {
