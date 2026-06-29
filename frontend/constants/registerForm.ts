@@ -1,22 +1,35 @@
 // Constants untuk halaman pendaftaran IBL
-// Tambahkan label field, opsi dropdown, dan konfigurasi form di sini
+// Menyediakan label form dan daftar divisi yang valid
 
 export const FORM_LABELS = {
   shortAnswer: "Jawaban Pendek",
   longAnswer: "Jawaban Panjang",
-  dropdown: "Dropdown Subdivisi",
+  dropdown: "Pilihan Subdivisi 1",
+  dropdown2: "Pilihan Subdivisi 2 (Opsional)",
   radio: "Pertanyaan Pilihan",
-}
+};
 
-export const DROPDOWN_OPTIONS = [
-  "The quick brown fox jumps over the lazy dog 1",
-  "The quick brown fox jumps over the lazy dog 2",
-  "The quick brown fox jumps over the lazy dog 3",
-  "The quick brown fox jumps over the lazy dog 4",
-  "The quick brown fox jumps over the lazy dog 5",
-]
+export const DIVISION_LIST = [
+  "UIUX",
+  "Front-End",
+  "Back-End",
+  "MedPro",
+  "CnD",
+  "Branding",
+  "Public Relations",
+  "SnL",
+  "Logistics",
+  "Medical",
+  "Consumption",
+  "Fundraising",
+  "Ticketing",
+  "Sponsorship",
+  "Ceremonial",
+  "Competition",
+  "Damen"
+];
 
-export const RADIO_OPTIONS = [
-  "The quick brown fox jumps over the lazy dog 1",
-  "The quick brown fox jumps over the lazy dog 2",
-]
+export const DROPDOWN_OPTIONS = [...DIVISION_LIST];
+
+// Opsi kedua bisa kosong jika pendaftar hanya memilih satu divisi
+export const DROPDOWN_OPTIONS_2 = ["Tidak Memilih", ...DIVISION_LIST];
