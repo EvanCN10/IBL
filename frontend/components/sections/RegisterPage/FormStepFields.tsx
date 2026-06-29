@@ -1,101 +1,199 @@
 import React from "react";
 import InputField from "@/components/ui/InputField";
 import Dropdown from "@/components/ui/Dropdown";
-import RadioGroup from "@/components/ui/RadioGroup";
-import { FORM_LABELS, DROPDOWN_OPTIONS, RADIO_OPTIONS } from "@/constants/registerForm";
-import { StepData } from "@/types/register";
+import { FORM_LABELS, DROPDOWN_OPTIONS, DROPDOWN_OPTIONS_2 } from "@/constants/registerForm";
+import { DIVISION_QUESTIONS } from "@/constants/questions";
+import { StepData, RegisterFormData } from "@/types/register";
 
 interface FormStepFieldsProps {
+  step: number;
+  formData: RegisterFormData;
   currentData: StepData;
-  updateField: (field: keyof StepData, value: string) => void;
+  updateField: (field: string, value: string) => void;
 }
 
-export const FormStepFields: React.FC<FormStepFieldsProps> = ({ currentData, updateField }) => {
+export const FormStepFields = ({
+  step,
+  formData,
+  currentData,
+  updateField,
+}: FormStepFieldsProps) => {
+  // STEP 1: INFORMASI UMUM
+  if (step === 1) {
+    return (
+      <div className="flex flex-col" style={{ gap: "24px" }}>
+        <InputField
+          label="Nama Lengkap"
+          value={currentData.nama || ""}
+          onChange={(val: string) => updateField("nama", val)}
+        />
+        <InputField
+          label="NIM"
+          value={currentData.nim || ""}
+          onChange={(val: string) => updateField("nim", val)}
+        />
+        <InputField
+          label="No. WhatsApp"
+          value={currentData.whatsapp || ""}
+          onChange={(val: string) => updateField("whatsapp", val)}
+        />
+        <InputField
+          label="ID Line"
+          value={currentData.lineId || ""}
+          onChange={(val: string) => updateField("lineId", val)}
+        />
+        <InputField
+          label="Departemen"
+          value={currentData.departemen || ""}
+          onChange={(val: string) => updateField("departemen", val)}
+        />
+        <InputField
+          label="Angkatan"
+          value={currentData.angkatan || ""}
+          onChange={(val: string) => updateField("angkatan", val)}
+        />
+        
+        <Dropdown
+          label={FORM_LABELS.dropdown}
+          options={DROPDOWN_OPTIONS}
+          selected={currentData.subdivisi1 || ""}
+          onSelect={(val: string) => updateField("subdivisi1", val)}
+        />
+
+        <Dropdown
+          label={FORM_LABELS.dropdown2}
+          options={DROPDOWN_OPTIONS_2}
+          selected={currentData.subdivisi2 || ""}
+          onSelect={(val: string) => updateField("subdivisi2", val)}
+        />
+      </div>
+    );
+  }
+
+  // Determine which division choice this step is for
+  const isChoice1 = step === 2;
+  const divisionChoice = isChoice1 
+    ? formData.informasiUmum.subdivisi1 
+    : formData.informasiUmum.subdivisi2;
+
+  // Handle case where no division is selected
+  if (!divisionChoice || divisionChoice === "Tidak Memilih") {
+    return (
+      <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center p-6 gap-4">
+        <div className="w-16 h-16 rounded-full bg-[#D1EAE5]/40 flex items-center justify-center border border-[#864B4D]">
+          <svg className="w-8 h-8 text-[#864B4D]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <h3 className="font-crosner text-xl font-semibold text-black uppercase tracking-wider">
+          {isChoice1 ? "Subdivisi Pilihan 1 Kosong" : "Subdivisi Pilihan 2 Kosong / Tidak Dipilih"}
+        </h3>
+        <p className="font-body text-sm text-gray-600 max-w-md">
+          {isChoice1 
+            ? "Silakan kembali ke Halaman Informasi Umum untuk memilih Subdivisi Pilihan 1 terlebih dahulu."
+            : "Kamu memilih untuk tidak mengambil pilihan subdivisi kedua. Silakan klik NEXT di navigasi bawah untuk melompat ke bagian Upload Berkas."}
+        </p>
+      </div>
+    );
+  }
+
+  // Load questions for the selected division
+  const divisionData = DIVISION_QUESTIONS[divisionChoice];
+  if (!divisionData) {
+    return (
+      <div className="text-center p-6 text-red-500 font-body">
+        Error: Pertanyaan divisi "{divisionChoice}" tidak ditemukan.
+      </div>
+    );
+  }
+
+  const { divisionQuestions = [], studyCases = [] } = divisionData;
+
   return (
-    <div className="flex flex-col" style={{ gap: "24px" }}>
-      <InputField
-        label={FORM_LABELS.shortAnswer}
-        value={currentData.shortAnswer1}
-        onChange={(val) => updateField("shortAnswer1", val)}
-      />
-      <InputField
-        label={FORM_LABELS.shortAnswer}
-        value={currentData.shortAnswer2}
-        onChange={(val) => updateField("shortAnswer2", val)}
-      />
-      <InputField
-        label={FORM_LABELS.shortAnswer}
-        value={currentData.shortAnswer3}
-        onChange={(val) => updateField("shortAnswer3", val)}
-      />
-      
-      <div className="flex flex-col w-full text-left">
-        <label 
-          className="font-bold text-[#2D2D2D] font-drowner tracking-widest"
-          style={{ 
-            fontSize: "var(--form-font-size)",
-            marginBottom: "var(--form-margin-bottom)"
-          }}
-        >
-          {FORM_LABELS.longAnswer}
-        </label>
-        <textarea
-          value={currentData.longAnswer1}
-          onChange={(e) => updateField("longAnswer1", e.target.value)}
-          placeholder="Content"
-          className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner resize-y"
-          style={{
-            fontSize: "var(--form-font-size)",
-            paddingTop: "var(--form-padding-y)",
-            paddingBottom: "var(--form-padding-y)",
-            paddingLeft: "var(--form-padding-x)",
-            paddingRight: "var(--form-padding-x)",
-            minHeight: "var(--form-textarea-min-height)",
-            borderRadius: "calc(var(--form-font-size) * 0.43)"
-          }}
-        />
+    <div className="flex flex-col" style={{ gap: "28px" }}>
+      {/* Title indicating which division we are answering for */}
+      <div className="border-b border-[#864B4D]/30 pb-3 mb-2">
+        <h3 className="font-crosner text-xl text-[#864B4D] font-bold uppercase tracking-widest">
+          DIVISI: {divisionChoice}
+        </h3>
+        <p className="font-body text-[11px] text-gray-500 mt-1">
+          Jawablah pertanyaan di bawah ini dengan lengkap.
+        </p>
       </div>
 
-      <div className="flex flex-col w-full text-left">
-        <label 
-          className="font-bold text-[#2D2D2D] font-drowner tracking-widest"
-          style={{ 
-            fontSize: "var(--form-font-size)",
-            marginBottom: "var(--form-margin-bottom)"
-          }}
-        >
-          {FORM_LABELS.longAnswer}
-        </label>
-        <textarea
-          value={currentData.longAnswer2}
-          onChange={(e) => updateField("longAnswer2", e.target.value)}
-          placeholder="Content"
-          className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors shadow-inner resize-y"
-          style={{
-            fontSize: "var(--form-font-size)",
-            paddingTop: "var(--form-padding-y)",
-            paddingBottom: "var(--form-padding-y)",
-            paddingLeft: "var(--form-padding-x)",
-            paddingRight: "var(--form-padding-x)",
-            minHeight: "var(--form-textarea-min-height)",
-            borderRadius: "calc(var(--form-font-size) * 0.43)"
-          }}
-        />
-      </div>
+      {/* Part 1: Pertanyaan Divisi */}
+      {divisionQuestions.length > 0 && (
+        <div className="flex flex-col gap-5">
+          <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-wider uppercase border-l-4 border-[#2B918E] pl-2 mb-1">
+            Pertanyaan Divisi
+          </h4>
+          {divisionQuestions.map((q, idx) => (
+            <div key={`div-q-${idx}`} className="flex flex-col w-full text-left">
+              <label 
+                className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
+                style={{ 
+                  fontSize: "var(--form-font-size)",
+                  marginBottom: "var(--form-margin-bottom)"
+                }}
+              >
+                {idx + 1}. {q}
+              </label>
+              <textarea
+                value={currentData[q] || ""}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField(q, e.target.value)}
+                placeholder="Tulis jawabanmu di sini..."
+                className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-[#2B918E] focus:ring-1 focus:ring-[#2B918E] transition-colors shadow-inner resize-y"
+                style={{
+                  fontSize: "var(--form-font-size)",
+                  paddingTop: "var(--form-padding-y)",
+                  paddingBottom: "var(--form-padding-y)",
+                  paddingLeft: "var(--form-padding-x)",
+                  paddingRight: "var(--form-padding-x)",
+                  minHeight: "120px",
+                  borderRadius: "calc(var(--form-font-size) * 0.43)"
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
 
-      <Dropdown
-        label={FORM_LABELS.dropdown}
-        options={DROPDOWN_OPTIONS}
-        selected={currentData.dropdownVal}
-        onSelect={(val) => updateField("dropdownVal", val)}
-      />
-
-      <RadioGroup
-        label={FORM_LABELS.radio}
-        options={RADIO_OPTIONS}
-        selected={currentData.radioVal}
-        onChange={(val) => updateField("radioVal", val)}
-      />
+      {/* Part 2: Pertanyaan Study Case */}
+      {studyCases.length > 0 && (
+        <div className="flex flex-col gap-5 mt-4">
+          <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-wider uppercase border-l-4 border-[#F4631E] pl-2 mb-1">
+            Studi Kasus (Study Case)
+          </h4>
+          {studyCases.map((q, idx) => (
+            <div key={`case-q-${idx}`} className="flex flex-col w-full text-left">
+              <label 
+                className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
+                style={{ 
+                  fontSize: "var(--form-font-size)",
+                  marginBottom: "var(--form-margin-bottom)"
+                }}
+              >
+                {idx + 1}. {q}
+              </label>
+              <textarea
+                value={currentData[q] || ""}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField(q, e.target.value)}
+                placeholder="Tulis analisis dan jawaban studi kasusmu di sini..."
+                className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-[#F4631E] focus:ring-1 focus:ring-[#F4631E] transition-colors shadow-inner resize-y"
+                style={{
+                  fontSize: "var(--form-font-size)",
+                  paddingTop: "var(--form-padding-y)",
+                  paddingBottom: "var(--form-padding-y)",
+                  paddingLeft: "var(--form-padding-x)",
+                  paddingRight: "var(--form-padding-x)",
+                  minHeight: "150px",
+                  borderRadius: "calc(var(--form-font-size) * 0.43)"
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

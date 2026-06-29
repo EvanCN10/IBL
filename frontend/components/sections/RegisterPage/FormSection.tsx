@@ -56,6 +56,8 @@ export const FormSection = () => {
     step,
     setStep,
     isSubmitted,
+    isSubmitting,
+    submitError,
     currentType,
     currentTitle,
     currentData,
@@ -262,7 +264,15 @@ export const FormSection = () => {
                     gap: "var(--form-card-gap)",
                   }}
                 >
+                  {submitError && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative font-body text-sm mb-4">
+                      <strong className="font-bold">Error: </strong>
+                      <span className="block sm:inline">{submitError}</span>
+                    </div>
+                  )}
                   <FormStepFields
+                    step={step}
+                    formData={formData}
                     currentData={currentData as StepData}
                     updateField={updateField}
                   />
@@ -286,10 +296,11 @@ export const FormSection = () => {
               <TitleHeader step={step} style={{ top: step === 1 ? "0px" : step === 4 ? "-48px" : "0px" }} />
 
               <UploadStep
-                uploadData={formData.uploadBerkas}
-                updateUploadField={updateUploadField}
-                style={{ top: "166px" }}
-              />
+                  uploadData={formData.uploadBerkas}
+                  updateUploadField={updateUploadField}
+                  submitError={submitError}
+                  style={{ top: "166px" }}
+                />
             </motion.div>
           )}
         </motion.div>
@@ -300,6 +311,7 @@ export const FormSection = () => {
           setStep={setStep}
           handleNext={handleNext}
           handleBack={handleBack}
+          isSubmitting={isSubmitting}
         />
       </div>
     </div>

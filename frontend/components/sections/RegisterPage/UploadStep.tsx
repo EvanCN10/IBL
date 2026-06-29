@@ -1,11 +1,11 @@
 import React from "react";
-import { UploadData } from "@/types/register";
+import { UploadData, FileData } from "@/types/register";
 import { noiseBg } from "@/constants/registerStyles";
 
 interface UploadSlotProps {
   title: string;
   value: string;
-  onChange: (fileName: string) => void;
+  onChange: (fileName: string, fileData?: FileData) => void;
   className?: string;
 }
 
@@ -19,7 +19,16 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      onChange(file.name);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = (reader.result as string).split(",")[1];
+        onChange(file.name, {
+          name: file.name,
+          mimeType: file.type,
+          base64: base64
+        });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -74,11 +83,12 @@ const UploadSlot: React.FC<UploadSlotProps> = ({ title, value, onChange, classNa
 
 interface UploadStepProps {
   uploadData: UploadData;
-  updateUploadField: (field: keyof UploadData, value: string) => void;
+  updateUploadField: (field: keyof UploadData, value: string, fileData?: FileData) => void;
+  submitError?: string | null;
   style?: React.CSSProperties;
 }
 
-export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUploadField, style }) => {
+export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUploadField, submitError, style }) => {
   return (
     <div
       style={{
@@ -96,6 +106,12 @@ export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUpload
       }}
       className="overflow-hidden flex flex-col shadow-[10px_10px_0px_0px_#000]/50"
     >
+      {submitError && (
+        <div className="absolute top-2 left-2 right-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded font-body text-xs z-50">
+          <strong className="font-bold">Error: </strong>
+          <span>{submitError}</span>
+        </div>
+      )}
       {/* Slanted Dividers */}
       <div className="absolute top-[33.33%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center rotate-[3deg] pointer-events-none z-10" />
       <div className="absolute top-[66.66%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center -rotate-[3deg] pointer-events-none z-10" />
@@ -125,13 +141,13 @@ export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUpload
         <UploadSlot
           title="CV"
           value={uploadData.cv}
-          onChange={(v) => updateUploadField("cv", v)}
+          onChange={(name, data) => updateUploadField("cv", name, data)}
           className="w-1/2"
         />
         <UploadSlot
           title="KTM"
           value={uploadData.ktm}
-          onChange={(v) => updateUploadField("ktm", v)}
+          onChange={(name, data) => updateUploadField("ktm", name, data)}
           className="w-1/2"
         />
       </div>
@@ -141,13 +157,13 @@ export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUpload
         <UploadSlot
           title="TWIBBON"
           value={uploadData.twibbon}
-          onChange={(v) => updateUploadField("twibbon", v)}
+          onChange={(name, data) => updateUploadField("twibbon", name, data)}
           className="w-1/2"
         />
         <UploadSlot
           title="BUKTI FOLLOW"
           value={uploadData.buktiFollow}
-          onChange={(v) => updateUploadField("buktiFollow", v)}
+          onChange={(name, data) => updateUploadField("buktiFollow", name, data)}
           className="w-1/2"
         />
       </div>
@@ -157,7 +173,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({ uploadData, updateUpload
         <UploadSlot
           title="PORTOFOLIO"
           value={uploadData.portofolio}
-          onChange={(v) => updateUploadField("portofolio", v)}
+          onChange={(name, data) => updateUploadField("portofolio", name, data)}
           className="w-full"
         />
       </div>

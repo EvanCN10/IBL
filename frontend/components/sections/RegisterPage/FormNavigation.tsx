@@ -8,14 +8,16 @@ interface FormNavigationProps {
   setStep: (step: number) => void;
   handleNext: () => void;
   handleBack: () => void;
+  isSubmitting?: boolean;
 }
 
-export const FormNavigation: React.FC<FormNavigationProps> = ({
+export const FormNavigation = ({
   step,
   setStep,
   handleNext,
   handleBack,
-}) => {
+  isSubmitting = false,
+}: FormNavigationProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -36,7 +38,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         style={{ width: "var(--btn-width)" }}
       >
         {step > 1 ? (
-          <Button onClick={handleBack}>BACK</Button>
+          <Button onClick={handleBack} disabled={isSubmitting}>BACK</Button>
         ) : (
           <div 
             style={{
@@ -57,7 +59,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
           return (
             <div
               key={s}
-              onClick={() => setStep(s)}
+              onClick={() => !isSubmitting && setStep(s)}
               className="relative cursor-pointer transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
               style={{
                 width: isActive ? "var(--nav-ball-active-size)" : "var(--nav-ball-inactive-size)",
@@ -79,8 +81,8 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         className="flex justify-end"
         style={{ width: "var(--btn-width)" }}
       >
-        <Button onClick={handleNext}>
-          {step === 4 ? "SUBMIT" : "NEXT"}
+        <Button onClick={handleNext} disabled={isSubmitting}>
+          {isSubmitting ? "SUBMITTING..." : step === 4 ? "SUBMIT" : "NEXT"}
         </Button>
       </div>
     </motion.div>
