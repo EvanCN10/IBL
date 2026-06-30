@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 
 export function useScaleRatio(designWidth = 1440) {
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth / designWidth;
+    }
+    return 1;
+  });
 
   useEffect(() => {
     const handleResize = () => {
