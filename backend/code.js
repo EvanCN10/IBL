@@ -3,7 +3,7 @@
  * Deploy this script as a Google Apps Script Web App.
  *
  * Requirements Met:
- * 1. Google Drive structure: Parent Folder > Subdivisi > Candidate Folder (Nama - NIM) > files
+ * 1. Google Drive structure: Parent Folder > Subdivisi > Candidate Folder (Nama - NRP) > files
  * 2. Google Spreadsheet: 1 Spreadsheet, separate tabs per division, automatically managed
  * 3. CORS-compliant doPost entrypoint for Next.js frontend integration
  */
@@ -11,8 +11,8 @@
 // --- CONFIGURATION ---
 // IMPORTANT: Paste your Spreadsheet ID and Parent Drive Folder ID here.
 // If PARENT_FOLDER_ID is blank, a new folder "IBL 2K26 Oprec - Pendaftar" will be created in your root Drive.
-var SPREADSHEET_ID = "1_Vfxb8PDrgg2eFsNQlZXBBOMgqKGqhoyUg52kGKALP8";
-var PARENT_FOLDER_ID = "1tHOOJXFDu1S-hwdvB4pWo8aj1orP0bUY";
+var SPREADSHEET_ID = "172zZSLR8yvFnwesEMcvwIo8QLByZ-0eLoQw5uzyK-cc";
+var PARENT_FOLDER_ID = "1PxnZkUf507tB_n8L6X1wCYIrqwy1frn3";
 // Folder Google Drive untuk backup CSV pendaftaran (share sebagai Editor ke akun yang deploy GAS).
 var BACKUP_FOLDER_ID = "1oHm0-oiUksJ5K6cNmXqhb8hbGQm_h-0B";
 var BACKUP_CSV_NAME = "backup_pendaftaran_IBL_2K26.csv";
@@ -239,9 +239,9 @@ var DIVISION_DATA = {
       "Apa saja tugas Data Management di IBL 2K26 yang kamu ketahui? Sebutkan!",
       "Mengapa kamu memilih divisi Data Management? jelaskan alasannya!",
       "Apa motivasi kamu mendaftar di divisi Data Management IBL 2026? Menurutmu, kontribusi apa yang bisa kamu berikan di divisi Data Management IBL 2026?",
-      "Jika diterima di divisi Data Management, komitmen apa yang akan kamu give untuk mendukung keberhasilan IBL 2K26?",
+      "Jika diterima di divisi Data Management, komitmen apa yang akan kamu berikan untuk mendukung keberhasilan IBL 2K26?",
       "Menurutmu, apa tantangan terbesar yang mungkin dihadapi oleh divisi Data Management selama berlangsungnya IBL 2K26?",
-      "Inovasi apa yang bisa kamu give apa bila kamu diterima pada divisi Data Management IBL 2026?",
+      "Inovasi apa yang bisa kamu berikan apa bila kamu diterima pada divisi Data Management IBL 2026?",
       "Seberapa exicted kamu untuk masuk ke divisi Data Management (kasih opsi skala 1-5)"
     ],
     "cases": [
@@ -261,7 +261,7 @@ function doPost(e) {
     var postData = JSON.parse(e.postData.contents);
     
     var nama = postData.nama || "Pendaftar";
-    var nim = postData.nim || "0000000000";
+    var nrp = postData.nrp || "0000000000";
     var whatsapp = postData.whatsapp || "";
     var lineId = postData.lineId || "";
     var departemen = postData.departemen || "";
@@ -303,7 +303,7 @@ function doPost(e) {
       // Get or create subdivision folder
       var divFolder = getOrCreateSubFolder(parentFolder, divName);
       // Get or create pendaftar folder inside subdivision folder
-      var candidateFolderName = nama + " - " + nim;
+      var candidateFolderName = nama + " - " + nrp;
       var candidateFolder = getOrCreateSubFolder(divFolder, candidateFolderName);
       
       var divFileUrls = {};
@@ -362,7 +362,7 @@ function doPost(e) {
       // If sheet is new or empty, initialize baseline headers
       if (headers.length === 0) {
         headers = [
-          "Timestamp", "Nama Lengkap", "NIM", "Departemen", "Angkatan", 
+          "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan", 
           "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2"
         ];
         
@@ -409,7 +409,7 @@ function doPost(e) {
       // Map baseline details
       newRowValues[getHeaderColIndex("Timestamp")] = timestamp;
       newRowValues[getHeaderColIndex("Nama Lengkap")] = nama;
-      newRowValues[getHeaderColIndex("NIM")] = nim;
+      newRowValues[getHeaderColIndex("NRP")] = nrp;
       newRowValues[getHeaderColIndex("Departemen")] = departemen;
       newRowValues[getHeaderColIndex("Angkatan")] = angkatan;
       newRowValues[getHeaderColIndex("No WhatsApp")] = whatsapp;
@@ -441,13 +441,13 @@ function doPost(e) {
     // 3. Catat ringkasan ke sheet master "Semua Form" (satu baris per pendaftar, lintas divisi).
     // Link berkas diambil dari folder subdivisi pertama (file yang diupload identik di tiap divisi).
     var masterFileUrls = (divisions.length > 0 && uploadedFiles[divisions[0].name]) ? uploadedFiles[divisions[0].name] : {};
-    logToMasterSheet(ss, timestamp, nama, nim, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, masterFileUrls);
+    logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, masterFileUrls);
 
     // 4. Backup data pendaftar ke file CSV di folder Drive backup (best-effort).
     backupToCsv({
       "Timestamp": timestamp,
       "Nama Lengkap": nama,
-      "NIM": nim,
+      "NRP": nrp,
       "Departemen": departemen,
       "Angkatan": angkatan,
       "No WhatsApp": whatsapp,
@@ -500,7 +500,7 @@ function getOrCreateSubFolder(parentFolder, folderName) {
  * Catat satu baris ringkasan pendaftar ke sheet master "Semua Form"
  * (menampung seluruh pendaftar lintas divisi). Sheet dibuat otomatis bila belum ada.
  */
-function logToMasterSheet(ss, timestamp, nama, nim, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, fileUrls) {
+function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, fileUrls) {
   var sheetName = "Semua Form";
   var sheet = ss.getSheetByName(sheetName);
   if (!sheet) {
@@ -508,7 +508,7 @@ function logToMasterSheet(ss, timestamp, nama, nim, departemen, angkatan, whatsa
   }
 
   var headers = [
-    "Timestamp", "Nama Lengkap", "NIM", "Departemen", "Angkatan",
+    "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan",
     "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
     "Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio"
   ];
@@ -519,7 +519,7 @@ function logToMasterSheet(ss, timestamp, nama, nim, departemen, angkatan, whatsa
   }
 
   var row = [
-    timestamp, nama, nim, departemen, angkatan,
+    timestamp, nama, nrp, departemen, angkatan,
     whatsapp, lineId, subdivisi1, subdivisi2,
     fileUrls["cv"] || "", fileUrls["ktm"] || "", fileUrls["twibbon"] || "",
     fileUrls["buktiFollow"] || "", fileUrls["portofolio"] || ""
@@ -542,7 +542,7 @@ function backupToCsv(rowData) {
 
     // Susun daftar kolom: baseline + seluruh pertanyaan tiap divisi + link berkas.
     var baselineHeaders = [
-      "Timestamp", "Nama Lengkap", "NIM", "Departemen", "Angkatan",
+      "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan",
       "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2"
     ];
     var divisionHeaders = [];
@@ -567,7 +567,7 @@ function backupToCsv(rowData) {
     // Nilai baseline
     valueMap["Timestamp"] = rowData["Timestamp"];
     valueMap["Nama Lengkap"] = rowData["Nama Lengkap"];
-    valueMap["NIM"] = rowData["NIM"];
+    valueMap["NRP"] = rowData["NRP"];
     valueMap["Departemen"] = rowData["Departemen"];
     valueMap["Angkatan"] = rowData["Angkatan"];
     valueMap["No WhatsApp"] = rowData["No WhatsApp"];

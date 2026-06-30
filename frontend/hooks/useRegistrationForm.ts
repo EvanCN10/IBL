@@ -18,7 +18,7 @@ import {
 
 export const initialStepData = (): StepData => ({
   nama: "",
-  nim: "",
+  nrp: "",
   whatsapp: "",
   lineId: "",
   departemen: "",
@@ -48,6 +48,8 @@ export const useRegistrationForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showPortfolioModal, setShowPortfolioModal] = useState(false);
+
+  const clearError = useCallback(() => setSubmitError(null), []);
 
   const getStepConfig = () => {
     switch (step) {
@@ -182,7 +184,7 @@ export const useRegistrationForm = () => {
       const info = formData.informasiUmum;
       if (
         !info.nama?.trim() ||
-        !info.nim?.trim() ||
+        !info.nrp?.trim() ||
         !info.whatsapp?.trim() ||
         !info.lineId?.trim() ||
         !info.departemen?.trim() ||
@@ -292,7 +294,7 @@ export const useRegistrationForm = () => {
         const compiledData: RegisterFormData = {
           informasiUmum: {
             nama: formData.informasiUmum.nama || "",
-            nim: formData.informasiUmum.nim || "",
+            nrp: formData.informasiUmum.nrp || "",
             whatsapp: formData.informasiUmum.whatsapp || "",
             lineId: formData.informasiUmum.lineId || "",
             departemen: formData.informasiUmum.departemen || "",
@@ -366,6 +368,7 @@ export const useRegistrationForm = () => {
     handleNext,
     handleBack,
     handleReset,
+    clearError,
   };
 };
 

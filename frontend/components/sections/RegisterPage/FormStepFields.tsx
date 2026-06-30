@@ -28,9 +28,9 @@ export const FormStepFields = ({
           onChange={(val: string) => updateField("nama", val)}
         />
         <InputField
-          label="NIM *"
-          value={currentData.nim || ""}
-          onChange={(val: string) => updateField("nim", val)}
+          label="NRP *"
+          value={currentData.nrp || ""}
+          onChange={(val: string) => updateField("nrp", val)}
         />
         <InputField
           label="No. WhatsApp *"

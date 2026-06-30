@@ -10,6 +10,7 @@ import { FormStepFields } from "./FormStepFields";
 import { UploadStep } from "./UploadStep";
 import { PortfolioReminderModal } from "./PortfolioReminderModal";
 import { SubmitLoadingScreen } from "./SubmitLoadingScreen";
+import { ValidationErrorToast } from "./ValidationErrorToast";
 import { noiseBg } from "@/constants/registerStyles";
 import { StepData } from "@/types/register";
 
@@ -71,6 +72,7 @@ export const FormSection = () => {
     dismissPortfolioModal,
     handleNext,
     handleBack,
+    clearError,
   } = useRegistrationForm();
 
   if (isSubmitted) {
@@ -269,12 +271,6 @@ export const FormSection = () => {
                     gap: "var(--form-card-gap)",
                   }}
                 >
-                  {submitError && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative font-body text-sm mb-4">
-                      <strong className="font-bold">Error: </strong>
-                      <span className="block sm:inline">{submitError}</span>
-                    </div>
-                  )}
                   <FormStepFields
                     step={step}
                     formData={formData}
@@ -328,6 +324,9 @@ export const FormSection = () => {
 
       {/* Loading screen saat submit pendaftaran */}
       {isSubmitting && <SubmitLoadingScreen />}
+
+      {/* Popup modal validasi error (auto-dismiss 3 detik) */}
+      <ValidationErrorToast message={submitError} onDismiss={clearError} />
     </div>
   );
 };

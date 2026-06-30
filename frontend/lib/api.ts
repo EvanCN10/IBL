@@ -16,7 +16,7 @@ export async function submitRegistration(
   // Compile the final payload
   const payload = {
     nama: formData.informasiUmum.nama,
-    nim: formData.informasiUmum.nim,
+    nrp: formData.informasiUmum.nrp,
     whatsapp: formData.informasiUmum.whatsapp,
     lineId: formData.informasiUmum.lineId,
     departemen: formData.informasiUmum.departemen,

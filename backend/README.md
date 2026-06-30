@@ -7,9 +7,9 @@ Backend ini dikembangkan menggunakan **Google Apps Script (GAS)** untuk menginte
 ## 🔗 Link Aset Google Workspace (Kepanitiaan)
 Berikut adalah link aset Google yang telah terhubung ke backend:
 * **Google Spreadsheet (Database Respon)**:
-  👉 [IBL 2K26 - Database Pendaftaran Staff](https://docs.google.com/spreadsheets/d/1_Vfxb8PDrgg2eFsNQlZXBBOMgqKGqhoyUg52kGKALP8/edit?usp=sharing)
+  👉 [IBL 2K26 - Database Pendaftaran Staff](https://docs.google.com/spreadsheets/d/172zZSLR8yvFnwesEMcvwIo8QLByZ-0eLoQw5uzyK-cc/edit?usp=sharing)
 * **Google Drive (Penyimpanan Berkas)**:
-  👉 [IBL 2K26 - Berkas Pendaftaran Staff](https://drive.google.com/drive/folders/1tHOOJXFDu1S-hwdvB4pWo8aj1orP0bUY?usp=sharing)
+  👉 [IBL 2K26 - Berkas Pendaftaran Staff](https://drive.google.com/drive/folders/1PxnZkUf507tB_n8L6X1wCYIrqwy1frn3?usp=sharing)
 * **Google Drive Backup (Backup CSV Pendaftaran)**:
   👉 [IBL 2K26 - Backup CSV Pendaftaran Staff](https://drive.google.com/drive/folders/1oHm0-oiUksJ5K6cNmXqhb8hbGQm_h-0B?usp=sharing)
 
@@ -20,7 +20,7 @@ Berikut adalah link aset Google yang telah terhubung ke backend:
 1. **Google Apps Script (`backend/code.js`)**:
    * **doPost(e) Entrypoint**: Menerima request POST data pendaftar yang dikirim oleh frontend.
    * **Penyimpanan Berkas di Google Drive**: Mengambil berkas (CV, KTM, Twibbon, Bukti Follow, Portofolio) dalam format Base64 dari frontend, men-decode, dan mengunggahnya ke folder Drive panitia dengan struktur:
-     `Parent Folder` > `Nama Subdivisi` > `[Nama Pendaftar] - [NIM]` > `berkas`
+     `Parent Folder` > `Nama Subdivisi` > `[Nama Pendaftar] - [NRP]` > `berkas`
      *(Jika pendaftar memilih 2 subdivisi, berkas akan disimpan di folder kedua divisi tersebut agar memudahkan penilaian masing-masing koordinator divisi).*
    * **Pencatatan Google Spreadsheet**: Mengelola tab sheet otomatis per divisi di Spreadsheet utama. Jika tab baru dibuat, script otomatis mengisi kolom header awal beserta **kolom dinamis** untuk seluruh pertanyaan divisi dan studi kasus.
    * **Sheet Master "Semua Form"**: Setiap submit juga mencatat satu baris ringkasan pendaftar ke tab `Semua Form` (menampung seluruh pendaftar lintas divisi) — berisi data dasar, pilihan subdivisi, dan link berkas.
@@ -32,11 +32,21 @@ Berikut adalah link aset Google yang telah terhubung ke backend:
    * **Visual Feedback**: Menambahkan status loading (`isSubmitting`) dan error handling (`submitError`) pada tombol navigasi form.
    * **Konfigurasi Git & Env**: Memasukkan file `.env` ke Git agar tim Anda bisa langsung mengunduh repositori dan menjalankannya tanpa perlu mengonfigurasi API Web App berulang kali.
 
+### ✨ Update Terbaru (Juni 2026)
+* **Migrasi ke Akun Resmi**: Folder Drive dan Spreadsheet sudah dialihkan sepenuhnya ke akun Google Workspace resmi IBL 2K26.
+* **Bug Fix Duplikasi Kolom Damen**: Memperbaiki isu di mana pertanyaan divisi Damen membuat kolom ganda di spreadsheet akibat perubahan teks pertanyaan (dari "give" ke "berikan"). Sheet sekarang menampung jawaban dengan benar dan rapi.
+* **Perbaikan UI Modal Peringatan (Error Validation)**: Notifikasi jika pendaftar melewatkan pertanyaan wajib kini muncul sebagai pop-up animasi yang elegan di tengah layar (terlepas dari isu scaling browser) dan akan tertutup otomatis setelah 3 detik berkat implementasi **React Portal**.
+* **Standardisasi Istilah**: Memastikan seluruh sistem (Frontend & Backend) menggunakan istilah **NRP** (bukan NIM) secara konsisten.
+
 ---
 
 ## 🚀 Link Project Google Apps Script (GAS)
 Project Apps Script yang aktif dan digunakan bersama dapat diakses langsung oleh tim melalui link berikut:
 👉 [Google Apps Script Editor - IBL 2K26 Backend Oprec Staff](https://script.google.com/home/projects/122563B8yc4tnk8yM2fsjxJ2Tuw5zkfkH_X8qySUwjpDMxgOE0nv-MLag/edit)
+
+Berikut adalah URL hasil Deployment untuk dihubungkan ke Frontend (`.env`):
+👉 **URL Aplikasi Web**: `https://script.google.com/macros/s/AKfycbx9TSpeSa7EdjJDRIg_JB1Set5OVnV-r6590XtmANQA5h0MGps_BvH2wtyHIYzebHPe/exec`
+👉 **Library URL**: `https://script.google.com/macros/library/d/122563B8yc4tnk8yM2fsjxJ2Tuw5zkfkH_X8qySUwjpDMxgOE0nv-MLag/6`
 
 Teman satu tim Anda tidak perlu membuat project baru dari awal, mereka cukup membuka link di atas untuk melihat kode atau melakukan deployment ulang jika diperlukan.
 
