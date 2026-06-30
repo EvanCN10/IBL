@@ -13,31 +13,9 @@ export default function Register() {
   const scale = useScaleRatio(1440);
 
   useEffect(() => {
-    let imageLoaded = false;
-    let timerFinished = false;
-
-    const checkFinished = () => {
-      if (imageLoaded && timerFinished) {
-        setIsLoading(false);
-      }
-    };
-
-    // Preload background image
-    const img = new window.Image();
-    img.src = "/images/Full_Page_Desktop.webp";
-    img.onload = () => {
-      imageLoaded = true;
-      checkFinished();
-    };
-    img.onerror = () => {
-      imageLoaded = true;
-      checkFinished();
-    };
-
     // Minimum delay of 1.2s for smooth loading animation
     const timer = setTimeout(() => {
-      timerFinished = true;
-      checkFinished();
+      setIsLoading(false);
     }, 1200);
 
     return () => clearTimeout(timer);
