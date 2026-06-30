@@ -13,7 +13,7 @@ const InputField: React.FC<InputFieldProps> = ({
   label,
   value,
   onChange,
-  placeholder = "Placeholder text",
+  placeholder = "Ketik di sini...",
   type = "text",
   error,
 }) => {

@@ -15,7 +15,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   options,
   selected,
   onSelect,
-  placeholder = "Placeholder text",
+  placeholder = "Pilih...",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
