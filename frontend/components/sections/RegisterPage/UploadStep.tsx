@@ -96,7 +96,7 @@ const UploadSlot: React.FC<UploadSlotProps> = ({
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        className="hidden"
+        className="absolute pointer-events-none opacity-0 w-px h-px"
         accept={accept}
       />
       <h4 className="font-crosner text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-normal text-black uppercase tracking-widest text-center leading-tight mb-1 sm:mb-2 lg:mb-3 group-hover:-translate-y-0.5 group-hover:scale-103 transition-all duration-300 ease-out">
