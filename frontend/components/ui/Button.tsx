@@ -1,11 +1,9 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: React.ReactNode;
-}
+type ButtonProps = HTMLMotionProps<"button">;
 
-const Button: React.FC<ButtonProps> = ({ children, className = "", ...props }) => {
+const Button = ({ children, className = "", ...props }: ButtonProps) => {
   return (
     <motion.button
       {...props}

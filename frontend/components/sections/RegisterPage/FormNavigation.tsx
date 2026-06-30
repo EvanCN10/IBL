@@ -5,17 +5,19 @@ import { motion } from "framer-motion";
 
 interface FormNavigationProps {
   step: number;
-  setStep: (step: number) => void;
+  goToStep: (step: number) => void;
   handleNext: () => void;
   handleBack: () => void;
+  isSubmitting?: boolean;
 }
 
-export const FormNavigation: React.FC<FormNavigationProps> = ({
+export const FormNavigation = ({
   step,
-  setStep,
+  goToStep,
   handleNext,
   handleBack,
-}) => {
+  isSubmitting = false,
+}: FormNavigationProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -36,7 +38,7 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         style={{ width: "var(--btn-width)" }}
       >
         {step > 1 ? (
-          <Button onClick={handleBack}>BACK</Button>
+          <Button onClick={handleBack} disabled={isSubmitting}>BACK</Button>
         ) : (
           <div 
             style={{
@@ -54,11 +56,14 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
       >
         {[1, 2, 3, 4].map((s) => {
           const isActive = s === step;
+          // Bola saat ini, sebelumnya, atau tepat +1 berikutnya boleh diklik.
+          // Bola di atasnya (lompatan) dimatikan agar navigasi bertahap.
+          const isReachable = s <= step + 1;
           return (
             <div
               key={s}
-              onClick={() => setStep(s)}
-              className="relative cursor-pointer transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)]"
+              onClick={isReachable && !isSubmitting ? () => goToStep(s) : undefined}
+              className={`relative transition-all duration-300 ease-out filter drop-shadow-[2px_2px_0px_rgba(0,0,0,1.00)] ${isReachable ? "cursor-pointer" : "cursor-not-allowed opacity-40"}`}
               style={{
                 width: isActive ? "var(--nav-ball-active-size)" : "var(--nav-ball-inactive-size)",
                 height: isActive ? "var(--nav-ball-active-size)" : "var(--nav-ball-inactive-size)",
@@ -79,8 +84,8 @@ export const FormNavigation: React.FC<FormNavigationProps> = ({
         className="flex justify-end"
         style={{ width: "var(--btn-width)" }}
       >
-        <Button onClick={handleNext}>
-          {step === 4 ? "SUBMIT" : "NEXT"}
+        <Button onClick={handleNext} disabled={isSubmitting}>
+          {isSubmitting ? "SUBMITTING..." : step === 4 ? "SUBMIT" : "NEXT"}
         </Button>
       </div>
     </motion.div>

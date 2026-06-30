@@ -8,6 +8,9 @@ import { FormNavigation } from "./FormNavigation";
 import { FormSuccessScreen } from "./FormSuccessScreen";
 import { FormStepFields } from "./FormStepFields";
 import { UploadStep } from "./UploadStep";
+import { PortfolioReminderModal } from "./PortfolioReminderModal";
+import { SubmitLoadingScreen } from "./SubmitLoadingScreen";
+import { ValidationErrorToast } from "./ValidationErrorToast";
 import { noiseBg } from "@/constants/registerStyles";
 import { StepData } from "@/types/register";
 
@@ -54,16 +57,22 @@ const TitleHeader = ({ step, style }: { step: number; style?: React.CSSPropertie
 export const FormSection = () => {
   const {
     step,
-    setStep,
+    goToStep,
     isSubmitted,
+    isSubmitting,
+    submitError,
     currentType,
-    currentTitle,
     currentData,
     formData,
     updateField,
     updateUploadField,
+    removeUploadField,
+    rawFiles,
+    showPortfolioModal,
+    dismissPortfolioModal,
     handleNext,
     handleBack,
+    clearError,
   } = useRegistrationForm();
 
   if (isSubmitted) {
@@ -263,6 +272,8 @@ export const FormSection = () => {
                   }}
                 >
                   <FormStepFields
+                    step={step}
+                    formData={formData}
                     currentData={currentData as StepData}
                     updateField={updateField}
                   />
@@ -286,10 +297,14 @@ export const FormSection = () => {
               <TitleHeader step={step} style={{ top: step === 1 ? "0px" : step === 4 ? "-48px" : "0px" }} />
 
               <UploadStep
-                uploadData={formData.uploadBerkas}
-                updateUploadField={updateUploadField}
-                style={{ top: "166px" }}
-              />
+                  formData={formData}
+                  uploadData={formData.uploadBerkas}
+                  rawFiles={rawFiles}
+                  updateUploadField={updateUploadField}
+                  removeUploadField={removeUploadField}
+                  submitError={submitError}
+                  style={{ top: "166px" }}
+                />
             </motion.div>
           )}
         </motion.div>
@@ -297,11 +312,21 @@ export const FormSection = () => {
         {/* Navigation & Step Indicator Row */}
         <FormNavigation
           step={step}
-          setStep={setStep}
+          goToStep={goToStep}
           handleNext={handleNext}
           handleBack={handleBack}
+          isSubmitting={isSubmitting}
         />
       </div>
+
+      {/* Pengingat portofolio untuk divisi SMM/Website */}
+      <PortfolioReminderModal open={showPortfolioModal} onClose={dismissPortfolioModal} />
+
+      {/* Loading screen saat submit pendaftaran */}
+      {isSubmitting && <SubmitLoadingScreen />}
+
+      {/* Popup modal validasi error (auto-dismiss 3 detik) */}
+      <ValidationErrorToast message={submitError} onDismiss={clearError} />
     </div>
   );
 };
