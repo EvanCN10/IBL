@@ -20,6 +20,7 @@ export interface UploadData {
 
 export interface RegisterFormData {
   informasiUmum: StepData;
+  pertanyaanGeneral: StepData;
   subdivisi1: StepData;
   subdivisi2: StepData;
   uploadBerkas: UploadData;
