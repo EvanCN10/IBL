@@ -29,10 +29,13 @@ const getTitleSvg = (step: number) => {
     case 1:
       return infoUmumText;
     case 2:
-      return subdivisi2Text;
+      // Fallback: Using infoUmumText for Pertanyaan General until new SVG is available
+      return infoUmumText;
     case 3:
-      return subdivisi3Text;
+      return subdivisi2Text;
     case 4:
+      return subdivisi3Text;
+    case 5:
       return uploadBerkasText;
     default:
       return infoUmumText;
@@ -45,7 +48,7 @@ const TitleHeader = ({ step, style }: { step: number; style?: React.CSSPropertie
     <div
       className="absolute left-1/2 z-20 -translate-x-1/2 -rotate-3"
       style={{
-        top: step === 1 ? "1677px" : step === 4 ? "1629px" : "1677px",
+        top: step === 1 ? "1677px" : step === 5 ? "1629px" : "1677px",
         ...style,
       }}
     >
@@ -245,7 +248,7 @@ export const FormSection = () => {
               className="w-full h-full relative"
             >
               {/* Header Title Bubble */}
-              <TitleHeader step={step} style={{ top: step === 1 ? "0px" : step === 4 ? "-48px" : "0px" }} />
+              <TitleHeader step={step} style={{ top: step === 1 ? "0px" : step === 5 ? "-48px" : "0px" }} />
 
               {/* Form Card/Grid Container (Figma top: 1843px, relative: 166px) */}
               <div
@@ -294,7 +297,7 @@ export const FormSection = () => {
               className="w-full h-full relative"
             >
               {/* Header Title Bubble for Upload Berkas */}
-              <TitleHeader step={step} style={{ top: step === 1 ? "0px" : step === 4 ? "-48px" : "0px" }} />
+              <TitleHeader step={step} style={{ top: step === 1 ? "0px" : step === 5 ? "-48px" : "0px" }} />
 
               <UploadStep
                   formData={formData}

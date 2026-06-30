@@ -70,8 +70,48 @@ export const FormStepFields = ({
     );
   }
 
+  // STEP 2: PERTANYAAN GENERAL
+  if (step === 2) {
+    const { GENERAL_QUESTIONS } = require("@/constants/questions");
+    return (
+      <div className="flex flex-col gap-5">
+        <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-wider uppercase border-l-4 border-[#2B918E] pl-2 mb-1">
+          Pertanyaan General
+        </h4>
+        {GENERAL_QUESTIONS.map((q: string, idx: number) => (
+          <div key={`gen-q-${idx}`} className="flex flex-col w-full text-left">
+            <label 
+              className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
+              style={{ 
+                fontSize: "var(--form-font-size)",
+                marginBottom: "var(--form-margin-bottom)"
+              }}
+            >
+              {idx + 1}. {q} *
+            </label>
+            <textarea
+              value={currentData[q] || ""}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField(q, e.target.value)}
+              placeholder="Tulis jawabanmu di sini..."
+              className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-[#2B918E] focus:ring-1 focus:ring-[#2B918E] transition-colors shadow-inner resize-y"
+              style={{
+                fontSize: "var(--form-font-size)",
+                paddingTop: "var(--form-padding-y)",
+                paddingBottom: "var(--form-padding-y)",
+                paddingLeft: "var(--form-padding-x)",
+                paddingRight: "var(--form-padding-x)",
+                minHeight: "120px",
+                borderRadius: "calc(var(--form-font-size) * 0.43)"
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   // Determine which division choice this step is for
-  const isChoice1 = step === 2;
+  const isChoice1 = step === 3;
   const divisionChoice = isChoice1 
     ? formData.informasiUmum.subdivisi1 
     : formData.informasiUmum.subdivisi2;

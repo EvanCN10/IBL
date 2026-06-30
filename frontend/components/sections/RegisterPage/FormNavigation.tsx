@@ -54,7 +54,7 @@ export const FormNavigation = ({
         className="flex items-center justify-center"
         style={{ gap: "var(--nav-ball-gap)" }}
       >
-        {[1, 2, 3, 4].map((s) => {
+        {[1, 2, 3, 4, 5].map((s) => {
           const isActive = s === step;
           // Bola saat ini, sebelumnya, atau tepat +1 berikutnya boleh diklik.
           // Bola di atasnya (lompatan) dimatikan agar navigasi bertahap.
@@ -85,7 +85,7 @@ export const FormNavigation = ({
         style={{ width: "var(--btn-width)" }}
       >
         <Button onClick={handleNext} disabled={isSubmitting}>
-          {isSubmitting ? "SUBMITTING..." : step === 4 ? "SUBMIT" : "NEXT"}
+          {isSubmitting ? "SUBMITTING..." : step === 5 ? "SUBMIT" : "NEXT"}
         </Button>
       </div>
     </motion.div>
