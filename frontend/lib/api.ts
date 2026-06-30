@@ -1,4 +1,4 @@
-import { RegisterFormData, FileData } from "@/types/register";
+import { RegisterFormData, FileData, UploadData } from "@/types/register";
 import { DIVISION_QUESTIONS } from "../constants/questions";
 
 /**
@@ -11,7 +11,7 @@ import { DIVISION_QUESTIONS } from "../constants/questions";
 export async function submitRegistration(
   url: string,
   formData: RegisterFormData,
-  rawFiles: { [key: string]: FileData }
+  rawFiles: Partial<Record<keyof UploadData, FileData>>
 ) {
   // Compile the final payload
   const payload = {
@@ -68,7 +68,7 @@ function isStudyCaseQuestion(division: string, question: string): boolean {
     if (divData && divData.studyCases) {
       return divData.studyCases.includes(question);
     }
-  } catch (e) {
+  } catch {
     // fallback
   }
   return false;

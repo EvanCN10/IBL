@@ -1,6 +1,8 @@
 import React from "react";
-import { UploadData, FileData } from "@/types/register";
+import { UploadData, FileData, RegisterFormData } from "@/types/register";
 import { noiseBg } from "@/constants/registerStyles";
+import { previewFileData } from "@/lib/utils";
+import { PORTFOLIO_REQUIRED_DIVISIONS } from "@/constants/registerForm";
 
 interface UploadSlotProps {
   title: string;
@@ -11,23 +13,42 @@ interface UploadSlotProps {
   allowedExtensions?: string[];
   allowedExtensionsLabel?: string;
   maxSizeMB?: number;
+  fileData?: FileData;
+  onRemove?: () => void;
 }
 
-const UploadSlot: React.FC<UploadSlotProps> = ({ 
-  title, 
-  value, 
-  onChange, 
-  className = "", 
-  accept, 
-  allowedExtensions, 
-  allowedExtensionsLabel, 
-  maxSizeMB = 10 
+const UploadSlot: React.FC<UploadSlotProps> = ({
+  title,
+  value,
+  onChange,
+  className = "",
+  accept,
+  allowedExtensions,
+  allowedExtensionsLabel,
+  maxSizeMB = 10,
+  fileData,
+  onRemove,
 }) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [localError, setLocalError] = React.useState<string | null>(null);
 
   const handleClick = () => {
     fileInputRef.current?.click();
+  };
+
+  // Buka berkas yang sudah di-upload di tab baru untuk pratinjau.
+  // stopPropagation agar tidak memicu dialog pilih file milik container.
+  const handlePreview = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (fileData) previewFileData(fileData);
+  };
+
+  // Hapus berkas: kosongkan nama file di state parent + reset input file
+  // agar file yang sama bisa dipilih ulang.
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onRemove?.();
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +88,7 @@ const UploadSlot: React.FC<UploadSlotProps> = ({
   };
 
   return (
-    <div 
+    <div
       onClick={handleClick}
       className={`p-3 sm:p-4 md:p-5 lg:p-6 flex flex-col items-center justify-center gap-1 sm:gap-1.5 md:gap-2 select-none cursor-pointer group hover:bg-[#D1EAE5]/20 transition-all duration-300 ease-out ${className}`}
     >
@@ -78,7 +99,7 @@ const UploadSlot: React.FC<UploadSlotProps> = ({
         className="hidden"
         accept={accept}
       />
-      <h4 className="font-crosner text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-normal text-black uppercase tracking-widest mb-1 sm:mb-2 lg:mb-3 group-hover:-translate-y-0.5 group-hover:scale-103 transition-all duration-300 ease-out">
+      <h4 className="font-crosner text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-normal text-black uppercase tracking-widest text-center leading-tight mb-1 sm:mb-2 lg:mb-3 group-hover:-translate-y-0.5 group-hover:scale-103 transition-all duration-300 ease-out">
         {title}
       </h4>
       <div className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 text-center">
@@ -98,15 +119,56 @@ const UploadSlot: React.FC<UploadSlotProps> = ({
             />
           </svg>
         </div>
-        
+
         {localError ? (
           <span className="font-body text-[10px] sm:text-xs text-red-600 font-semibold px-2 py-0.5 max-w-[140px] sm:max-w-[180px] bg-red-50 border border-red-200 rounded leading-snug">
             {localError}
           </span>
         ) : value ? (
-          <span className="font-body text-[10px] sm:text-xs text-gray-700 font-semibold bg-white border border-gray-300 rounded px-2 py-0.5 max-w-[140px] sm:max-w-[180px] truncate shadow-sm group-hover:border-gray-400 group-hover:shadow-md transition-all duration-300">
-            {value}
-          </span>
+          <div className="flex items-center gap-1 max-w-[180px] sm:max-w-[220px]">
+            <span className="font-body text-[10px] sm:text-xs text-gray-700 font-semibold bg-white border border-gray-300 rounded px-2 py-0.5 truncate flex-1 min-w-0 shadow-sm group-hover:border-gray-400 group-hover:shadow-md transition-all duration-300 ease-out">
+              {value}
+            </span>
+            {fileData && (
+              <button
+                type="button"
+                onClick={handlePreview}
+                title="Lihat berkas"
+                aria-label="Lihat berkas"
+                className="shrink-0 p-1 rounded text-gray-500 hover:text-[#2B918E] hover:bg-[#D1EAE5]/40 transition-colors duration-200"
+              >
+                <svg
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            )}
+            {onRemove && (
+              <button
+                type="button"
+                onClick={handleRemove}
+                title="Hapus berkas"
+                aria-label="Hapus berkas"
+                className="shrink-0 p-1 rounded text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors duration-200"
+              >
+                <svg
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            )}
+          </div>
         ) : (
           <div className="flex flex-col items-center">
             <span className="font-body text-[9px] sm:text-xs text-gray-500">Drop files here or click to upload</span>
@@ -123,20 +185,21 @@ const UploadSlot: React.FC<UploadSlotProps> = ({
 };
 
 interface UploadStepProps {
-  formData: any; // We use any or RegisterFormData to avoid circular/missing import type warnings
+  formData: RegisterFormData;
   uploadData: UploadData;
+  rawFiles: { [key in keyof UploadData]?: FileData };
   updateUploadField: (field: keyof UploadData, value: string, fileData?: FileData) => void;
+  removeUploadField: (field: keyof UploadData) => void;
   submitError?: string | null;
   style?: React.CSSProperties;
 }
 
-export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, updateUploadField, submitError, style }) => {
+export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, rawFiles, updateUploadField, removeUploadField, submitError, style }) => {
   const isPortfolioRequired = React.useMemo(() => {
     if (!formData || !formData.informasiUmum) return false;
     const p1 = formData.informasiUmum.subdivisi1;
     const p2 = formData.informasiUmum.subdivisi2;
-    const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro", "Front-End", "Back-End", "Branding"];
-    return portfolioRequiredDivisions.includes(p1) || portfolioRequiredDivisions.includes(p2);
+    return PORTFOLIO_REQUIRED_DIVISIONS.includes(p1) || PORTFOLIO_REQUIRED_DIVISIONS.includes(p2);
   }, [formData]);
 
   return (
@@ -166,7 +229,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
       <div className="absolute top-[33.33%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center rotate-[3deg] pointer-events-none z-10" />
       <div className="absolute top-[66.66%] -left-4 -right-4 h-[8px] bg-[#B93310] origin-center -rotate-[3deg] pointer-events-none z-10" />
       {/* Vertical Divider 1 (Row 1) - Slanted right */}
-      <div 
+      <div
         className="absolute left-1/2 w-[8px] bg-[#B93310] origin-center pointer-events-none z-10"
         style={{
           top: "-4px",
@@ -176,7 +239,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
         }}
       />
       {/* Vertical Divider 2 (Row 2) - Slanted left */}
-      <div 
+      <div
         className="absolute left-1/2 w-[8px] bg-[#B93310] origin-center pointer-events-none z-10"
         style={{
           top: "calc(33.33% - 4px)",
@@ -185,13 +248,15 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
           transform: "rotate(6deg)",
         }}
       />
- 
+
       {/* Row 1 - CV & KTM */}
       <div className="flex h-1/3 relative z-20">
         <UploadSlot
           title="CV *"
           value={uploadData.cv}
           onChange={(name, data) => updateUploadField("cv", name, data)}
+          fileData={rawFiles.cv}
+          onRemove={() => removeUploadField("cv")}
           className="w-1/2"
           accept=".pdf,.doc,.docx"
           allowedExtensions={["pdf", "doc", "docx"]}
@@ -201,41 +266,49 @@ export const UploadStep: React.FC<UploadStepProps> = ({ formData, uploadData, up
           title="KTM *"
           value={uploadData.ktm}
           onChange={(name, data) => updateUploadField("ktm", name, data)}
+          fileData={rawFiles.ktm}
+          onRemove={() => removeUploadField("ktm")}
           className="w-1/2"
           accept=".pdf,.png,.jpg,.jpeg"
           allowedExtensions={["pdf", "png", "jpg", "jpeg"]}
           allowedExtensionsLabel="PDF, PNG, JPG, JPEG"
         />
       </div>
- 
-      {/* Row 2 - TWIBBON & BUKTI FOLLOW */}
+
+      {/* Row 2 - TWIBBON & BUKTI FOLLOW & REPOST */}
       <div className="flex h-1/3 relative z-20">
         <UploadSlot
           title="TWIBBON *"
           value={uploadData.twibbon}
           onChange={(name, data) => updateUploadField("twibbon", name, data)}
+          fileData={rawFiles.twibbon}
+          onRemove={() => removeUploadField("twibbon")}
           className="w-1/2"
           accept=".png,.jpg,.jpeg"
           allowedExtensions={["png", "jpg", "jpeg"]}
           allowedExtensionsLabel="PNG, JPG, JPEG"
         />
         <UploadSlot
-          title="BUKTI FOLLOW *"
+          title="BUKTI FOLLOW DAN REPOST *"
           value={uploadData.buktiFollow}
           onChange={(name, data) => updateUploadField("buktiFollow", name, data)}
+          fileData={rawFiles.buktiFollow}
+          onRemove={() => removeUploadField("buktiFollow")}
           className="w-1/2"
-          accept=".png,.jpg,.jpeg"
-          allowedExtensions={["png", "jpg", "jpeg"]}
-          allowedExtensionsLabel="PNG, JPG, JPEG"
+          accept=".pdf,.doc,.docx,.zip,.rar"
+          allowedExtensions={["pdf", "doc", "docx", "zip", "rar"]}
+          allowedExtensionsLabel="PDF, DOC, DOCX, ZIP, RAR"
         />
       </div>
- 
+
       {/* Row 3 - PORTOFOLIO */}
       <div className="flex h-1/3 relative z-20">
         <UploadSlot
           title={isPortfolioRequired ? "PORTOFOLIO *" : "PORTOFOLIO (Opsional)"}
           value={uploadData.portofolio}
           onChange={(name, data) => updateUploadField("portofolio", name, data)}
+          fileData={rawFiles.portofolio}
+          onRemove={() => removeUploadField("portofolio")}
           className="w-full"
           accept=".pdf,.doc,.docx,.zip,.rar"
           allowedExtensions={["pdf", "doc", "docx", "zip", "rar"]}

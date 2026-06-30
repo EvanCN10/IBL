@@ -8,6 +8,8 @@ import { FormNavigation } from "./FormNavigation";
 import { FormSuccessScreen } from "./FormSuccessScreen";
 import { FormStepFields } from "./FormStepFields";
 import { UploadStep } from "./UploadStep";
+import { PortfolioReminderModal } from "./PortfolioReminderModal";
+import { SubmitLoadingScreen } from "./SubmitLoadingScreen";
 import { noiseBg } from "@/constants/registerStyles";
 import { StepData } from "@/types/register";
 
@@ -54,16 +56,19 @@ const TitleHeader = ({ step, style }: { step: number; style?: React.CSSPropertie
 export const FormSection = () => {
   const {
     step,
-    setStep,
+    goToStep,
     isSubmitted,
     isSubmitting,
     submitError,
     currentType,
-    currentTitle,
     currentData,
     formData,
     updateField,
     updateUploadField,
+    removeUploadField,
+    rawFiles,
+    showPortfolioModal,
+    dismissPortfolioModal,
     handleNext,
     handleBack,
   } = useRegistrationForm();
@@ -298,7 +303,9 @@ export const FormSection = () => {
               <UploadStep
                   formData={formData}
                   uploadData={formData.uploadBerkas}
+                  rawFiles={rawFiles}
                   updateUploadField={updateUploadField}
+                  removeUploadField={removeUploadField}
                   submitError={submitError}
                   style={{ top: "166px" }}
                 />
@@ -309,12 +316,18 @@ export const FormSection = () => {
         {/* Navigation & Step Indicator Row */}
         <FormNavigation
           step={step}
-          setStep={setStep}
+          goToStep={goToStep}
           handleNext={handleNext}
           handleBack={handleBack}
           isSubmitting={isSubmitting}
         />
       </div>
+
+      {/* Pengingat portofolio untuk divisi SMM/Website */}
+      <PortfolioReminderModal open={showPortfolioModal} onClose={dismissPortfolioModal} />
+
+      {/* Loading screen saat submit pendaftaran */}
+      {isSubmitting && <SubmitLoadingScreen />}
     </div>
   );
 };

@@ -1,14 +1,12 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: React.ReactNode;
-}
+type ButtonProps = HTMLMotionProps<"button">;
 
-const Button: React.FC<ButtonProps> = ({ children, className = "", ...props }) => {
+const Button = ({ children, className = "", ...props }: ButtonProps) => {
   return (
     <motion.button
-      {...(props as any)}
+      {...props}
       suppressHydrationWarning
       className={`bg-tosca outline outline-black inline-flex justify-center items-center font-hollywood text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none ${className}`}
       style={{

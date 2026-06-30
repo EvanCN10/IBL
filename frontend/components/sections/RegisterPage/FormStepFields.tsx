@@ -102,7 +102,7 @@ export const FormStepFields = ({
   if (!divisionData) {
     return (
       <div className="text-center p-6 text-red-500 font-body">
-        Error: Pertanyaan divisi "{divisionChoice}" tidak ditemukan.
+        Error: Pertanyaan divisi &ldquo;{divisionChoice}&rdquo; tidak ditemukan.
       </div>
     );
   }

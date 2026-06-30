@@ -6,10 +6,12 @@ Backend ini dikembangkan menggunakan **Google Apps Script (GAS)** untuk menginte
 
 ## 🔗 Link Aset Google Workspace (Kepanitiaan)
 Berikut adalah link aset Google yang telah terhubung ke backend:
-* **Google Spreadsheet (Database Respon)**: 
+* **Google Spreadsheet (Database Respon)**:
   👉 [IBL 2K26 - Database Pendaftaran Staff](https://docs.google.com/spreadsheets/d/1_Vfxb8PDrgg2eFsNQlZXBBOMgqKGqhoyUg52kGKALP8/edit?usp=sharing)
-* **Google Drive (Penyimpanan Berkas)**: 
+* **Google Drive (Penyimpanan Berkas)**:
   👉 [IBL 2K26 - Berkas Pendaftaran Staff](https://drive.google.com/drive/folders/1tHOOJXFDu1S-hwdvB4pWo8aj1orP0bUY?usp=sharing)
+* **Google Drive Backup (Backup CSV Pendaftaran)**:
+  👉 [IBL 2K26 - Backup CSV Pendaftaran Staff](https://drive.google.com/drive/folders/1oHm0-oiUksJ5K6cNmXqhb8hbGQm_h-0B?usp=sharing)
 
 ---
 
@@ -21,6 +23,8 @@ Berikut adalah link aset Google yang telah terhubung ke backend:
      `Parent Folder` > `Nama Subdivisi` > `[Nama Pendaftar] - [NIM]` > `berkas`
      *(Jika pendaftar memilih 2 subdivisi, berkas akan disimpan di folder kedua divisi tersebut agar memudahkan penilaian masing-masing koordinator divisi).*
    * **Pencatatan Google Spreadsheet**: Mengelola tab sheet otomatis per divisi di Spreadsheet utama. Jika tab baru dibuat, script otomatis mengisi kolom header awal beserta **kolom dinamis** untuk seluruh pertanyaan divisi dan studi kasus.
+   * **Sheet Master "Semua Form"**: Setiap submit juga mencatat satu baris ringkasan pendaftar ke tab `Semua Form` (menampung seluruh pendaftar lintas divisi) — berisi data dasar, pilihan subdivisi, dan link berkas.
+   * **Backup CSV Otomatis**: Setiap submit juga menambah satu baris ke file `backup_pendaftaran_IBL_2K26.csv` di folder Drive backup. Skema CSV mencakup **seluruh pertanyaan & study case dari semua divisi** (diberi prefix nama divisi); kolom divisi yang tidak dipilih otomatis berisi `-`.
 
 2. **Frontend Next.js Integration**:
    * **Pembacaan Berkas Base64**: Menambahkan pembacaan file dengan `FileReader` di frontend agar berkas biner di-encode menjadi string base64 sebelum dikirim ke API.
@@ -32,7 +36,7 @@ Berikut adalah link aset Google yang telah terhubung ke backend:
 
 ## 🚀 Link Project Google Apps Script (GAS)
 Project Apps Script yang aktif dan digunakan bersama dapat diakses langsung oleh tim melalui link berikut:
-👉 [Google Apps Script Editor - IBL 2K26 Backend Oprec Staff](https://script.google.com/d/1OkDg-WfdqjHFcJHX6oIa1JSX8s6KTKh5hpuExoDnF65dbt_CE10O1VyS/edit?usp=sharing)
+👉 [Google Apps Script Editor - IBL 2K26 Backend Oprec Staff](https://script.google.com/home/projects/122563B8yc4tnk8yM2fsjxJ2Tuw5zkfkH_X8qySUwjpDMxgOE0nv-MLag/edit)
 
 Teman satu tim Anda tidak perlu membuat project baru dari awal, mereka cukup membuka link di atas untuk melihat kode atau melakukan deployment ulang jika diperlukan.
 

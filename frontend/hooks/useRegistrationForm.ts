@@ -1,7 +1,20 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { RegisterFormData, StepData, UploadData, FileData } from "@/types/register";
 import { submitRegistration } from "@/lib/api";
 import { DIVISION_QUESTIONS } from "../constants/questions";
+import { PORTFOLIO_REQUIRED_DIVISIONS } from "../constants/registerForm";
+import {
+  isStorageAvailable,
+  loadFormState,
+  saveFormState,
+  clearFormState,
+  isSessionActive,
+  markSessionActive,
+  getAllFiles,
+  saveFile,
+  deleteFile,
+  clearAllFiles,
+} from "@/lib/storage";
 
 export const initialStepData = (): StepData => ({
   nama: "",
@@ -34,6 +47,7 @@ export const useRegistrationForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [showPortfolioModal, setShowPortfolioModal] = useState(false);
 
   const getStepConfig = () => {
     switch (step) {
@@ -78,12 +92,93 @@ export const useRegistrationForm = () => {
         ...prev,
         [field]: fileData,
       }));
+      if (hydratedRef.current && isStorageAvailable()) {
+        saveFile(field, fileData).catch(() => {});
+      }
     }
   };
 
-  const handleNext = async () => {
-    // STEP 1 VALIDATION
-    if (step === 1) {
+  const removeUploadField = (field: keyof UploadData) => {
+    setSubmitError(null); // Clear errors when user removes a file
+    setFormData((prev) => ({
+      ...prev,
+      uploadBerkas: {
+        ...prev.uploadBerkas,
+        [field]: "",
+      },
+    }));
+    setRawFiles((prev) => {
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+    if (hydratedRef.current && isStorageAvailable()) {
+      deleteFile(field).catch(() => {});
+    }
+  };
+
+  // Apakah pendaftar memilih divisi yang mewajibkan portofolio
+  const isPortfolioRequired = useCallback(() => {
+    const p1 = formData.informasiUmum.subdivisi1;
+    const p2 = formData.informasiUmum.subdivisi2;
+    return (
+      PORTFOLIO_REQUIRED_DIVISIONS.includes(p1) ||
+      PORTFOLIO_REQUIRED_DIVISIONS.includes(p2)
+    );
+  }, [formData.informasiUmum.subdivisi1, formData.informasiUmum.subdivisi2]);
+
+  const dismissPortfolioModal = useCallback(() => setShowPortfolioModal(false), []);
+
+  // --- Persistensi form (sessionStorage untuk teks, IndexedDB untuk berkas) ---
+  const hydratedRef = useRef(false);
+
+  // Restore saat mount (post-mount → aman dari hydration mismatch).
+  // Fresh session (browser baru dibuka) → bersihkan sisa file lama lebih dulu.
+  // Refresh (sesi berlanjut) → pulihkan teks + berkas.
+  useEffect(() => {
+    if (!isStorageAvailable()) return; // incognito / storage diblokir → skip persist
+
+    let cancelled = false;
+
+    const restore = async () => {
+      if (!isSessionActive()) {
+        await clearAllFiles().catch(() => {});
+        clearFormState();
+        markSessionActive();
+        hydratedRef.current = true;
+        return;
+      }
+
+      const persisted = loadFormState();
+      const files = await getAllFiles().catch(() => ({}));
+      if (cancelled) return;
+      if (persisted) {
+        setStep(persisted.step);
+        setFormData(persisted.formData);
+      }
+      if (files && Object.keys(files).length > 0) {
+        setRawFiles(files as { [key in keyof UploadData]?: FileData });
+      }
+      hydratedRef.current = true;
+    };
+
+    restore();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Simpan data teks (debounced 400ms). Hanya aktif setelah restore selesai
+  // supaya tidak menimpa storage dengan state awal yang kosong.
+  useEffect(() => {
+    if (!hydratedRef.current) return;
+    const timer = setTimeout(() => saveFormState({ step, formData }), 400);
+    return () => clearTimeout(timer);
+  }, [step, formData]);
+
+  // Validasi langkah 1-3 (data teks & jawaban). Mengembalikan pesan error atau null bila valid.
+  const validateStep = (stepNum: number): string | null => {
+    if (stepNum === 1) {
       const info = formData.informasiUmum;
       if (
         !info.nama?.trim() ||
@@ -95,53 +190,80 @@ export const useRegistrationForm = () => {
         !info.subdivisi1?.trim() ||
         info.subdivisi1 === "Pilih Subdivisi"
       ) {
-        setSubmitError("Mohon lengkapi seluruh informasi umum yang bertanda bintang (*).");
-        return;
+        return "Mohon lengkapi seluruh informasi umum yang bertanda bintang (*).";
       }
-      setSubmitError(null);
-      setStep((s) => s + 1);
-      return;
+      return null;
     }
-
-    // STEP 2 VALIDATION
-    if (step === 2) {
+    if (stepNum === 2) {
       const div1 = formData.informasiUmum.subdivisi1;
       if (div1 && div1 !== "Tidak Memilih" && div1 !== "Pilih Subdivisi") {
         const divData = DIVISION_QUESTIONS[div1];
         if (divData) {
-          const requiredQuestions = [...(divData.divisionQuestions || []), ...(divData.studyCases || [])];
-          for (const q of requiredQuestions) {
-            const ans = formData.subdivisi1[q];
-            if (!ans || !ans.trim()) {
-              setSubmitError("Mohon jawab seluruh pertanyaan subdivisi pilihan 1 (*).");
-              return;
+          const required = [...(divData.divisionQuestions || []), ...(divData.studyCases || [])];
+          for (const q of required) {
+            if (!formData.subdivisi1[q]?.trim()) {
+              return "Mohon jawab seluruh pertanyaan subdivisi pilihan 1 (*).";
             }
           }
         }
       }
-      setSubmitError(null);
-      setStep((s) => s + 1);
-      return;
+      return null;
     }
-
-    // STEP 3 VALIDATION
-    if (step === 3) {
+    if (stepNum === 3) {
       const div2 = formData.informasiUmum.subdivisi2;
       if (div2 && div2 !== "Tidak Memilih" && div2 !== "Pilih Subdivisi") {
         const divData = DIVISION_QUESTIONS[div2];
         if (divData) {
-          const requiredQuestions = [...(divData.divisionQuestions || []), ...(divData.studyCases || [])];
-          for (const q of requiredQuestions) {
-            const ans = formData.subdivisi2[q];
-            if (!ans || !ans.trim()) {
-              setSubmitError("Mohon jawab seluruh pertanyaan subdivisi pilihan 2 (*).");
-              return;
+          const required = [...(divData.divisionQuestions || []), ...(divData.studyCases || [])];
+          for (const q of required) {
+            if (!formData.subdivisi2[q]?.trim()) {
+              return "Mohon jawab seluruh pertanyaan subdivisi pilihan 2 (*).";
             }
           }
         }
       }
+      return null;
+    }
+    return null;
+  };
+
+  // Validasi langkah saat ini (1-3); bila valid kembalikan true (dan picu modal
+  // portofolio saat meninggalkan langkah 3). Dipakai bersama oleh handleNext & goToStep.
+  const advanceFrom = (fromStep: number): boolean => {
+    const error = validateStep(fromStep);
+    if (error) {
+      setSubmitError(error);
+      return false;
+    }
+    setSubmitError(null);
+    if (fromStep === 3 && isPortfolioRequired()) {
+      setShowPortfolioModal(true);
+    }
+    return true;
+  };
+
+  // Navigasi via klik bola step. Aturan:
+  // - ke langkah sebelumnya/saat ini: boleh (untuk review).
+  // - ke langkah +1 berikutnya: harus lulus validasi langkah saat ini.
+  // - melompat lebih dari 1 langkah ke depan: dilarang (bola dimatikan di UI).
+  const goToStep = (target: number) => {
+    if (target === step) return;
+    if (target < step) {
       setSubmitError(null);
-      setStep((s) => s + 1);
+      setStep(target);
+      return;
+    }
+    if (target > step + 1) {
+      setSubmitError("Lengkapi langkah ini terlebih dahulu sebelum melompat ke langkah lain.");
+      return;
+    }
+    if (advanceFrom(step)) setStep(target);
+  };
+
+  const handleNext = async () => {
+    // Langkah 1-3: validasi data teks/jawaban, lalu maju satu langkah.
+    if (step < 4) {
+      if (advanceFrom(step)) setStep((s) => s + 1);
       return;
     }
 
@@ -153,13 +275,8 @@ export const useRegistrationForm = () => {
         return;
       }
 
-      // Dynamic portfolio check
-      const p1 = formData.informasiUmum.subdivisi1;
-      const p2 = formData.informasiUmum.subdivisi2;
-      const portfolioRequiredDivisions = ["UIUX", "CnD", "MedPro", "Front-End", "Back-End", "Branding"];
-      const isPortfolioRequired = portfolioRequiredDivisions.includes(p1) || portfolioRequiredDivisions.includes(p2);
-
-      if (isPortfolioRequired && !uploads.portofolio) {
+      // Dynamic portfolio check (menggunakan helper di hook)
+      if (isPortfolioRequired() && !uploads.portofolio) {
         setSubmitError("Subdivisi pilihanmu mewajibkan portofolio. Mohon unggah berkas Portofolio (*).");
         return;
       }
@@ -188,11 +305,15 @@ export const useRegistrationForm = () => {
           uploadBerkas: formData.uploadBerkas
         };
 
-        await submitRegistration(gasUrl, compiledData, rawFiles as any);
+        await submitRegistration(gasUrl, compiledData, rawFiles);
         setIsSubmitted(true);
-      } catch (err: any) {
+        // Pendaftaran selesai → hapus draft dari storage (cegah submit ganda & data tertinggal)
+        clearFormState();
+        if (isStorageAvailable()) clearAllFiles().catch(() => {});
+      } catch (err: unknown) {
         console.error("Submission failed:", err);
-        setSubmitError(err.message || "Failed to submit. Please try again.");
+        const message = err instanceof Error ? err.message : "Failed to submit. Please try again.";
+        setSubmitError(message);
       } finally {
         setIsSubmitting(false);
       }
@@ -218,6 +339,10 @@ export const useRegistrationForm = () => {
     setIsSubmitted(false);
     setSubmitError(null);
     setIsSubmitting(false);
+    setShowPortfolioModal(false);
+    // Hapus draft dari storage saat reset
+    clearFormState();
+    if (isStorageAvailable()) clearAllFiles().catch(() => {});
   };
 
   return {
@@ -233,6 +358,11 @@ export const useRegistrationForm = () => {
     currentData,
     updateField,
     updateUploadField,
+    removeUploadField,
+    rawFiles,
+    showPortfolioModal,
+    dismissPortfolioModal,
+    goToStep,
     handleNext,
     handleBack,
     handleReset,

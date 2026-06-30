@@ -11,8 +11,11 @@
 // --- CONFIGURATION ---
 // IMPORTANT: Paste your Spreadsheet ID and Parent Drive Folder ID here.
 // If PARENT_FOLDER_ID is blank, a new folder "IBL 2K26 Oprec - Pendaftar" will be created in your root Drive.
-var SPREADSHEET_ID = "1_Vfxb8PDrgg2eFsNQlZXBBOMgqKGqhoyUg52kGKALP8"; 
-var PARENT_FOLDER_ID = "1tHOOJXFDu1S-hwdvB4pWo8aj1orP0bUY"; 
+var SPREADSHEET_ID = "1_Vfxb8PDrgg2eFsNQlZXBBOMgqKGqhoyUg52kGKALP8";
+var PARENT_FOLDER_ID = "1tHOOJXFDu1S-hwdvB4pWo8aj1orP0bUY";
+// Folder Google Drive untuk backup CSV pendaftaran (share sebagai Editor ke akun yang deploy GAS).
+var BACKUP_FOLDER_ID = "1oHm0-oiUksJ5K6cNmXqhb8hbGQm_h-0B";
+var BACKUP_CSV_NAME = "backup_pendaftaran_IBL_2K26.csv";
 
 // --- DIVISION QUESTIONS DATABASE ---
 // Extracted from All Divisi Pemberkasan.xlsx to automatically create headers
@@ -434,7 +437,32 @@ function doPost(e) {
       // Append the mapped row to sheet
       sheet.appendRow(newRowValues);
     }
-    
+
+    // 3. Catat ringkasan ke sheet master "Semua Form" (satu baris per pendaftar, lintas divisi).
+    // Link berkas diambil dari folder subdivisi pertama (file yang diupload identik di tiap divisi).
+    var masterFileUrls = (divisions.length > 0 && uploadedFiles[divisions[0].name]) ? uploadedFiles[divisions[0].name] : {};
+    logToMasterSheet(ss, timestamp, nama, nim, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, masterFileUrls);
+
+    // 4. Backup data pendaftar ke file CSV di folder Drive backup (best-effort).
+    backupToCsv({
+      "Timestamp": timestamp,
+      "Nama Lengkap": nama,
+      "NIM": nim,
+      "Departemen": departemen,
+      "Angkatan": angkatan,
+      "No WhatsApp": whatsapp,
+      "ID Line": lineId,
+      "Pilihan Subdivisi 1": subdivisi1,
+      "Pilihan Subdivisi 2": subdivisi2,
+      "answers1": answers1,
+      "answers2": answers2,
+      "Link CV": masterFileUrls["cv"] || "",
+      "Link KTM": masterFileUrls["ktm"] || "",
+      "Link Twibbon": masterFileUrls["twibbon"] || "",
+      "Link Bukti Follow": masterFileUrls["buktiFollow"] || "",
+      "Link Portofolio": masterFileUrls["portofolio"] || ""
+    });
+
     var responseObj = {
       status: "success",
       message: "Pendaftaran berhasil dicatat dan berkas diunggah.",
@@ -466,4 +494,144 @@ function getOrCreateSubFolder(parentFolder, folderName) {
   } else {
     return parentFolder.createFolder(folderName);
   }
+}
+
+/**
+ * Catat satu baris ringkasan pendaftar ke sheet master "Semua Form"
+ * (menampung seluruh pendaftar lintas divisi). Sheet dibuat otomatis bila belum ada.
+ */
+function logToMasterSheet(ss, timestamp, nama, nim, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, fileUrls) {
+  var sheetName = "Semua Form";
+  var sheet = ss.getSheetByName(sheetName);
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+  }
+
+  var headers = [
+    "Timestamp", "Nama Lengkap", "NIM", "Departemen", "Angkatan",
+    "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
+    "Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio"
+  ];
+
+  if (sheet.getLastColumn() === 0) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.setFrozenRows(1);
+  }
+
+  var row = [
+    timestamp, nama, nim, departemen, angkatan,
+    whatsapp, lineId, subdivisi1, subdivisi2,
+    fileUrls["cv"] || "", fileUrls["ktm"] || "", fileUrls["twibbon"] || "",
+    fileUrls["buktiFollow"] || "", fileUrls["portofolio"] || ""
+  ];
+  sheet.appendRow(row);
+}
+
+/**
+ * Backup data pendaftar ke file CSV di folder Drive backup (best-effort).
+ * File dibuat otomatis pada submit pertama. Kegagalan backup TIDAK membatalkan
+ * submit utama (penyimpanan Drive + Spreadsheet tetap sukses).
+ *
+ * Skema CSV = baseline + SELURUH pertanyaan semua divisi + link berkas, agar
+ * seluruh aktivitas tercatat. Jawaban divisi yang tidak dipilih otomatis "-".
+ */
+function backupToCsv(rowData) {
+  try {
+    if (!BACKUP_FOLDER_ID) return;
+    var folder = DriveApp.getFolderById(BACKUP_FOLDER_ID);
+
+    // Susun daftar kolom: baseline + seluruh pertanyaan tiap divisi + link berkas.
+    var baselineHeaders = [
+      "Timestamp", "Nama Lengkap", "NIM", "Departemen", "Angkatan",
+      "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2"
+    ];
+    var divisionHeaders = [];
+    for (var divName in DIVISION_DATA) {
+      var db = DIVISION_DATA[divName];
+      var qs = db.questions || [];
+      for (var q = 0; q < qs.length; q++) {
+        divisionHeaders.push(divName + " | Divisi Q: " + qs[q]);
+      }
+      var cs = db.cases || [];
+      for (var c = 0; c < cs.length; c++) {
+        divisionHeaders.push(divName + " | Study Case: " + cs[c]);
+      }
+    }
+    var fileHeaders = ["Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio"];
+    var headers = baselineHeaders.concat(divisionHeaders).concat(fileHeaders);
+
+    // Peta nilai: default "-" untuk kolom yang tidak diisi.
+    var valueMap = {};
+    for (var i = 0; i < headers.length; i++) valueMap[headers[i]] = "-";
+
+    // Nilai baseline
+    valueMap["Timestamp"] = rowData["Timestamp"];
+    valueMap["Nama Lengkap"] = rowData["Nama Lengkap"];
+    valueMap["NIM"] = rowData["NIM"];
+    valueMap["Departemen"] = rowData["Departemen"];
+    valueMap["Angkatan"] = rowData["Angkatan"];
+    valueMap["No WhatsApp"] = rowData["No WhatsApp"];
+    valueMap["ID Line"] = rowData["ID Line"];
+    valueMap["Pilihan Subdivisi 1"] = rowData["Pilihan Subdivisi 1"];
+    valueMap["Pilihan Subdivisi 2"] = rowData["Pilihan Subdivisi 2"];
+
+    // Isi jawaban subdivisi 1 & 2 ke kolom divisi terkait
+    fillAnswerColumns(valueMap, rowData["Pilihan Subdivisi 1"], rowData["answers1"] || []);
+    fillAnswerColumns(valueMap, rowData["Pilihan Subdivisi 2"], rowData["answers2"] || []);
+
+    // Link berkas
+    valueMap["Link CV"] = rowData["Link CV"];
+    valueMap["Link KTM"] = rowData["Link KTM"];
+    valueMap["Link Twibbon"] = rowData["Link Twibbon"];
+    valueMap["Link Bukti Follow"] = rowData["Link Bukti Follow"];
+    valueMap["Link Portofolio"] = rowData["Link Portofolio"];
+
+    // Susun baris CSV sesuai urutan header
+    var line = headers.map(function (h) { return csvEscape(valueMap[h]); }).join(",") + "\n";
+
+    var existing = folder.getFilesByName(BACKUP_CSV_NAME);
+    if (existing.hasNext()) {
+      var csvFile = existing.next();
+      var prev = csvFile.getBlob().getDataAsString();
+      csvFile.setContent(prev + line);
+    } else {
+      var headerLine = headers.map(csvEscape).join(",") + "\n";
+      // BOM di awal supaya Excel membaca UTF-8 dengan benar.
+      folder.createFile(BACKUP_CSV_NAME, String.fromCharCode(0xFEFF) + headerLine + line, "text/csv");
+    }
+  } catch (err) {
+    Logger.log("[backupToCsv] gagal: " + err.message);
+  }
+}
+
+/**
+ * Isi jawaban sebuah subdivisi ke kolom divisi terkait di valueMap.
+ * Kolom divisi diberi prefix nama divisi untuk menghindari tabrakan pertanyaan
+ * yang sama antar divisi.
+ */
+function fillAnswerColumns(valueMap, divName, answers) {
+  if (!divName || divName === "Tidak Memilih") return;
+  for (var a = 0; a < answers.length; a++) {
+    var item = answers[a];
+    if (item && item.question) {
+      var prefix = item.isStudyCase ? (divName + " | Study Case: ") : (divName + " | Divisi Q: ");
+      var col = prefix + item.question;
+      if (valueMap.hasOwnProperty(col)) {
+        valueMap[col] = item.answer || "-";
+      }
+    }
+  }
+}
+
+/**
+ * Escape nilai untuk format CSV: bungkus dengan kutip ganda bila mengandung
+ * koma, kutip, atau baris baru; kutip ganda di dalam nilai digandakan.
+ */
+function csvEscape(value) {
+  if (value === null || value === undefined) return "";
+  var s = String(value);
+  if (/[",\n\r]/.test(s)) {
+    s = '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
 }
