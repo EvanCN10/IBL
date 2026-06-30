@@ -12,7 +12,7 @@ import { noiseBg } from "@/constants/registerStyles";
 import { StepData } from "@/types/register";
 
 // Direct imports for background graphics to preserve native dimensions
-import starBg from "@/public/images/star bg.png";
+import starBg from "@/public/images/star bg.webp";
 import sinarAtas from "@/public/images/Sinar Atas.svg";
 
 // Direct imports for title text SVGs
