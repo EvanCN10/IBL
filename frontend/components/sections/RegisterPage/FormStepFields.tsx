@@ -66,6 +66,61 @@ export const FormStepFields = ({
           selected={currentData.subdivisi2 || ""}
           onSelect={(val: string) => updateField("subdivisi2", val)}
         />
+
+        {/* Pertanyaan Essay Informasi Umum */}
+        <div className="flex flex-col w-full text-left mt-2">
+          <label 
+            className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
+            style={{ 
+              fontSize: "var(--form-font-size)",
+              marginBottom: "var(--form-margin-bottom)"
+            }}
+          >
+            Sebutkan kelebihan dan kekuranganmu! *
+          </label>
+          <textarea
+            value={currentData.kelebihanKekurangan || ""}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField("kelebihanKekurangan", e.target.value)}
+            placeholder="Tulis jawabanmu di sini..."
+            className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-[#2B918E] focus:ring-1 focus:ring-[#2B918E] transition-colors shadow-inner resize-y"
+            style={{
+              fontSize: "var(--form-font-size)",
+              paddingTop: "var(--form-padding-y)",
+              paddingBottom: "var(--form-padding-y)",
+              paddingLeft: "var(--form-padding-x)",
+              paddingRight: "var(--form-padding-x)",
+              minHeight: "120px",
+              borderRadius: "calc(var(--form-font-size) * 0.43)"
+            }}
+          />
+        </div>
+
+        <div className="flex flex-col w-full text-left mt-3">
+          <label 
+            className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
+            style={{ 
+              fontSize: "var(--form-font-size)",
+              marginBottom: "var(--form-margin-bottom)"
+            }}
+          >
+            Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda? *
+          </label>
+          <textarea
+            value={currentData.halUnik || ""}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateField("halUnik", e.target.value)}
+            placeholder="Tulis jawabanmu di sini..."
+            className="w-full bg-white border border-gray-300 font-body text-gray-800 placeholder-gray-400 outline-none focus:border-[#2B918E] focus:ring-1 focus:ring-[#2B918E] transition-colors shadow-inner resize-y"
+            style={{
+              fontSize: "var(--form-font-size)",
+              paddingTop: "var(--form-padding-y)",
+              paddingBottom: "var(--form-padding-y)",
+              paddingLeft: "var(--form-padding-x)",
+              paddingRight: "var(--form-padding-x)",
+              minHeight: "120px",
+              borderRadius: "calc(var(--form-font-size) * 0.43)"
+            }}
+          />
+        </div>
       </div>
     );
   }

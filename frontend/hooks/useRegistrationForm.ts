@@ -25,6 +25,8 @@ export const initialStepData = (): StepData => ({
   angkatan: "",
   subdivisi1: "",
   subdivisi2: "",
+  kelebihanKekurangan: "",
+  halUnik: "",
 });
 
 export const initialUploadData = (): UploadData => ({
@@ -193,7 +195,9 @@ export const useRegistrationForm = () => {
         !info.departemen?.trim() ||
         !info.angkatan?.trim() ||
         !info.subdivisi1?.trim() ||
-        info.subdivisi1 === "Pilih Subdivisi"
+        info.subdivisi1 === "Pilih Subdivisi" ||
+        !info.kelebihanKekurangan?.trim() ||
+        !info.halUnik?.trim()
       ) {
         return "Mohon lengkapi seluruh informasi umum yang bertanda bintang (*).";
       }
@@ -313,7 +317,9 @@ export const useRegistrationForm = () => {
             departemen: formData.informasiUmum.departemen || "",
             angkatan: formData.informasiUmum.angkatan || "",
             subdivisi1: formData.informasiUmum.subdivisi1 || "",
-            subdivisi2: formData.informasiUmum.subdivisi2 || ""
+            subdivisi2: formData.informasiUmum.subdivisi2 || "",
+            kelebihanKekurangan: formData.informasiUmum.kelebihanKekurangan || "",
+            halUnik: formData.informasiUmum.halUnik || ""
           },
           pertanyaanGeneral: formData.pertanyaanGeneral,
           subdivisi1: formData.subdivisi1,
