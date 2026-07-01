@@ -340,8 +340,8 @@ function doPost(e) {
     
     var fileUrls = {};
     var divisions = [];
-    if (subdivisi1) divisions.push({ name: subdivisi1, answers: answers1 });
-    if (subdivisi2 && subdivisi2 !== subdivisi1) divisions.push({ name: subdivisi2, answers: answers2 });
+    if (subdivisi1 && subdivisi1 !== "Tidak Memilih") divisions.push({ name: subdivisi1, answers: answers1 });
+    if (subdivisi2 && subdivisi2 !== subdivisi1 && subdivisi2 !== "Tidak Memilih") divisions.push({ name: subdivisi2, answers: answers2 });
     
     // Upload files for each chosen division
     // If they apply for two divisions, we put folders under both divisions.
@@ -441,7 +441,7 @@ function doPost(e) {
         
         // Write headers to sheet
         sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-        sheet.setFrozenRows(1);
+        formatSheetPremium(sheet, headers.length);
       }
       
       // Map candidate values to header columns
@@ -503,6 +503,7 @@ function doPost(e) {
       
       // Append the mapped row to sheet
       sheet.appendRow(newRowValues);
+      formatNewRow(sheet, sheet.getLastRow(), headers.length);
     }
 
     // 3. Catat ringkasan ke sheet master "Semua Form" (satu baris per pendaftar, lintas divisi).
@@ -630,6 +631,7 @@ function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsa
     return valMap[h] || "";
   });
   sheet.appendRow(row);
+  formatNewRow(sheet, sheet.getLastRow(), sheetHeaders.length);
 }
 
 /**
@@ -755,4 +757,192 @@ function csvEscape(value) {
     s = '"' + s.replace(/"/g, '""') + '"';
   }
   return s;
+}
+
+/**
+ * Format a sheet beautifully with premium headers, freezing, alignments, text wrapping, and auto-sizing.
+ */
+function formatSheetPremium(sheet, headersCount) {
+  if (headersCount <= 0) return;
+  
+  var lastRow = sheet.getLastRow();
+  
+  // 1. Format Header Row (Row 1)
+  var headerRange = sheet.getRange(1, 1, 1, headersCount);
+  headerRange.setFontWeight("bold");
+  headerRange.setFontColor("#FFFFFF");
+  headerRange.setBackground("#1F4E79"); // Classic Navy
+  headerRange.setHorizontalAlignment("center");
+  headerRange.setVerticalAlignment("middle");
+  headerRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
+  sheet.setRowHeight(1, 40); // Set a comfortable height for wrapped headers
+  sheet.setFrozenRows(1);
+  
+  // 2. Format Data Range (if any rows exist)
+  if (lastRow > 1) {
+    var dataRange = sheet.getRange(2, 1, lastRow - 1, headersCount);
+    dataRange.setHorizontalAlignment("center");
+    dataRange.setVerticalAlignment("middle");
+    dataRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
+    
+    // Set a clean height for the data rows
+    for (var r = 2; r <= lastRow; r++) {
+      sheet.setRowHeight(r, 24);
+    }
+  }
+  
+  // 3. Auto-resize columns
+  for (var col = 1; col <= headersCount; col++) {
+    sheet.autoResizeColumn(col);
+    var currentWidth = sheet.getColumnWidth(col);
+    
+    // Set a min/max width for readability
+    if (col >= 10 && col <= headersCount - 5) {
+      if (currentWidth < 220) {
+        sheet.setColumnWidth(col, 220);
+      } else if (currentWidth > 400) {
+        sheet.setColumnWidth(col, 400);
+      }
+    } else {
+      if (currentWidth < 100) {
+        sheet.setColumnWidth(col, 100);
+      } else if (currentWidth > 180) {
+        sheet.setColumnWidth(col, 180);
+      }
+    }
+  }
+}
+
+/**
+ * Format a single newly appended row to be center-aligned vertically/horizontally with wrapping.
+ */
+function formatNewRow(sheet, rowIndex, headersCount) {
+  sheet.setRowHeight(rowIndex, 24);
+  var rowRange = sheet.getRange(rowIndex, 1, 1, headersCount);
+  rowRange.setHorizontalAlignment("center");
+  rowRange.setVerticalAlignment("middle");
+  rowRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
+}
+
+/**
+ * Run this function manually in the Google Apps Script editor to clean up and align
+ * all division sheets and the master sheet to have consistent headers and column order.
+ * It will rearrange existing columns in each sheet to match the standard order:
+ * Baseline -> Kelebihan/General Qs -> Division Qs/Cases -> File Links.
+ */
+function migrateAndAlignSpreadsheet() {
+  var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  
+  for (var i = 0; i < sheets.length; i++) {
+    var sheet = sheets[i];
+    var sheetName = sheet.getName();
+    
+    // Skip sheets that are not division tabs or master sheet
+    if (sheetName === "Semua Form") {
+      alignMasterSheetHeaders(sheet);
+      continue;
+    }
+    
+    if (DIVISION_DATA.hasOwnProperty(sheetName)) {
+      alignDivisionSheetHeaders(sheet, sheetName);
+    }
+  }
+}
+
+/**
+ * Align master sheet columns to the correct sequence and apply formatting.
+ */
+function alignMasterSheetHeaders(sheet) {
+  var expectedHeaders = [
+    "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan",
+    "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
+    "Kelebihan & Kekurangan", "Hal Unik",
+    "General Q: Apa yang kamu ketahui tentang IBL?",
+    "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
+    "General Q: Apa kesibukan kamu pada semester depan?",
+    "General Q: Skala prioritas IBL2K26 bagi kamu!",
+    "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?",
+    "Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio"
+  ];
+  
+  reorderSheetColumns(sheet, expectedHeaders);
+}
+
+/**
+ * Align division sheet columns to the correct sequence and apply formatting.
+ */
+function alignDivisionSheetHeaders(sheet, divName) {
+  var expectedHeaders = [
+    "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan", 
+    "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
+    "Kelebihan & Kekurangan", "Hal Unik",
+    "General Q: Apa yang kamu ketahui tentang IBL?",
+    "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
+    "General Q: Apa kesibukan kamu pada semester depan?",
+    "General Q: Skala prioritas IBL2K26 bagi kamu!",
+    "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?"
+  ];
+  
+  var dbData = DIVISION_DATA[divName];
+  if (dbData) {
+    var questions = dbData.questions || [];
+    for (var q = 0; q < questions.length; q++) {
+      expectedHeaders.push("Divisi Q: " + questions[q]);
+    }
+    var cases = dbData.cases || [];
+    for (var c = 0; c < cases.length; c++) {
+      expectedHeaders.push("Study Case: " + cases[c]);
+    }
+  }
+  expectedHeaders.push("Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio");
+  
+  reorderSheetColumns(sheet, expectedHeaders);
+}
+
+/**
+ * Helper to reorder columns in a sheet based on expected headers and format it.
+ */
+function reorderSheetColumns(sheet, expectedHeaders) {
+  var lastCol = sheet.getLastColumn();
+  var lastRow = sheet.getLastRow();
+  
+  if (lastCol === 0) {
+    sheet.getRange(1, 1, 1, expectedHeaders.length).setValues([expectedHeaders]);
+    formatSheetPremium(sheet, expectedHeaders.length);
+    return;
+  }
+  
+  var currentHeaders = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  var allData = [];
+  if (lastRow > 1) {
+    allData = sheet.getRange(2, 1, lastRow - 1, lastCol).getValues();
+  }
+  
+  var newGrid = [];
+  for (var r = 0; r < allData.length; r++) {
+    var newRow = new Array(expectedHeaders.length);
+    for (var c = 0; c < expectedHeaders.length; c++) {
+      newRow[c] = "";
+    }
+    
+    for (var c = 0; c < lastCol; c++) {
+      var headerVal = currentHeaders[c];
+      if (headerVal) {
+        var newIdx = expectedHeaders.indexOf(headerVal);
+        if (newIdx !== -1) {
+          newRow[newIdx] = allData[r][c];
+        }
+      }
+    }
+    newGrid.push(newRow);
+  }
+  
+  sheet.clear();
+  sheet.getRange(1, 1, 1, expectedHeaders.length).setValues([expectedHeaders]);
+  if (newGrid.length > 0) {
+    sheet.getRange(2, 1, newGrid.length, expectedHeaders.length).setValues(newGrid);
+  }
+  
+  formatSheetPremium(sheet, expectedHeaders.length);
 }
