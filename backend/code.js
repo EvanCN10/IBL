@@ -62,7 +62,7 @@ var DIVISION_DATA = {
     ],
     "cases": [
       "Kamu ditugaskan mengedit video recap yang harus di-upload besok pagi. Tapi sampai malam ini footage dari tim lapangan belum lengkap. Apa yang kamu lakukan?",
-      "Dalam sebuah project, kamu ditugaskan di bidang yang bukan keahlianmu (misalnya kamu ahli di bidang editing tapi diminta dokumentasi). Bagaimana caramu menyikapinya?"
+      "Dalam sebuah project, kamu ditugaskan di bidang yang bukan keahlianmu (misalnya kamu ahli di bidang editing tapi diminta dokumentasi).\nBagaimana caramu menyikapinya?"
     ]
   },
   "CnD": {
@@ -124,7 +124,7 @@ var DIVISION_DATA = {
     "questions": [
       "Apa yang kamu ketahui tentang sub divisi logistic ? Apakah kamu memiliki pengalaman menjadi panitia subdivisi logistic sebelumnya?",
       "Apa alasan kamu untuk masuk sub divisi logistic?",
-      "Inovasi apa yang bisa kamu give apa bila kamu diterima pada IBL 2026?",
+      "Inovasi apa yang bisa kamu berikan apa bila kamu diterima pada IBL 2026?",
       "Apa rencana cadangan kamu jika ada kerusakan atau kekurangan pada perlengkapan selama acara?",
       "Berdasarkan Pengalamanmu yang kamu miliki, sebutkan kendala yang kamu alami dan bagaimana cara kamu mengatasi kendala tersebut sebagai panitia sub divisi logistic?",
       "Berdasarkan kelebihan dan kekurangan yang kamu miliki, sebutkan alasan mengapa kami harus menerima kamu sebagai staff subdivisi logistic IBL 2026?",
@@ -414,7 +414,13 @@ function doPost(e) {
       if (headers.length === 0) {
         headers = [
           "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan", 
-          "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2"
+          "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
+          "Kelebihan & Kekurangan", "Hal Unik",
+          "General Q: Apa yang kamu ketahui tentang IBL?",
+          "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
+          "General Q: Apa kesibukan kamu pada semester depan?",
+          "General Q: Skala prioritas IBL2K26 bagi kamu!",
+          "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?"
         ];
         
         // Add question columns for this division from database
