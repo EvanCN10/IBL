@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { LandingSection } from "@/components/sections/RegisterPage/LandingSection";
@@ -31,14 +32,28 @@ export default function Register() {
         <main
           className="w-full relative overflow-hidden"
           style={{
-            backgroundImage: "url('/images/Full_Page_Desktop.webp')",
-            backgroundSize: "100% auto",
-            backgroundPosition: "top center",
-            backgroundRepeat: "no-repeat",
             width: "100%",
             aspectRatio: "2880 / 6646",
           }}
         >
+          {/*
+            Background dirender via next/image (bukan CSS background-image) supaya
+            WebKit (Safari / iOS WKWebView) tidak harus men-decode aset 2880x6646
+            (~19 MP / ~76 MB bitmap) di setiap perangkat. Dengan `sizes`, Vercel
+            menyajikan variant webp yang sesuai viewport — ponsel men-decode gambar
+            yang jauh lebih kecil, mencegah jetsam crash "A problem repeatedly occurred".
+            `w-full h-auto` menjaga rasio & skalanya identik dengan overlay 1440-canvas.
+          */}
+          <Image
+            src="/images/Full_Page_Desktop.webp"
+            alt=""
+            aria-hidden
+            width={2880}
+            height={6646}
+            priority
+            sizes="100vw"
+            className="absolute inset-0 block w-full h-auto select-none pointer-events-none"
+          />
           <h1 className="sr-only">Open Recruitment Staff IBL 2K26 — Pendaftaran</h1>
 
           <div
