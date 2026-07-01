@@ -124,7 +124,7 @@ var DIVISION_DATA = {
     "questions": [
       "Apa yang kamu ketahui tentang sub divisi logistic ? Apakah kamu memiliki pengalaman menjadi panitia subdivisi logistic sebelumnya?",
       "Apa alasan kamu untuk masuk sub divisi logistic?",
-      "Inovasi apa yang bisa kamu give apa bila kamu diterima pada IBL 2026?",
+      "Inovasi apa yang bisa kamu berikan apa bila kamu diterima pada IBL 2026?",
       "Apa rencana cadangan kamu jika ada kerusakan atau kekurangan pada perlengkapan selama acara?",
       "Berdasarkan Pengalamanmu yang kamu miliki, sebutkan kendala yang kamu alami dan bagaimana cara kamu mengatasi kendala tersebut sebagai panitia sub divisi logistic?",
       "Berdasarkan kelebihan dan kekurangan yang kamu miliki, sebutkan alasan mengapa kami harus menerima kamu sebagai staff subdivisi logistic IBL 2026?",
