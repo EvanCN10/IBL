@@ -78,6 +78,33 @@ export const LandingSection = () => {
   const orangKiriVariants = makeOrangVariants(isDesktop, 4, -120, 0.2);
   const orangKananVariants = makeOrangVariants(isDesktop, 4.5, 120, 0.3);
 
+  // Mobile: render statik (tanpa framer-motion) untuk meminimalkan GPU compositing
+  // layer yang memicu crash jetsam WebKit di ambang memori. Desktop: animasi penuh.
+  if (!isDesktop) {
+    return (
+      <div className="relative w-[1440px] flex items-center">
+        <div className="absolute z-2 top-0">
+          <Image src={vectorHitam} alt="Decorative Vector Hitam" loading="lazy" />
+        </div>
+        <div className="absolute z-1 top-0">
+          <Image src={vectorBiru} alt="Decorative Vector Biru" loading="lazy" />
+        </div>
+        <div className="flex absolute gap-[7px] top-[341px] justify-center w-full z-5">
+          <div className="flex items-center justify-center">
+            <Image src={orangKiri} alt="Ilustrasi pemain basket kiri" loading="lazy" />
+          </div>
+          <div className="flex items-center justify-center">
+            <Image src={orangKanan} alt="Ilustrasi pemain basket kanan" loading="lazy" />
+          </div>
+        </div>
+        <div className="flex absolute top-[719px] gap-[47px] w-full justify-center">
+          <Image src="/texts/IBL.svg" alt="IBL" width={666} height={199} priority />
+          <Image src="/texts/2K26.svg" alt="2K26" width={666} height={199} loading="lazy" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial="hidden"

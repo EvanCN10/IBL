@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
+import Image, { type StaticImageData } from "next/image";
+import { motion, type Transition } from "framer-motion";
 import { useRegistrationForm } from "@/hooks/useRegistrationForm";
 import { FormNavigation } from "./FormNavigation";
 import { FormSuccessScreen } from "./FormSuccessScreen";
@@ -43,8 +43,49 @@ const getTitleSvg = (step: number) => {
   }
 };
 
-const TitleHeader = ({ step, style }: { step: number; style?: React.CSSProperties }) => {
-  const svgSrc = getTitleSvg(step);
+/*
+  DecoLayer — lapisan gambar dekoratif (starBg / sinarAtas).
+  Desktop: tetap memakai framer-motion (entrance + breathing) seperti semula.
+  Mobile: dirender sebagai <Image> polos + lazy (tanpa GPU compositing layer,
+  tanpa decode di critical path) untuk meredam crash jetsam WebKit yang
+  "kadang bisa kadang engga" akibat halaman ini berada tepat di batas memori.
+*/
+const DecoLayer = ({
+  isDesktop,
+  breathAnimate,
+  breathTransition,
+  src,
+  className,
+  initial,
+  transition,
+}: {
+  isDesktop: boolean;
+  breathAnimate: { scale: number | number[] };
+  breathTransition: Transition;
+  src: StaticImageData;
+  className: string;
+  initial: { opacity: number; scale: number };
+  transition: Transition;
+}) =>
+  isDesktop ? (
+    <motion.div
+      initial={initial}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: false, amount: 0.1 }}
+      transition={transition}
+      className={className}
+    >
+      <motion.div animate={breathAnimate} transition={breathTransition}>
+        <Image src={src} alt="" priority />
+      </motion.div>
+    </motion.div>
+  ) : (
+    <div className={className}>
+      <Image src={src} alt="" loading="lazy" />
+    </div>
+  );
+
+const TitleHeader = ({ step, style }: { step: number; style?: React.CSSProperties }) => {  const svgSrc = getTitleSvg(step);
   return (
     <div
       className="absolute left-1/2 z-20 -translate-x-1/2 -rotate-3"
@@ -92,52 +133,24 @@ export const FormSection = () => {
     return (
       <div className="absolute top-0 left-0 w-[1440px] h-[3323px] select-none pointer-events-none">
         {/* Background graphics (no-wrap next/image with imported dimensions) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false, amount: 0.1 }}
-          transition={{
-            type: "spring",
-            stiffness: 60,
-            damping: 14,
-          }}
+        <DecoLayer
+          isDesktop={isDesktop}
+          breathAnimate={breathAnimate}
+          breathTransition={breathTransition}
+          src={starBg}
           className="absolute top-[1345px] left-0 z-0 pointer-events-none"
-        >
-          <motion.div
-            animate={breathAnimate}
-            transition={breathTransition}
-          >
-            <Image
-              src={starBg}
-              alt=""
-              priority
-            />
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: false, amount: 0.1 }}
-          transition={{
-            type: "spring",
-            stiffness: 60,
-            damping: 14,
-            delay: 0.05,
-          }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          transition={{ type: "spring", stiffness: 60, damping: 14 }}
+        />
+        <DecoLayer
+          isDesktop={isDesktop}
+          breathAnimate={breathAnimate}
+          breathTransition={breathTransition}
+          src={sinarAtas}
           className="absolute top-[1432px] left-[-156px] z-0 pointer-events-none"
-        >
-          <motion.div
-            animate={breathAnimate}
-            transition={breathTransition}
-          >
-            <Image
-              src={sinarAtas}
-              alt=""
-              priority
-            />
-          </motion.div>
-        </motion.div>
+          initial={{ opacity: 0, scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 60, damping: 14, delay: 0.05 }}
+        />
 
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -155,52 +168,24 @@ export const FormSection = () => {
   return (
     <div className="absolute top-0 left-0 w-[1440px] h-[3323px] select-none pointer-events-none">
       {/* Background graphics (no-wrap next/image with imported dimensions) */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: false, amount: 0.1 }}
-        transition={{
-          type: "spring",
-          stiffness: 60,
-          damping: 14,
-        }}
+      <DecoLayer
+        isDesktop={isDesktop}
+        breathAnimate={breathAnimate}
+        breathTransition={breathTransition}
+        src={starBg}
         className="absolute top-[1345px] left-0 z-0 pointer-events-none"
-      >
-        <motion.div
-          animate={breathAnimate}
-          transition={breathTransition}
-        >
-          <Image
-            src={starBg}
-            alt=""
-            priority
-          />
-        </motion.div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: false, amount: 0.1 }}
-        transition={{
-          type: "spring",
-          stiffness: 60,
-          damping: 14,
-          delay: 0.05,
-        }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        transition={{ type: "spring", stiffness: 60, damping: 14 }}
+      />
+      <DecoLayer
+        isDesktop={isDesktop}
+        breathAnimate={breathAnimate}
+        breathTransition={breathTransition}
+        src={sinarAtas}
         className="absolute top-[1472px] left-0 z-0 pointer-events-none"
-      >
-        <motion.div
-          animate={breathAnimate}
-          transition={breathTransition}
-        >
-          <Image
-            src={sinarAtas}
-            alt=""
-            priority
-          />
-        </motion.div>
-      </motion.div>
+        initial={{ opacity: 0, scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 60, damping: 14, delay: 0.05 }}
+      />
 
       {/* Form Content container to enable input pointer-events */}
       <div className="w-full h-full relative z-10 pointer-events-auto">
