@@ -269,9 +269,60 @@ function doPost(e) {
     var subdivisi1 = postData.subdivisi1 || "";
     var subdivisi2 = postData.subdivisi2 || "";
     
+    // New payload fields
+    var kelebihanKekurangan = postData.kelebihanKekurangan || "";
+    var halUnik = postData.halUnik || "";
+    var generalAnswers = postData.generalAnswers || [];
+    
     var answers1 = postData.answers1 || [];
     var answers2 = postData.answers2 || [];
     var filesData = postData.files || {};
+
+    // Helper function for validation
+    function validateNumberRange(val, min, max) {
+      if (val === undefined || val === null) return false;
+      var str = val.toString().trim();
+      if (!/^\d+$/.test(str)) return false;
+      var num = parseInt(str, 10);
+      return num >= min && num <= max;
+    }
+
+    // 1. Validate Core Fields
+    if (!/^\d{10}$/.test((nrp || "").toString().trim())) {
+      throw new Error("Validasi Gagal: NRP harus berupa 10 digit angka.");
+    }
+    if (!/^\d{8,15}$/.test((whatsapp || "").toString().trim())) {
+      throw new Error("Validasi Gagal: Nomor WhatsApp harus berupa angka saja, minimal 8 digit.");
+    }
+    if (!/^\d{4}$/.test((angkatan || "").toString().trim())) {
+      throw new Error("Validasi Gagal: Angkatan harus berupa 4 digit angka.");
+    }
+
+    // 2. Validate General Questions Scale Q if present
+    for (var g = 0; g < generalAnswers.length; g++) {
+      var item = generalAnswers[g];
+      if (item && item.question === "Skala prioritas IBL2K26 bagi kamu!") {
+        if (!validateNumberRange(item.answer, 1, 10)) {
+          throw new Error("Validasi Gagal: Skala prioritas general harus berupa angka dari 1 sampai 10.");
+        }
+      }
+    }
+
+    // 3. Validate Subdivisi Questions
+    var allAnswers = answers1.concat(answers2);
+    for (var a = 0; a < allAnswers.length; a++) {
+      var item = allAnswers[a];
+      if (item && item.question === "Berikan skala prioritas dengan rentang 1-10 untuk IBL 2026") {
+        if (!validateNumberRange(item.answer, 1, 10)) {
+          throw new Error("Validasi Gagal: Skala prioritas SnL harus berupa angka dari 1 sampai 10.");
+        }
+      }
+      if (item && item.question === "Seberapa excited kamu untuk masuk ke divisi Data Management (kasih opsi skala 1-5)") {
+        if (!validateNumberRange(item.answer, 1, 5)) {
+          throw new Error("Validasi Gagal: Skala excited Data Management harus berupa angka dari 1 sampai 5.");
+        }
+      }
+    }
     
     // 1. Process files in Google Drive
     // Get parent folder
@@ -417,6 +468,16 @@ function doPost(e) {
       newRowValues[getHeaderColIndex("Pilihan Subdivisi 1")] = subdivisi1;
       newRowValues[getHeaderColIndex("Pilihan Subdivisi 2")] = subdivisi2;
       
+      // Map new general/essay fields
+      newRowValues[getHeaderColIndex("Kelebihan & Kekurangan")] = kelebihanKekurangan;
+      newRowValues[getHeaderColIndex("Hal Unik")] = halUnik;
+      for (var g = 0; g < generalAnswers.length; g++) {
+        var item = generalAnswers[g];
+        if (item && item.question) {
+          newRowValues[getHeaderColIndex("General Q: " + item.question)] = item.answer;
+        }
+      }
+      
       // Map candidates answers by matching question text or index
       for (var a = 0; a < answers.length; a++) {
         var item = answers[a];
@@ -441,7 +502,7 @@ function doPost(e) {
     // 3. Catat ringkasan ke sheet master "Semua Form" (satu baris per pendaftar, lintas divisi).
     // Link berkas diambil dari folder subdivisi pertama (file yang diupload identik di tiap divisi).
     var masterFileUrls = (divisions.length > 0 && uploadedFiles[divisions[0].name]) ? uploadedFiles[divisions[0].name] : {};
-    logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, masterFileUrls);
+    logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, kelebihanKekurangan, halUnik, generalAnswers, masterFileUrls);
 
     // 4. Backup data pendaftar ke file CSV di folder Drive backup (best-effort).
     backupToCsv({
@@ -454,6 +515,9 @@ function doPost(e) {
       "ID Line": lineId,
       "Pilihan Subdivisi 1": subdivisi1,
       "Pilihan Subdivisi 2": subdivisi2,
+      "Kelebihan & Kekurangan": kelebihanKekurangan,
+      "Hal Unik": halUnik,
+      "generalAnswers": generalAnswers,
       "answers1": answers1,
       "answers2": answers2,
       "Link CV": masterFileUrls["cv"] || "",
@@ -500,7 +564,7 @@ function getOrCreateSubFolder(parentFolder, folderName) {
  * Catat satu baris ringkasan pendaftar ke sheet master "Semua Form"
  * (menampung seluruh pendaftar lintas divisi). Sheet dibuat otomatis bila belum ada.
  */
-function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, fileUrls) {
+function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, kelebihanKekurangan, halUnik, generalAnswers, fileUrls) {
   var sheetName = "Semua Form";
   var sheet = ss.getSheetByName(sheetName);
   if (!sheet) {
@@ -510,20 +574,55 @@ function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsa
   var headers = [
     "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan",
     "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
+    "Kelebihan & Kekurangan", "Hal Unik",
+    "General Q: Apa yang kamu ketahui tentang IBL?",
+    "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
+    "General Q: Apa kesibukan kamu pada semester depan?",
+    "General Q: Skala prioritas IBL2K26 bagi kamu!",
+    "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?",
     "Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio"
   ];
+
+  var valMap = {};
+  valMap["Timestamp"] = timestamp;
+  valMap["Nama Lengkap"] = nama;
+  valMap["NRP"] = nrp;
+  valMap["Departemen"] = departemen;
+  valMap["Angkatan"] = angkatan;
+  valMap["No WhatsApp"] = whatsapp;
+  valMap["ID Line"] = lineId;
+  valMap["Pilihan Subdivisi 1"] = subdivisi1;
+  valMap["Pilihan Subdivisi 2"] = subdivisi2;
+  valMap["Kelebihan & Kekurangan"] = kelebihanKekurangan;
+  valMap["Hal Unik"] = halUnik;
+  
+  for (var g = 0; g < generalAnswers.length; g++) {
+    var item = generalAnswers[g];
+    if (item && item.question) {
+      valMap["General Q: " + item.question] = item.answer;
+    }
+  }
+  
+  valMap["Link CV"] = fileUrls["cv"] || "";
+  valMap["Link KTM"] = fileUrls["ktm"] || "";
+  valMap["Link Twibbon"] = fileUrls["twibbon"] || "";
+  valMap["Link Bukti Follow"] = fileUrls["buktiFollow"] || "";
+  valMap["Link Portofolio"] = fileUrls["portofolio"] || "";
 
   if (sheet.getLastColumn() === 0) {
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.setFrozenRows(1);
   }
 
-  var row = [
-    timestamp, nama, nrp, departemen, angkatan,
-    whatsapp, lineId, subdivisi1, subdivisi2,
-    fileUrls["cv"] || "", fileUrls["ktm"] || "", fileUrls["twibbon"] || "",
-    fileUrls["buktiFollow"] || "", fileUrls["portofolio"] || ""
-  ];
+  // Get current sheet headers dynamically to preserve mapping
+  var sheetHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn() > 0 ? sheet.getLastColumn() : headers.length).getValues()[0];
+  if (sheetHeaders.length === 0 || !sheetHeaders[0]) {
+    sheetHeaders = headers;
+  }
+
+  var row = sheetHeaders.map(function(h) {
+    return valMap[h] || "";
+  });
   sheet.appendRow(row);
 }
 
@@ -543,7 +642,13 @@ function backupToCsv(rowData) {
     // Susun daftar kolom: baseline + seluruh pertanyaan tiap divisi + link berkas.
     var baselineHeaders = [
       "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan",
-      "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2"
+      "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
+      "Kelebihan & Kekurangan", "Hal Unik",
+      "General Q: Apa yang kamu ketahui tentang IBL?",
+      "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
+      "General Q: Apa kesibukan kamu pada semester depan?",
+      "General Q: Skala prioritas IBL2K26 bagi kamu!",
+      "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?"
     ];
     var divisionHeaders = [];
     for (var divName in DIVISION_DATA) {
@@ -574,6 +679,16 @@ function backupToCsv(rowData) {
     valueMap["ID Line"] = rowData["ID Line"];
     valueMap["Pilihan Subdivisi 1"] = rowData["Pilihan Subdivisi 1"];
     valueMap["Pilihan Subdivisi 2"] = rowData["Pilihan Subdivisi 2"];
+    valueMap["Kelebihan & Kekurangan"] = rowData["Kelebihan & Kekurangan"];
+    valueMap["Hal Unik"] = rowData["Hal Unik"];
+
+    var genAnswers = rowData["generalAnswers"] || [];
+    for (var g = 0; g < genAnswers.length; g++) {
+      var item = genAnswers[g];
+      if (item && item.question) {
+        valueMap["General Q: " + item.question] = item.answer;
+      }
+    }
 
     // Isi jawaban subdivisi 1 & 2 ke kolom divisi terkait
     fillAnswerColumns(valueMap, rowData["Pilihan Subdivisi 1"], rowData["answers1"] || []);

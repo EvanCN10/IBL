@@ -2,7 +2,7 @@ import React from "react";
 import InputField from "@/components/ui/InputField";
 import Dropdown from "@/components/ui/Dropdown";
 import { FORM_LABELS, DROPDOWN_OPTIONS, DROPDOWN_OPTIONS_2 } from "@/constants/registerForm";
-import { DIVISION_QUESTIONS } from "@/constants/questions";
+import { DIVISION_QUESTIONS, GENERAL_QUESTIONS } from "@/constants/questions";
 import { StepData, RegisterFormData } from "@/types/register";
 
 interface FormStepFieldsProps {
@@ -127,7 +127,6 @@ export const FormStepFields = ({
 
   // STEP 2: PERTANYAAN GENERAL
   if (step === 2) {
-    const { GENERAL_QUESTIONS } = require("@/constants/questions");
     return (
       <div className="flex flex-col gap-5">
         <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-widest uppercase border-l-4 border-[#2B918E] pl-2 mb-1">
