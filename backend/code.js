@@ -340,8 +340,8 @@ function doPost(e) {
     
     var fileUrls = {};
     var divisions = [];
-    if (subdivisi1) divisions.push({ name: subdivisi1, answers: answers1 });
-    if (subdivisi2 && subdivisi2 !== subdivisi1) divisions.push({ name: subdivisi2, answers: answers2 });
+    if (subdivisi1 && subdivisi1 !== "Tidak Memilih") divisions.push({ name: subdivisi1, answers: answers1 });
+    if (subdivisi2 && subdivisi2 !== subdivisi1 && subdivisi2 !== "Tidak Memilih") divisions.push({ name: subdivisi2, answers: answers2 });
     
     // Upload files for each chosen division
     // If they apply for two divisions, we put folders under both divisions.
