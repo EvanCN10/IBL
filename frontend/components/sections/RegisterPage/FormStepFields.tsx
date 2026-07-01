@@ -72,7 +72,7 @@ export const FormStepFields = ({
           <label 
             className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
             style={{ 
-              fontSize: "calc(var(--form-font-size) * 0.75)",
+              fontSize: "var(--form-font-size)",
               marginBottom: "var(--form-margin-bottom)"
             }}
           >
@@ -99,7 +99,7 @@ export const FormStepFields = ({
           <label 
             className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
             style={{ 
-              fontSize: "calc(var(--form-font-size) * 0.75)",
+              fontSize: "var(--form-font-size)",
               marginBottom: "var(--form-margin-bottom)"
             }}
           >
@@ -137,7 +137,7 @@ export const FormStepFields = ({
             <label 
               className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
               style={{ 
-                fontSize: "calc(var(--form-font-size) * 0.75)",
+                fontSize: "var(--form-font-size)",
                 marginBottom: "var(--form-margin-bottom)"
               }}
             >
@@ -226,7 +226,7 @@ export const FormStepFields = ({
               <label 
                 className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
                 style={{ 
-                  fontSize: "calc(var(--form-font-size) * 0.75)",
+                  fontSize: "var(--form-font-size)",
                   marginBottom: "var(--form-margin-bottom)"
                 }}
               >
@@ -263,7 +263,7 @@ export const FormStepFields = ({
               <label 
                 className="font-bold text-[#2D2D2D] font-drowner tracking-widest leading-relaxed"
                 style={{ 
-                  fontSize: "calc(var(--form-font-size) * 0.75)",
+                  fontSize: "var(--form-font-size)",
                   marginBottom: "var(--form-margin-bottom)"
                 }}
               >

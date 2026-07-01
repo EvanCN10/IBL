@@ -225,7 +225,7 @@
 /* Kunci ukuran di atas 1440px */
 @media (min-width: 1220px) {
   :root {
-    --form-font-size: 16px;        /* Berhenti tumbuh dan terkunci di 26px */
+    --form-font-size: 26px;        /* Berhenti tumbuh dan terkunci di 26px */
     --form-title-font-size: 64px;  /* Terkunci di 83px */
     --form-error-font-size: 14px;  /* Terkunci di 23px */
   }
