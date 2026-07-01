@@ -11,11 +11,11 @@
 // --- CONFIGURATION ---
 // IMPORTANT: Paste your Spreadsheet ID and Parent Drive Folder ID here.
 // If PARENT_FOLDER_ID is blank, a new folder "IBL 2K26 Oprec - Pendaftar" will be created in your root Drive.
-var SPREADSHEET_ID = "172zZSLR8yvFnwesEMcvwIo8QLByZ-0eLoQw5uzyK-cc";
-var PARENT_FOLDER_ID = "1PxnZkUf507tB_n8L6X1wCYIrqwy1frn3";
+var SPREADSHEET_ID = "1bmQJswhn0mpPBOTiiLVkGv8c83Da8mFYxTsqTcK6a1A";
+var PARENT_FOLDER_ID = "1MaUvGb_13QsQly0ub0sOZr91YZzq3Pcf";
 // Folder Google Drive untuk backup CSV pendaftaran (share sebagai Editor ke akun yang deploy GAS).
 var BACKUP_FOLDER_ID = "1oHm0-oiUksJ5K6cNmXqhb8hbGQm_h-0B";
-var BACKUP_CSV_NAME = "backup_pendaftaran_IBL_2K26.csv";
+var BACKUP_CSV_NAME = "backup_berkas_pendaftaran_IBL_2K26.csv";
 
 // --- DIVISION QUESTIONS DATABASE ---
 // Extracted from All Divisi Pemberkasan.xlsx to automatically create headers
@@ -317,7 +317,7 @@ function doPost(e) {
           throw new Error("Validasi Gagal: Skala prioritas SnL harus berupa angka dari 1 sampai 10.");
         }
       }
-      if (item && item.question === "Seberapa excited kamu untuk masuk ke divisi Data Management (kasih opsi skala 1-5)") {
+      if (item && item.question === "Seberapa exicted kamu untuk masuk ke divisi Data Management (kasih opsi skala 1-5)") {
         if (!validateNumberRange(item.answer, 1, 5)) {
           throw new Error("Validasi Gagal: Skala excited Data Management harus berupa angka dari 1 sampai 5.");
         }
@@ -415,7 +415,7 @@ function doPost(e) {
         headers = [
           "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan", 
           "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
-          "Kelebihan & Kekurangan", "Hal Unik",
+          "Kelebihan & Kekurangan", "Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?",
           "General Q: Apa yang kamu ketahui tentang IBL?",
           "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
           "General Q: Apa kesibukan kamu pada semester depan?",
@@ -476,7 +476,7 @@ function doPost(e) {
       
       // Map new general/essay fields
       newRowValues[getHeaderColIndex("Kelebihan & Kekurangan")] = kelebihanKekurangan;
-      newRowValues[getHeaderColIndex("Hal Unik")] = halUnik;
+      newRowValues[getHeaderColIndex("Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?")] = halUnik;
       for (var g = 0; g < generalAnswers.length; g++) {
         var item = generalAnswers[g];
         if (item && item.question) {
@@ -509,7 +509,7 @@ function doPost(e) {
     // 3. Catat ringkasan ke sheet master "Semua Form" (satu baris per pendaftar, lintas divisi).
     // Link berkas diambil dari folder subdivisi pertama (file yang diupload identik di tiap divisi).
     var masterFileUrls = (divisions.length > 0 && uploadedFiles[divisions[0].name]) ? uploadedFiles[divisions[0].name] : {};
-    logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, kelebihanKekurangan, halUnik, generalAnswers, masterFileUrls);
+    logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, kelebihanKekurangan, halUnik, generalAnswers, answers1, answers2, masterFileUrls);
 
     // 4. Backup data pendaftar ke file CSV di folder Drive backup (best-effort).
     backupToCsv({
@@ -523,7 +523,7 @@ function doPost(e) {
       "Pilihan Subdivisi 1": subdivisi1,
       "Pilihan Subdivisi 2": subdivisi2,
       "Kelebihan & Kekurangan": kelebihanKekurangan,
-      "Hal Unik": halUnik,
+      "Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?": halUnik,
       "generalAnswers": generalAnswers,
       "answers1": answers1,
       "answers2": answers2,
@@ -571,26 +571,45 @@ function getOrCreateSubFolder(parentFolder, folderName) {
  * Catat satu baris ringkasan pendaftar ke sheet master "Semua Form"
  * (menampung seluruh pendaftar lintas divisi). Sheet dibuat otomatis bila belum ada.
  */
-function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, kelebihanKekurangan, halUnik, generalAnswers, fileUrls) {
+function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsapp, lineId, subdivisi1, subdivisi2, kelebihanKekurangan, halUnik, generalAnswers, answers1, answers2, fileUrls) {
   var sheetName = "Semua Form";
   var sheet = ss.getSheetByName(sheetName);
   if (!sheet) {
     sheet = ss.insertSheet(sheetName);
   }
 
-  var headers = [
+  // Susun daftar kolom: baseline + seluruh pertanyaan tiap divisi + link berkas.
+  var baselineHeaders = [
     "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan",
     "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
-    "Kelebihan & Kekurangan", "Hal Unik",
+    "Kelebihan & Kekurangan", "Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?",
     "General Q: Apa yang kamu ketahui tentang IBL?",
     "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
     "General Q: Apa kesibukan kamu pada semester depan?",
     "General Q: Skala prioritas IBL2K26 bagi kamu!",
-    "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?",
-    "Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio"
+    "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?"
   ];
+  
+  var divisionHeaders = [];
+  for (var divName in DIVISION_DATA) {
+    var db = DIVISION_DATA[divName];
+    var qs = db.questions || [];
+    for (var q = 0; q < qs.length; q++) {
+      divisionHeaders.push(divName + " | Divisi Q: " + qs[q]);
+    }
+    var cs = db.cases || [];
+    for (var c = 0; c < cs.length; c++) {
+      divisionHeaders.push(divName + " | Study Case: " + cs[c]);
+    }
+  }
+  
+  var fileHeaders = ["Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio"];
+  var headers = baselineHeaders.concat(divisionHeaders).concat(fileHeaders);
 
+  // Peta nilai: default "-" untuk kolom yang tidak diisi.
   var valMap = {};
+  for (var i = 0; i < headers.length; i++) valMap[headers[i]] = "-";
+
   valMap["Timestamp"] = timestamp;
   valMap["Nama Lengkap"] = nama;
   valMap["NRP"] = nrp;
@@ -601,7 +620,7 @@ function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsa
   valMap["Pilihan Subdivisi 1"] = subdivisi1;
   valMap["Pilihan Subdivisi 2"] = subdivisi2;
   valMap["Kelebihan & Kekurangan"] = kelebihanKekurangan;
-  valMap["Hal Unik"] = halUnik;
+  valMap["Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?"] = halUnik;
   
   for (var g = 0; g < generalAnswers.length; g++) {
     var item = generalAnswers[g];
@@ -609,6 +628,10 @@ function logToMasterSheet(ss, timestamp, nama, nrp, departemen, angkatan, whatsa
       valMap["General Q: " + item.question] = item.answer;
     }
   }
+  
+  // Isi jawaban subdivisi 1 & 2 ke kolom divisi terkait
+  fillAnswerColumns(valMap, subdivisi1, answers1 || []);
+  fillAnswerColumns(valMap, subdivisi2, answers2 || []);
   
   valMap["Link CV"] = fileUrls["cv"] || "";
   valMap["Link KTM"] = fileUrls["ktm"] || "";
@@ -651,7 +674,7 @@ function backupToCsv(rowData) {
     var baselineHeaders = [
       "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan",
       "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
-      "Kelebihan & Kekurangan", "Hal Unik",
+      "Kelebihan & Kekurangan", "Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?",
       "General Q: Apa yang kamu ketahui tentang IBL?",
       "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
       "General Q: Apa kesibukan kamu pada semester depan?",
@@ -688,7 +711,7 @@ function backupToCsv(rowData) {
     valueMap["Pilihan Subdivisi 1"] = rowData["Pilihan Subdivisi 1"];
     valueMap["Pilihan Subdivisi 2"] = rowData["Pilihan Subdivisi 2"];
     valueMap["Kelebihan & Kekurangan"] = rowData["Kelebihan & Kekurangan"];
-    valueMap["Hal Unik"] = rowData["Hal Unik"];
+    valueMap["Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?"] = rowData["Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?"];
 
     var genAnswers = rowData["generalAnswers"] || [];
     for (var g = 0; g < genAnswers.length; g++) {
@@ -857,14 +880,27 @@ function alignMasterSheetHeaders(sheet) {
   var expectedHeaders = [
     "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan",
     "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
-    "Kelebihan & Kekurangan", "Hal Unik",
+    "Kelebihan & Kekurangan", "Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?",
     "General Q: Apa yang kamu ketahui tentang IBL?",
     "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
     "General Q: Apa kesibukan kamu pada semester depan?",
     "General Q: Skala prioritas IBL2K26 bagi kamu!",
-    "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?",
-    "Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio"
+    "General Q: Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?"
   ];
+  
+  for (var divName in DIVISION_DATA) {
+    var db = DIVISION_DATA[divName];
+    var qs = db.questions || [];
+    for (var q = 0; q < qs.length; q++) {
+      expectedHeaders.push(divName + " | Divisi Q: " + qs[q]);
+    }
+    var cs = db.cases || [];
+    for (var c = 0; c < cs.length; c++) {
+      expectedHeaders.push(divName + " | Study Case: " + cs[c]);
+    }
+  }
+  
+  expectedHeaders.push("Link CV", "Link KTM", "Link Twibbon", "Link Bukti Follow", "Link Portofolio");
   
   reorderSheetColumns(sheet, expectedHeaders);
 }
@@ -876,7 +912,7 @@ function alignDivisionSheetHeaders(sheet, divName) {
   var expectedHeaders = [
     "Timestamp", "Nama Lengkap", "NRP", "Departemen", "Angkatan", 
     "No WhatsApp", "ID Line", "Pilihan Subdivisi 1", "Pilihan Subdivisi 2",
-    "Kelebihan & Kekurangan", "Hal Unik",
+    "Kelebihan & Kekurangan", "Apa satu hal yang kalian inginkan kami ketahui tentang diri Anda yang tidak dapat terlihat dari dokumen tertulis (CV atau portofolio) Anda?",
     "General Q: Apa yang kamu ketahui tentang IBL?",
     "General Q: Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
     "General Q: Apa kesibukan kamu pada semester depan?",
