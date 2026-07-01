@@ -56,14 +56,14 @@ export const FormStepFields = ({
         
         <Dropdown
           label={FORM_LABELS.dropdown + " *"}
-          options={DROPDOWN_OPTIONS}
+          options={DROPDOWN_OPTIONS.filter(opt => opt !== currentData.subdivisi2)}
           selected={currentData.subdivisi1 || ""}
           onSelect={(val: string) => updateField("subdivisi1", val)}
         />
 
         <Dropdown
           label={FORM_LABELS.dropdown2}
-          options={DROPDOWN_OPTIONS_2}
+          options={DROPDOWN_OPTIONS_2.filter(opt => opt !== currentData.subdivisi1)}
           selected={currentData.subdivisi2 || ""}
           onSelect={(val: string) => updateField("subdivisi2", val)}
         />
