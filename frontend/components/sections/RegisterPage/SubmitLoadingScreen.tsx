@@ -78,7 +78,7 @@ export const SubmitLoadingScreen = () => {
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className="font-crosner text-center text-white text-base sm:text-lg uppercase tracking-wider min-h-[1.5em]"
+          className="font-crosner text-center text-white text-base sm:text-lg uppercase tracking-widest min-h-[1.5em]"
         >
           {STAGES[stage]}
         </motion.p>

@@ -70,7 +70,7 @@ export const PortfolioReminderModal = ({
 
         <h2
           id="portfolio-reminder-title"
-          className="font-crosner text-2xl sm:text-3xl uppercase tracking-wider text-[#7E0202]"
+          className="font-crosner text-2xl sm:text-3xl uppercase tracking-widest text-[#7E0202]"
         >
           Perhatian!
         </h2>
