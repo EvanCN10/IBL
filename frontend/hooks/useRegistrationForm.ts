@@ -25,6 +25,8 @@ export const initialStepData = (): StepData => ({
   angkatan: "",
   subdivisi1: "",
   subdivisi2: "",
+  kelebihanKekurangan: "",
+  halUnik: "",
 });
 
 export const initialUploadData = (): UploadData => ({
@@ -39,6 +41,7 @@ export const useRegistrationForm = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<RegisterFormData>({
     informasiUmum: initialStepData(),
+    pertanyaanGeneral: {},
     subdivisi1: {},
     subdivisi2: {},
     uploadBerkas: initialUploadData(),
@@ -56,10 +59,12 @@ export const useRegistrationForm = () => {
       case 1:
         return { type: "form" as const, key: "informasiUmum" as const, title: "INFORMASI UMUM" };
       case 2:
-        return { type: "form" as const, key: "subdivisi1" as const, title: "SUBDIVISI 1" };
+        return { type: "form" as const, key: "pertanyaanGeneral" as const, title: "PERTANYAAN GENERAL" };
       case 3:
-        return { type: "form" as const, key: "subdivisi2" as const, title: "SUBDIVISI 2" };
+        return { type: "form" as const, key: "subdivisi1" as const, title: "SUBDIVISI 1" };
       case 4:
+        return { type: "form" as const, key: "subdivisi2" as const, title: "SUBDIVISI 2" };
+      case 5:
         return { type: "upload" as const, key: "uploadBerkas" as const, title: "UPLOAD BERKAS" };
       default:
         return { type: "form" as const, key: "informasiUmum" as const, title: "INFORMASI UMUM" };
@@ -74,7 +79,7 @@ export const useRegistrationForm = () => {
     setFormData((prev) => ({
       ...prev,
       [currentKey]: {
-        ...prev[currentKey as "informasiUmum" | "subdivisi1" | "subdivisi2"],
+        ...prev[currentKey as "informasiUmum" | "pertanyaanGeneral" | "subdivisi1" | "subdivisi2"],
         [field]: value,
       },
     }));
@@ -178,7 +183,7 @@ export const useRegistrationForm = () => {
     return () => clearTimeout(timer);
   }, [step, formData]);
 
-  // Validasi langkah 1-3 (data teks & jawaban). Mengembalikan pesan error atau null bila valid.
+  // Validasi langkah 1-4 (data teks & jawaban). Mengembalikan pesan error atau null bila valid.
   const validateStep = (stepNum: number): string | null => {
     if (stepNum === 1) {
       const info = formData.informasiUmum;
@@ -190,13 +195,25 @@ export const useRegistrationForm = () => {
         !info.departemen?.trim() ||
         !info.angkatan?.trim() ||
         !info.subdivisi1?.trim() ||
-        info.subdivisi1 === "Pilih Subdivisi"
+        info.subdivisi1 === "Pilih Subdivisi" ||
+        !info.kelebihanKekurangan?.trim() ||
+        !info.halUnik?.trim()
       ) {
         return "Mohon lengkapi seluruh informasi umum yang bertanda bintang (*).";
       }
       return null;
     }
     if (stepNum === 2) {
+      const { GENERAL_QUESTIONS } = require("../constants/questions");
+      const gen = formData.pertanyaanGeneral;
+      for (const q of GENERAL_QUESTIONS) {
+        if (!gen[q]?.trim()) {
+          return "Mohon jawab seluruh Pertanyaan General (*).";
+        }
+      }
+      return null;
+    }
+    if (stepNum === 3) {
       const div1 = formData.informasiUmum.subdivisi1;
       if (div1 && div1 !== "Tidak Memilih" && div1 !== "Pilih Subdivisi") {
         const divData = DIVISION_QUESTIONS[div1];
@@ -211,7 +228,7 @@ export const useRegistrationForm = () => {
       }
       return null;
     }
-    if (stepNum === 3) {
+    if (stepNum === 4) {
       const div2 = formData.informasiUmum.subdivisi2;
       if (div2 && div2 !== "Tidak Memilih" && div2 !== "Pilih Subdivisi") {
         const divData = DIVISION_QUESTIONS[div2];
@@ -229,8 +246,8 @@ export const useRegistrationForm = () => {
     return null;
   };
 
-  // Validasi langkah saat ini (1-3); bila valid kembalikan true (dan picu modal
-  // portofolio saat meninggalkan langkah 3). Dipakai bersama oleh handleNext & goToStep.
+  // Validasi langkah saat ini (1-4); bila valid kembalikan true (dan picu modal
+  // portofolio saat meninggalkan langkah 4). Dipakai bersama oleh handleNext & goToStep.
   const advanceFrom = (fromStep: number): boolean => {
     const error = validateStep(fromStep);
     if (error) {
@@ -238,7 +255,7 @@ export const useRegistrationForm = () => {
       return false;
     }
     setSubmitError(null);
-    if (fromStep === 3 && isPortfolioRequired()) {
+    if (fromStep === 4 && isPortfolioRequired()) {
       setShowPortfolioModal(true);
     }
     return true;
@@ -263,14 +280,14 @@ export const useRegistrationForm = () => {
   };
 
   const handleNext = async () => {
-    // Langkah 1-3: validasi data teks/jawaban, lalu maju satu langkah.
-    if (step < 4) {
+    // Langkah 1-4: validasi data teks/jawaban, lalu maju satu langkah.
+    if (step < 5) {
       if (advanceFrom(step)) setStep((s) => s + 1);
       return;
     }
 
-    // STEP 4 VALIDATION & SUBMISSION
-    if (step === 4) {
+    // STEP 5 VALIDATION & SUBMISSION
+    if (step === 5) {
       const uploads = formData.uploadBerkas;
       if (!uploads.cv || !uploads.ktm || !uploads.twibbon || !uploads.buktiFollow) {
         setSubmitError("Mohon lengkapi dokumen wajib (*): CV, KTM, Twibbon, dan Bukti Follow.");
@@ -300,8 +317,11 @@ export const useRegistrationForm = () => {
             departemen: formData.informasiUmum.departemen || "",
             angkatan: formData.informasiUmum.angkatan || "",
             subdivisi1: formData.informasiUmum.subdivisi1 || "",
-            subdivisi2: formData.informasiUmum.subdivisi2 || ""
+            subdivisi2: formData.informasiUmum.subdivisi2 || "",
+            kelebihanKekurangan: formData.informasiUmum.kelebihanKekurangan || "",
+            halUnik: formData.informasiUmum.halUnik || ""
           },
+          pertanyaanGeneral: formData.pertanyaanGeneral,
           subdivisi1: formData.subdivisi1,
           subdivisi2: formData.subdivisi2,
           uploadBerkas: formData.uploadBerkas
@@ -333,6 +353,7 @@ export const useRegistrationForm = () => {
     setStep(1);
     setFormData({
       informasiUmum: initialStepData(),
+      pertanyaanGeneral: {},
       subdivisi1: {},
       subdivisi2: {},
       uploadBerkas: initialUploadData(),

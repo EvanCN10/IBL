@@ -3,6 +3,14 @@ export interface DivisionQuestionData {
   studyCases: string[];
 }
 
+export const GENERAL_QUESTIONS: string[] = [
+  "Apa yang kamu ketahui tentang IBL?",
+  "Apa motivasi dan alasan kamu untuk mendaftar sebagai staff IBL2K26?",
+  "Apa kesibukan kamu pada semester depan?",
+  "Skala prioritas IBL2K26 bagi kamu!",
+  "Komitmen apa yang bisa kamu berikan ketika nantinya kamu diterima sebagai staff dari IBL2K26?"
+];
+
 export const DIVISION_QUESTIONS: Record<string, DivisionQuestionData> = {
   "UIUX": {
     "divisionQuestions": [

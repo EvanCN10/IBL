@@ -73,13 +73,39 @@ export const markSessionActive = (): void => {
 /* ---------- IndexedDB: berkas (base64) ---------- */
 const openDB = (): Promise<IDBDatabase> =>
   new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
+    let active = true;
+    const timeout = setTimeout(() => {
+      active = false;
+      reject(new Error("IndexedDB connection timeout"));
+    }, 1000); // 1s timeout to prevent hanging in iOS WebViews
+
+    try {
+      if (typeof indexedDB === "undefined") {
+        clearTimeout(timeout);
+        reject(new Error("IndexedDB is undefined"));
+        return;
+      }
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = () => {
+        if (!active) return;
+        const db = req.result;
+        if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+      };
+      req.onsuccess = () => {
+        clearTimeout(timeout);
+        if (active) resolve(req.result);
+        else {
+          try { req.result.close(); } catch {}
+        }
+      };
+      req.onerror = () => {
+        clearTimeout(timeout);
+        if (active) reject(req.error || new Error("Unknown IndexedDB error"));
+      };
+    } catch (err) {
+      clearTimeout(timeout);
+      reject(err);
+    }
   });
 
 export const saveFile = async (field: string, file: FileData): Promise<void> => {
