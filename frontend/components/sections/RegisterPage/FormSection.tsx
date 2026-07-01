@@ -12,6 +12,7 @@ import { PortfolioReminderModal } from "./PortfolioReminderModal";
 import { SubmitLoadingScreen } from "./SubmitLoadingScreen";
 import { ValidationErrorToast } from "./ValidationErrorToast";
 import { noiseBg } from "@/constants/registerStyles";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import { StepData } from "@/types/register";
 
 // Direct imports for background graphics to preserve native dimensions
@@ -78,6 +79,15 @@ export const FormSection = () => {
     clearError,
   } = useRegistrationForm();
 
+  // Loop "breathing" (scale [1,1.04,1] repeat: Infinity) pada starBg & sinarAtas
+  // hanya aktif di desktop. Pada layar kecil loop tak terhingga ini dimatikan untuk
+  // meringankan beban compositing/GPU di WebKit (Sari/iOS WKWebView).
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const breathAnimate = isDesktop ? { scale: [1, 1.04, 1] } : { scale: 1 };
+  const breathTransition = isDesktop
+    ? { duration: 3.5, ease: "easeInOut" as const, repeat: Infinity, repeatType: "loop" as const }
+    : { duration: 0 };
+
   if (isSubmitted) {
     return (
       <div className="absolute top-0 left-0 w-[1440px] h-[3323px] select-none pointer-events-none">
@@ -94,15 +104,8 @@ export const FormSection = () => {
           className="absolute top-[1345px] left-0 z-0 pointer-events-none"
         >
           <motion.div
-            animate={{
-              scale: [1, 1.04, 1],
-            }}
-            transition={{
-              duration: 3.5,
-              ease: "easeInOut",
-              repeat: Infinity,
-              repeatType: "loop",
-            }}
+            animate={breathAnimate}
+            transition={breathTransition}
           >
             <Image
               src={starBg}
@@ -125,15 +128,8 @@ export const FormSection = () => {
           className="absolute top-[1432px] left-[-156px] z-0 pointer-events-none"
         >
           <motion.div
-            animate={{
-              scale: [1, 1.04, 1],
-            }}
-            transition={{
-              duration: 3.5,
-              ease: "easeInOut",
-              repeat: Infinity,
-              repeatType: "loop",
-            }}
+            animate={breathAnimate}
+            transition={breathTransition}
           >
             <Image
               src={sinarAtas}
@@ -171,15 +167,8 @@ export const FormSection = () => {
         className="absolute top-[1345px] left-0 z-0 pointer-events-none"
       >
         <motion.div
-          animate={{
-            scale: [1, 1.04, 1],
-          }}
-          transition={{
-            duration: 3.5,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatType: "loop",
-          }}
+          animate={breathAnimate}
+          transition={breathTransition}
         >
           <Image
             src={starBg}
@@ -202,15 +191,8 @@ export const FormSection = () => {
         className="absolute top-[1472px] left-0 z-0 pointer-events-none"
       >
         <motion.div
-          animate={{
-            scale: [1, 1.04, 1],
-          }}
-          transition={{
-            duration: 3.5,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatType: "loop",
-          }}
+          animate={breathAnimate}
+          transition={breathTransition}
         >
           <Image
             src={sinarAtas}

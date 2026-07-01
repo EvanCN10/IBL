@@ -12,7 +12,12 @@ export default function RegisterLayout({
 }>) {
   return (
     <>
-      <link rel="preload" as="image" href="/images/Full_Page_Desktop.webp" />
+      {/*
+        Preload full-res 2880x6646 dihapus. Background kini dilayari via next/image
+        dengan `priority` + `sizes`, yang sudah memprioritaskan fetch variant webp
+        yang sesuai viewport. Preload manual aset full-res justru memaksa WebKit
+        men-decode ~19 MP di tiap perangkat (penyebab crash Safari/iOS).
+      */}
       {children}
     </>
   );
