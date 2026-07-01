@@ -127,7 +127,7 @@ export const DIVISION_QUESTIONS: Record<string, DivisionQuestionData> = {
     "studyCases": [
       "kamu diberi tugas menjadi operator untuk mengoprasikan Audio,Proyektor,Score board akan tetapi ada salah satu komponen audio yang rusak, Proyektor yang awalnya bisa namun tiba- tiba mati, dan Kabel serta Score Board mengalami kerusakan dan Kabelnya terputus bagaimana solusimu agar tetap bisa melaksanakan event dengan baik dan bagaimana caramu berkoordinasi dengan yang lain?",
       "Apabila sudah melakukan penyewaan vendor, tetapi saat hari h pelakasanaan, vendor tersebut melakukan pemutusan kontrak secara sepihak. Bagaimana caramu mengatasi permasalahan tersebut dan apa tindakanmu untuk menunjukan profesionalitas sebagai seorang staf logistic yang berkewajiban untuk memenuhi kebutuhan perlengkapan",
-      "Jika saat Pengembalian barang milik vendor terdapat kerusakan dikarenakan kesengajaan atau ketidaksengajaan panitia atau peserta , apa yang akan kamu lakukan untuk bertanggung jawab kepada vendor atas kerusakan yang diperbuat dan bagaimana caramu untuk memastikan hal  tidak terjadi lagi"
+      "Jika saat Pengembalian barang milik vendor terdapat kerusakan dikarenakan kesengajaan atau ketidaksengajaan panitia atau peserta , apa yang akan kamu lakukan untuk bertanggung jawab kepada vendor atas kerusakan yang diperbuat dan bagaimana caramu untuk memastikan hal tidak terjadi lagi"
     ]
   },
   "Medical": {
