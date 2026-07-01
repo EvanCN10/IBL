@@ -36,7 +36,7 @@ export default function Register() {
             backgroundPosition: "top center",
             backgroundRepeat: "no-repeat",
             width: "100%",
-            aspectRatio: "2880 / 6646",
+            height: "calc(100vw * 3323 / 1440)",
           }}
         >
           <h1 className="sr-only">Open Recruitment Staff IBL 2K26 — Pendaftaran</h1>
