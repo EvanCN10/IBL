@@ -765,6 +765,8 @@ function csvEscape(value) {
 function formatSheetPremium(sheet, headersCount) {
   if (headersCount <= 0) return;
   
+  var lastRow = sheet.getLastRow();
+  
   // 1. Format Header Row (Row 1)
   var headerRange = sheet.getRange(1, 1, 1, headersCount);
   headerRange.setFontWeight("bold");
@@ -772,30 +774,20 @@ function formatSheetPremium(sheet, headersCount) {
   headerRange.setBackground("#1F4E79"); // Classic Navy
   headerRange.setHorizontalAlignment("center");
   headerRange.setVerticalAlignment("middle");
-  sheet.setRowHeight(1, 28);
+  headerRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
+  sheet.setRowHeight(1, 40); // Set a comfortable height for wrapped headers
   sheet.setFrozenRows(1);
   
-  // 2. Set horizontal alignments and wrapping for data
-  var lastRow = sheet.getLastRow();
+  // 2. Format Data Range (if any rows exist)
   if (lastRow > 1) {
-    for (var col = 1; col <= headersCount; col++) {
-      var colRange = sheet.getRange(2, col, lastRow - 1, 1);
-      
-      // Determine alignment and wrapping based on column index
-      if (col === 1 || col === 3 || col === 5 || col === 6 || col === 7 || col === 8 || col === 9) {
-        // Timestamp, NRP, Angkatan, WhatsApp, Line, Subdivisi 1 & 2
-        colRange.setHorizontalAlignment("center");
-        colRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      } else if (col >= 10 && col <= headersCount - 5) {
-        // Kelebihan/Kekurangan, Hal Unik, General Qs, Division Qs, Study Cases
-        colRange.setHorizontalAlignment("left");
-        colRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
-      } else {
-        // Link CV, KTM, Twibbon, Bukti Follow, Portofolio
-        colRange.setHorizontalAlignment("center");
-        colRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-      }
-      colRange.setVerticalAlignment("middle");
+    var dataRange = sheet.getRange(2, 1, lastRow - 1, headersCount);
+    dataRange.setHorizontalAlignment("center");
+    dataRange.setVerticalAlignment("middle");
+    dataRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
+    
+    // Set a clean height for the data rows
+    for (var r = 2; r <= lastRow; r++) {
+      sheet.setRowHeight(r, 24);
     }
   }
   
@@ -806,41 +798,30 @@ function formatSheetPremium(sheet, headersCount) {
     
     // Set a min/max width for readability
     if (col >= 10 && col <= headersCount - 5) {
-      if (currentWidth < 250) {
-        sheet.setColumnWidth(col, 250);
-      } else if (currentWidth > 450) {
-        sheet.setColumnWidth(col, 450);
+      if (currentWidth < 220) {
+        sheet.setColumnWidth(col, 220);
+      } else if (currentWidth > 400) {
+        sheet.setColumnWidth(col, 400);
       }
     } else {
       if (currentWidth < 100) {
         sheet.setColumnWidth(col, 100);
-      } else if (currentWidth > 200) {
-        sheet.setColumnWidth(col, 200);
+      } else if (currentWidth > 180) {
+        sheet.setColumnWidth(col, 180);
       }
     }
   }
 }
 
 /**
- * Format a single newly appended row to be center-aligned or left-aligned with wrapping.
+ * Format a single newly appended row to be center-aligned vertically/horizontally with wrapping.
  */
 function formatNewRow(sheet, rowIndex, headersCount) {
-  sheet.setRowHeight(rowIndex, 22);
-  
-  for (var col = 1; col <= headersCount; col++) {
-    var cell = sheet.getRange(rowIndex, col);
-    if (col === 1 || col === 3 || col === 5 || col === 6 || col === 7 || col === 8 || col === 9) {
-      cell.setHorizontalAlignment("center");
-      cell.setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-    } else if (col >= 10 && col <= headersCount - 5) {
-      cell.setHorizontalAlignment("left");
-      cell.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
-    } else {
-      cell.setHorizontalAlignment("center");
-      cell.setWrapStrategy(SpreadsheetApp.WrapStrategy.CLIP);
-    }
-    cell.setVerticalAlignment("middle");
-  }
+  sheet.setRowHeight(rowIndex, 24);
+  var rowRange = sheet.getRange(rowIndex, 1, 1, headersCount);
+  rowRange.setHorizontalAlignment("center");
+  rowRange.setVerticalAlignment("middle");
+  rowRange.setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
 }
 
 /**
