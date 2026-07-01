@@ -222,6 +222,16 @@
   }
 }
 
+/* Kunci ukuran di atas 1440px */
+@media (min-width: 1220px) {
+  :root {
+    --form-font-size: 16px;        /* Berhenti tumbuh dan terkunci di 26px */
+    --form-title-font-size: 64px;  /* Terkunci di 83px */
+    --form-error-font-size: 14px;  /* Terkunci di 23px */
+  }
+}
+
+
 .dark {
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;

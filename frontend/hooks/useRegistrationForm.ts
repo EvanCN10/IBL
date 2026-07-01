@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { RegisterFormData, StepData, UploadData, FileData } from "@/types/register";
 import { submitRegistration } from "@/lib/api";
-import { DIVISION_QUESTIONS } from "../constants/questions";
+import { DIVISION_QUESTIONS, GENERAL_QUESTIONS } from "../constants/questions";
 import { PORTFOLIO_REQUIRED_DIVISIONS } from "../constants/registerForm";
 import {
   isStorageAvailable,
@@ -201,14 +201,34 @@ export const useRegistrationForm = () => {
       ) {
         return "Mohon lengkapi seluruh informasi umum yang bertanda bintang (*).";
       }
+
+      // Validasi Angka Input Utama
+      if (!/^\d{10}$/.test(info.nrp.trim())) {
+        return "NRP harus berupa 10 digit angka.";
+      }
+      if (!/^\d{8,15}$/.test(info.whatsapp.trim())) {
+        return "Nomor WhatsApp tidak valid (harus berupa angka saja, minimal 8 digit).";
+      }
+      if (!/^\d{4}$/.test(info.angkatan.trim())) {
+        return "Angkatan harus berupa 4 digit angka (contoh: 2024).";
+      }
       return null;
     }
     if (stepNum === 2) {
-      const { GENERAL_QUESTIONS } = require("../constants/questions");
       const gen = formData.pertanyaanGeneral;
       for (const q of GENERAL_QUESTIONS) {
         if (!gen[q]?.trim()) {
           return "Mohon jawab seluruh Pertanyaan General (*).";
+        }
+      }
+
+      // Validasi Skala Prioritas General (1-10)
+      const scaleQ = "Skala prioritas IBL2K26 bagi kamu!";
+      const scaleVal = gen[scaleQ];
+      if (scaleVal) {
+        const num = parseInt(scaleVal.trim(), 10);
+        if (isNaN(num) || num < 1 || num > 10) {
+          return "Jawaban untuk 'Skala prioritas' harus berupa angka bulat dari 1 sampai 10.";
         }
       }
       return null;
@@ -224,6 +244,24 @@ export const useRegistrationForm = () => {
               return "Mohon jawab seluruh pertanyaan subdivisi pilihan 1 (*).";
             }
           }
+
+          // Validasi skala prioritas SnL (1-10)
+          const snlQ = "Berikan skala prioritas dengan rentang 1-10 untuk IBL 2026";
+          if (formData.subdivisi1[snlQ]) {
+            const num = parseInt(formData.subdivisi1[snlQ].trim(), 10);
+            if (isNaN(num) || num < 1 || num > 10) {
+              return "Jawaban skala prioritas untuk SnL harus berupa angka dari 1 sampai 10.";
+            }
+          }
+
+          // Validasi skala excited Damen (1-5)
+          const damenQ = "Seberapa excited kamu untuk masuk ke divisi Data Management (kasih opsi skala 1-5)";
+          if (formData.subdivisi1[damenQ]) {
+            const num = parseInt(formData.subdivisi1[damenQ].trim(), 10);
+            if (isNaN(num) || num < 1 || num > 5) {
+              return "Jawaban skala excited untuk Data Management harus berupa angka dari 1 sampai 5.";
+            }
+          }
         }
       }
       return null;
@@ -237,6 +275,24 @@ export const useRegistrationForm = () => {
           for (const q of required) {
             if (!formData.subdivisi2[q]?.trim()) {
               return "Mohon jawab seluruh pertanyaan subdivisi pilihan 2 (*).";
+            }
+          }
+
+          // Validasi skala prioritas SnL (1-10)
+          const snlQ = "Berikan skala prioritas dengan rentang 1-10 untuk IBL 2026";
+          if (formData.subdivisi2[snlQ]) {
+            const num = parseInt(formData.subdivisi2[snlQ].trim(), 10);
+            if (isNaN(num) || num < 1 || num > 10) {
+              return "Jawaban skala prioritas untuk SnL harus berupa angka dari 1 sampai 10.";
+            }
+          }
+
+          // Validasi skala excited Damen (1-5)
+          const damenQ = "Seberapa excited kamu untuk masuk ke divisi Data Management (kasih opsi skala 1-5)";
+          if (formData.subdivisi2[damenQ]) {
+            const num = parseInt(formData.subdivisi2[damenQ].trim(), 10);
+            if (isNaN(num) || num < 1 || num > 5) {
+              return "Jawaban skala excited untuk Data Management harus berupa angka dari 1 sampai 5.";
             }
           }
         }

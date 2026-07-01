@@ -24,6 +24,14 @@ export async function submitRegistration(
     subdivisi1: formData.informasiUmum.subdivisi1,
     subdivisi2: formData.informasiUmum.subdivisi2,
     
+    // New essay & general questions answers
+    kelebihanKekurangan: formData.informasiUmum.kelebihanKekurangan,
+    halUnik: formData.informasiUmum.halUnik,
+    generalAnswers: Object.entries(formData.pertanyaanGeneral).map(([q, ans]) => ({
+      question: q,
+      answer: ans
+    })),
+    
     // Convert subdivisiAnswers to structured format for backend
     answers1: Object.entries(formData.subdivisi1).map(([q, ans]) => ({
       question: q,

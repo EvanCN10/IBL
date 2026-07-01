@@ -2,7 +2,7 @@ import React from "react";
 import InputField from "@/components/ui/InputField";
 import Dropdown from "@/components/ui/Dropdown";
 import { FORM_LABELS, DROPDOWN_OPTIONS, DROPDOWN_OPTIONS_2 } from "@/constants/registerForm";
-import { DIVISION_QUESTIONS } from "@/constants/questions";
+import { DIVISION_QUESTIONS, GENERAL_QUESTIONS } from "@/constants/questions";
 import { StepData, RegisterFormData } from "@/types/register";
 
 interface FormStepFieldsProps {
@@ -127,10 +127,9 @@ export const FormStepFields = ({
 
   // STEP 2: PERTANYAAN GENERAL
   if (step === 2) {
-    const { GENERAL_QUESTIONS } = require("@/constants/questions");
     return (
       <div className="flex flex-col gap-5">
-        <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-wider uppercase border-l-4 border-[#2B918E] pl-2 mb-1">
+        <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-widest uppercase border-l-4 border-[#2B918E] pl-2 mb-1">
           Pertanyaan General
         </h4>
         {GENERAL_QUESTIONS.map((q: string, idx: number) => (
@@ -180,7 +179,7 @@ export const FormStepFields = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
         </div>
-        <h3 className="font-crosner text-xl font-semibold text-black uppercase tracking-wider">
+        <h3 className="font-crosner text-xl font-semibold text-black uppercase tracking-widest">
           {isChoice1 ? "Subdivisi Pilihan 1 Kosong" : "Subdivisi Pilihan 2 Kosong / Tidak Dipilih"}
         </h3>
         <p className="font-body text-sm text-gray-600 max-w-md">
@@ -219,7 +218,7 @@ export const FormStepFields = ({
       {/* Part 1: Pertanyaan Divisi */}
       {divisionQuestions.length > 0 && (
         <div className="flex flex-col gap-5">
-          <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-wider uppercase border-l-4 border-[#2B918E] pl-2 mb-1">
+          <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-widest uppercase border-l-4 border-[#2B918E] pl-2 mb-1">
             Pertanyaan Divisi
           </h4>
           {divisionQuestions.map((q, idx) => (
@@ -256,7 +255,7 @@ export const FormStepFields = ({
       {/* Part 2: Pertanyaan Study Case */}
       {studyCases.length > 0 && (
         <div className="flex flex-col gap-5 mt-4">
-          <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-wider uppercase border-l-4 border-[#F4631E] pl-2 mb-1">
+          <h4 className="font-crosner text-sm font-bold text-gray-700 tracking-widest uppercase border-l-4 border-[#F4631E] pl-2 mb-1">
             Studi Kasus (Study Case)
           </h4>
           {studyCases.map((q, idx) => (
