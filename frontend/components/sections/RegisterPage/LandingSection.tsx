@@ -7,115 +7,104 @@ import orangKiri from "@/public/images/orang kiri.svg";
 import vectorHitam from "@/public/images/vector hitam.svg";
 import vectorBiru from "@/public/images/vector biru.svg";
 import { motion, Variants } from "framer-motion";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 
-// Stagger parent container for vector entry animations
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.35,
-    },
-  },
-};
-
-// Vector Hitam: Staggered entrance from top + visible infinite scale breathing
-const vectorHitamVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: -30,
-    scale: 1,
-  },
+// Builder varian: animasi entrance selalu jalan; "breathing" (scale loop `repeat:
+// Infinity`) hanya aktif saat `breathe=true` (desktop). Pada layar kecil kita
+// matikan loop tak terhingga ini untuk meringankan beban compositing/GPU di WebKit
+// (Safari/iOS WKWebView) tanpa mengubah tampilan akhir elemen.
+const makeVectorVariants = (breathe: boolean, breathDuration: number): Variants => ({
+  hidden: { opacity: 0, y: -30, scale: 1 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: [1, 1.05, 1],
+    scale: breathe ? [1, 1.05, 1] : 1,
     transition: {
       opacity: { duration: 0.6, ease: "easeInOut" },
       y: { duration: 0.6, ease: "easeInOut" },
-      scale: {
-        duration: 5,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "loop",
-      },
+      ...(breathe
+        ? {
+            scale: {
+              duration: breathDuration,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "loop",
+            },
+          }
+        : {}),
     },
   },
-};
+});
 
-// Vector Biru: Staggered entrance from top + visible infinite scale breathing (offset duration)
-const vectorBiruVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: -30,
-    scale: 1,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: [1, 1.05, 1],
-    transition: {
-      opacity: { duration: 0.6, ease: "easeInOut" },
-      y: { duration: 0.6, ease: "easeInOut" },
-      scale: {
-        duration: 5.5,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "loop",
-      },
-    },
-  },
-};
-
-// Orang Kiri: Spring fade-in from left + visible infinite scale breathing
-const orangKiriVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    x: -120,
-    scale: 1,
-  },
+const makeOrangVariants = (
+  breathe: boolean,
+  breathDuration: number,
+  fromX: number,
+  delay: number,
+): Variants => ({
+  hidden: { opacity: 0, x: fromX, scale: 1 },
   visible: {
     opacity: 1,
     x: 0,
-    scale: [1, 1.07, 1],
+    scale: breathe ? [1, 1.07, 1] : 1,
     transition: {
       opacity: { duration: 0.8, ease: "easeOut" },
-      x: { type: "spring", stiffness: 60, damping: 15, delay: 0.2 },
-      scale: {
-        duration: 4,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "loop",
-      },
+      x: { type: "spring", stiffness: 60, damping: 15, delay },
+      ...(breathe
+        ? {
+            scale: {
+              duration: breathDuration,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "loop",
+            },
+          }
+        : {}),
     },
   },
-};
-
-// Orang Kanan: Spring fade-in from right + visible infinite scale breathing (offset duration)
-const orangKananVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    x: 120,
-    scale: 1,
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    scale: [1, 1.07, 1],
-    transition: {
-      opacity: { duration: 0.8, ease: "easeOut" },
-      x: { type: "spring", stiffness: 60, damping: 15, delay: 0.3 },
-      scale: {
-        duration: 4.5,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "loop",
-      },
-    },
-  },
-};
-
+});
 
 export const LandingSection = () => {
+  // Loop breathing hanya di desktop (>= 1024px). SSR/mobile => false.
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.35 } },
+  };
+
+  const vectorHitamVariants = makeVectorVariants(isDesktop, 5);
+  const vectorBiruVariants = makeVectorVariants(isDesktop, 5.5);
+  const orangKiriVariants = makeOrangVariants(isDesktop, 4, -120, 0.2);
+  const orangKananVariants = makeOrangVariants(isDesktop, 4.5, 120, 0.3);
+
+  // Mobile: render statik (tanpa framer-motion) untuk meminimalkan GPU compositing
+  // layer yang memicu crash jetsam WebKit di ambang memori. Desktop: animasi penuh.
+  if (!isDesktop) {
+    return (
+      <div className="relative w-[1440px] flex items-center">
+        <div className="absolute z-2 top-0">
+          <Image src={vectorHitam} alt="Decorative Vector Hitam" loading="lazy" />
+        </div>
+        <div className="absolute z-1 top-0">
+          <Image src={vectorBiru} alt="Decorative Vector Biru" loading="lazy" />
+        </div>
+        <div className="flex absolute gap-[7px] top-[341px] justify-center w-full z-5">
+          <div className="flex items-center justify-center">
+            <Image src={orangKiri} alt="Ilustrasi pemain basket kiri" loading="lazy" />
+          </div>
+          <div className="flex items-center justify-center">
+            <Image src={orangKanan} alt="Ilustrasi pemain basket kanan" loading="lazy" />
+          </div>
+        </div>
+        <div className="flex absolute top-[719px] gap-[47px] w-full justify-center">
+          <Image src="/texts/IBL.svg" alt="IBL" width={666} height={199} priority />
+          <Image src="/texts/2K26.svg" alt="2K26" width={666} height={199} loading="lazy" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial="hidden"
@@ -192,4 +181,3 @@ export const LandingSection = () => {
     </motion.div>
   );
 };
-

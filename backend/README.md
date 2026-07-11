@@ -7,9 +7,9 @@ Backend ini dikembangkan menggunakan **Google Apps Script (GAS)** untuk menginte
 ## 🔗 Link Aset Google Workspace (Kepanitiaan)
 Berikut adalah link aset Google yang telah terhubung ke backend:
 * **Google Spreadsheet (Database Respon)**:
-  👉 [IBL 2K26 - Database Pendaftaran Staff](https://docs.google.com/spreadsheets/d/172zZSLR8yvFnwesEMcvwIo8QLByZ-0eLoQw5uzyK-cc/edit?usp=sharing)
+  👉 [IBL 2K26 - Database Pendaftaran Staff](https://docs.google.com/spreadsheets/d/1WQ5WGB3Bfoq637RiJk3yLqMh89XR6wMAM3NILxw0yME/edit?usp=sharing)
 * **Google Drive (Penyimpanan Berkas)**:
-  👉 [IBL 2K26 - Berkas Pendaftaran Staff](https://drive.google.com/drive/folders/1PxnZkUf507tB_n8L6X1wCYIrqwy1frn3?usp=sharing)
+  👉 [IBL 2K26 - Berkas Pendaftaran Staff](https://drive.google.com/drive/folders/1MaUvGb_13QsQly0ub0sOZr91YZzq3Pcf?usp=sharing)
 * **Google Drive Backup (Backup CSV Pendaftaran)**:
   👉 [IBL 2K26 - Backup CSV Pendaftaran Staff](https://drive.google.com/drive/folders/1oHm0-oiUksJ5K6cNmXqhb8hbGQm_h-0B?usp=sharing)
 
@@ -24,7 +24,7 @@ Berikut adalah link aset Google yang telah terhubung ke backend:
      *(Jika pendaftar memilih 2 subdivisi, berkas akan disimpan di folder kedua divisi tersebut agar memudahkan penilaian masing-masing koordinator divisi).*
    * **Pencatatan Google Spreadsheet**: Mengelola tab sheet otomatis per divisi di Spreadsheet utama. Jika tab baru dibuat, script otomatis mengisi kolom header awal beserta **kolom dinamis** untuk seluruh pertanyaan divisi dan studi kasus.
    * **Sheet Master "Semua Form"**: Setiap submit juga mencatat satu baris ringkasan pendaftar ke tab `Semua Form` (menampung seluruh pendaftar lintas divisi) — berisi data dasar, pilihan subdivisi, dan link berkas.
-   * **Backup CSV Otomatis**: Setiap submit juga menambah satu baris ke file `backup_pendaftaran_IBL_2K26.csv` di folder Drive backup. Skema CSV mencakup **seluruh pertanyaan & study case dari semua divisi** (diberi prefix nama divisi); kolom divisi yang tidak dipilih otomatis berisi `-`.
+   * **Backup CSV Otomatis**: Setiap submit juga menambah satu baris ke file `backup_berkas_pendaftaran_IBL_2K26.csv` di folder Drive backup. Skema CSV mencakup **seluruh pertanyaan & study case dari semua divisi** (diberi prefix nama divisi); kolom divisi yang tidak dipilih otomatis berisi `-`.
 
 2. **Frontend Next.js Integration**:
    * **Pembacaan Berkas Base64**: Menambahkan pembacaan file dengan `FileReader` di frontend agar berkas biner di-encode menjadi string base64 sebelum dikirim ke API.
@@ -32,8 +32,10 @@ Berikut adalah link aset Google yang telah terhubung ke backend:
    * **Visual Feedback**: Menambahkan status loading (`isSubmitting`) dan error handling (`submitError`) pada tombol navigasi form.
    * **Konfigurasi Git & Env**: Memasukkan file `.env` ke Git agar tim Anda bisa langsung mengunduh repositori dan menjalankannya tanpa perlu mengonfigurasi API Web App berulang kali.
 
-### ✨ Update Terbaru (Juni 2026)
-* **Migrasi ke Akun Resmi**: Folder Drive dan Spreadsheet sudah dialihkan sepenuhnya ke akun Google Workspace resmi IBL 2K26.
+### ✨ Update Terbaru (Juli 2026)
+* **Migrasi Ulang ke Folder Baru**: Mengubah tujuan ID Folder dan Spreadsheet ke direktori resmi terbaru IBL 2K26 (Juli 2026). Serta mengganti nama file csv ke `backup_berkas_pendaftaran_IBL_2K26.csv`.
+* **Perbaikan Header "Hal Unik"**: Menghapus penggunaan istilah "Hal Unik" di backend dan mengubah semua kemunculannya di Spreadsheet & CSV menjadi teks pertanyaan panjang sesuai dengan label di frontend form (agar sama dengan pertanyaan aslinya).
+* **Fix Validasi Typo Damen**: Memperbaiki typo logika validasi dari "excited" menjadi "exicted" agar cocok dengan format database pertanyaan frontend divisi Data Management.
 * **Bug Fix Duplikasi Kolom Damen**: Memperbaiki isu di mana pertanyaan divisi Damen membuat kolom ganda di spreadsheet akibat perubahan teks pertanyaan (dari "give" ke "berikan"). Sheet sekarang menampung jawaban dengan benar dan rapi.
 * **Perbaikan UI Modal Peringatan (Error Validation)**: Notifikasi jika pendaftar melewatkan pertanyaan wajib kini muncul sebagai pop-up animasi yang elegan di tengah layar (terlepas dari isu scaling browser) dan akan tertutup otomatis setelah 3 detik berkat implementasi **React Portal**.
 * **Standardisasi Istilah**: Memastikan seluruh sistem (Frontend & Backend) menggunakan istilah **NRP** (bukan NIM) secara konsisten.
