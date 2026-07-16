@@ -44,7 +44,7 @@ export default function ResultPage() {
           {/* TwoSix — DOM pertama di dalam wrapper = z paling bawah di atas texture */}
           <TwoSixSection />
           {/* Client animation wrapper for players SVGs */}
-          <PlayersAnimationWrapper />
+          <PlayersAnimationWrapper showStars={false} />
         </div>
       </PageScaleWrapper>
 

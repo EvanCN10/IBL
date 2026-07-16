@@ -13,7 +13,11 @@ import LukaDoncic from "@/public/images/announcement/Luka Doncic.svg";
 import Michael from "@/public/images/announcement/michael.svg";
 import Star from "@/public/images/announcement/star.svg";
 
-export default function PlayersAnimationWrapper() {
+interface PlayersAnimationWrapperProps {
+  showStars?: boolean;
+}
+
+export default function PlayersAnimationWrapper({ showStars = true }: PlayersAnimationWrapperProps) {
   return (
     <div className="relative h-0 w-[1440px] left-1/2 -translate-x-1/2 pointer-events-none">
       {/* SVG Kiri — slide in from left after 0.9s delay */}
@@ -33,11 +37,13 @@ export default function PlayersAnimationWrapper() {
           alt="LeBron James 1"
           className="absolute top-[14px] z-[2] max-w-none"
         />
-        <Image
-          src={Star}
-          alt="Star"
-          className="absolute left-[320px] top-[138px] max-w-none z-15"
-        />
+        {showStars && (
+          <Image
+            src={Star}
+            alt="Star"
+            className="absolute left-[320px] top-[138px] max-w-none z-15"
+          />
+        )}
         <Image
           src={Nikola}
           alt="Nikola"
@@ -67,11 +73,13 @@ export default function PlayersAnimationWrapper() {
           alt="Michael"
           className="absolute right-0 top-[75px] max-w-none"
         />
-        <Image
-          src={Star}
-          alt="Star"
-          className="absolute right-[202px] top-[379px] max-w-none -scale-x-100"
-        />
+        {showStars && (
+          <Image
+            src={Star}
+            alt="Star"
+            className="absolute right-[202px] top-[379px] max-w-none -scale-x-100"
+          />
+        )}
         <Image
           src={Icaz}
           alt="Icaz"
@@ -86,3 +94,4 @@ export default function PlayersAnimationWrapper() {
     </div>
   );
 }
+
