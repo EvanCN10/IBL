@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import Nikola from "@/public/images/announcement/nikola.svg";
 import Icaz from "@/public/images/announcement/icaz.svg";
 import KobeBryant2 from "@/public/images/announcement/Kobe Bryant 2.svg";
@@ -13,11 +14,10 @@ import LukaDoncic from "@/public/images/announcement/Luka Doncic.svg";
 import Michael from "@/public/images/announcement/michael.svg";
 import Star from "@/public/images/announcement/star.svg";
 
-interface PlayersAnimationWrapperProps {
-  showStars?: boolean;
-}
+export default function PlayersAnimationWrapper() {
+  const pathname = usePathname();
+  const showStars = pathname !== "/announcement/result";
 
-export default function PlayersAnimationWrapper({ showStars = true }: PlayersAnimationWrapperProps) {
   return (
     <div className="relative h-0 w-[1440px] left-1/2 -translate-x-1/2 pointer-events-none">
       {/* SVG Kiri — slide in from left after 0.9s delay */}

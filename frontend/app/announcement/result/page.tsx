@@ -14,9 +14,10 @@ function ResultContent() {
   const searchParams = useSearchParams();
   const nrp = searchParams.get("nrp") || "";
   const status = searchParams.get("status") || "";
+  const nameParam = searchParams.get("nama") || searchParams.get("name") || "";
 
   if (status === "lolos") {
-    return <LolosSection nrp={nrp} />;
+    return <LolosSection nrp={nrp} urlName={nameParam} />;
   }
 
   return <TidakLolosSection nrp={nrp} />;
@@ -44,7 +45,7 @@ export default function ResultPage() {
           {/* TwoSix — DOM pertama di dalam wrapper = z paling bawah di atas texture */}
           <TwoSixSection />
           {/* Client animation wrapper for players SVGs */}
-          <PlayersAnimationWrapper showStars={false} />
+          <PlayersAnimationWrapper />
         </div>
       </PageScaleWrapper>
 
