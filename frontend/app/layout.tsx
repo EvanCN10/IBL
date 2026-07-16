@@ -71,7 +71,8 @@ export default function RootLayout({
       lang="en"
       className={`${hollywood.variable} ${crosner.variable} ${drowner.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col"
+        suppressHydrationWarning>
         <Navbar />
         {children}
       </body>
