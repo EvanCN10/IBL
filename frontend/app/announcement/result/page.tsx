@@ -20,7 +20,7 @@ function ResultContent() {
     return <LolosSection nrp={nrp} urlName={nameParam} />;
   }
 
-  return <TidakLolosSection nrp={nrp} />;
+  return <TidakLolosSection nrp={nrp} urlName={nameParam} />;
 }
 
 export default function ResultPage() {
