@@ -24,7 +24,7 @@ export default function LolosSection({ nrp, urlName }: LolosSectionProps) {
       </div>
 
       {/* Ticket wrapper using exact aspect ratio of the SVG (575x363) */}
-      <div className="relative w-[450px] aspect-[575/363] z-0">
+      <div className="relative w-[575px] max-w-full aspect-[575/363] z-0">
         <Image
           src={TicketCongrats}
           alt="Ticket Congrats"
