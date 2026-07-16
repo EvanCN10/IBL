@@ -1,6 +1,15 @@
 import React from "react";
 
-export default function WhatsAppContact() {
+interface WhatsAppContactProps {
+    contactName: string;
+    phoneNumber: string; // e.g., "6281234567890"
+}
+
+export default function WhatsAppContact({ contactName, phoneNumber }: WhatsAppContactProps) {
+    // Pre-fill message for convenience
+    const textMessage = encodeURIComponent("Halo, saya ingin konfirmasi kelulusan IBL2K26.");
+    const waLink = `https://wa.me/${phoneNumber}?text=${textMessage}`;
+
     return (
         <>
             {/* Konfirmasi ke contact person di bawah ini: */}
@@ -26,8 +35,11 @@ export default function WhatsAppContact() {
                 Konfirmasi ke contact person di bawah ini:
             </p>
 
-            {/* WhatsApp Button */}
-            <button
+            {/* WhatsApp Button (Functional Link) */}
+            <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="font-drowner absolute flex items-center justify-center gap-2.5 hover:opacity-90 active:translate-y-0.5 active:shadow-[6px_6px_0px_#000] transition-all select-none cursor-pointer"
                 style={{
                     width: "350px",
@@ -43,6 +55,7 @@ export default function WhatsAppContact() {
                     lineHeight: "1",
                     padding: "10px",
                     fontFamily: "var(--font-drowner), sans-serif",
+                    textDecoration: "none",
                 }}
             >
                 {/* Tabler Icons / brand-whatsapp */}
@@ -62,8 +75,10 @@ export default function WhatsAppContact() {
                     <path d="M3 21l1.65 -3.8a9 9 0 1 1 3.4 2.9l-5.05 .9" />
                     <path d="M9 10a.5 .5 0 0 0 1 0v-1a.5 .5 0 0 0 -1 0v1a5 5 0 0 0 5 5h1a.5 .5 0 0 0 0 -1h-1a.5 .5 0 0 0 0 1" />
                 </svg>
-                <span className="tracking-wide">NOMOR (NAMA)</span>
-            </button>
+                <span className="tracking-wide">
+                    {phoneNumber} ({contactName})
+                </span>
+            </a>
         </>
     );
 }

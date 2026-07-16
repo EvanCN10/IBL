@@ -75,9 +75,10 @@ export default function ResultTicket({
 
                 {/* Text content area */}
                 <div
-                    className="absolute font-drowner text-black px-6 z-10"
+                    className="absolute font-drowner text-black px-6 z-10 flex flex-col items-center justify-center text-center"
                     style={{
                         left: "50%",
+                        top: "52.9%",
                         transform: "translate(-50%, -50%)",
                         ...contentStyle,
                     }}

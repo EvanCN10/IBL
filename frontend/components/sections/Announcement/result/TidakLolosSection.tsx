@@ -23,12 +23,6 @@ export default function TidakLolosSection({ nrp, urlName }: TidakLolosSectionPro
         lineHeight: "15px",
         letterSpacing: "0.08em",
         opacity: 0.8,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        top: "52.9%",
       }}
     >
       <p className="my-0.5">Hi, {displayName}</p>

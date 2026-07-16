@@ -23,14 +23,8 @@ export default function LolosSection({ nrp, urlName }: LolosSectionProps) {
         height: "44.9%",
         fontSize: "16px",
         lineHeight: "1.4",
-        top: "52.9%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
       }}
-      footerNode={<WhatsAppContact />}
+      footerNode={<WhatsAppContact contactName="NAMA" phoneNumber="628000000000" />}
     >
       <p className="mb-2">Hi, {displayName}</p>
       <p className="mb-2">
