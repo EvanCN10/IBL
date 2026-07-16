@@ -5,7 +5,7 @@ import Image from "next/image";
 import TicketCongrats from "@/public/images/announcement/Ticket_Congrats.svg";
 
 interface ResultTicketProps {
-    isLolos: boolean;
+    headerText?: string;
     stickerSrc: any;
     stickerAlt: string;
     stickerClass?: string; // e.g., "w-[260px] sm:w-[280px] mb-[-40px] z-10 relative"
@@ -16,7 +16,7 @@ interface ResultTicketProps {
 }
 
 export default function ResultTicket({
-    isLolos,
+    headerText,
     stickerSrc,
     stickerAlt,
     stickerClass = "w-[320px] sm:w-[350px] h-auto flex items-center justify-center mb-[-36px] z-10 relative",
@@ -47,8 +47,8 @@ export default function ResultTicket({
                     priority
                 />
 
-                {/* Conditional Ticket Header Title (Only for Lolos) */}
-                {isLolos && (
+                {/* Conditional Ticket Header Title */}
+                {headerText && (
                     <div
                         className="absolute font-hollywood text-center select-none uppercase"
                         style={{
@@ -69,7 +69,7 @@ export default function ResultTicket({
                             transform: "translate(-50%, -50%)",
                         }}
                     >
-                        WELCOME TO THE TEAM
+                        {headerText}
                     </div>
                 )}
 

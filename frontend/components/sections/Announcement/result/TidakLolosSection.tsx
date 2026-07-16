@@ -12,7 +12,6 @@ export default function TidakLolosSection({ nrp, urlName }: TidakLolosSectionPro
 
   return (
     <ResultTicket
-      isLolos={false}
       stickerSrc={ThankYouDesktop}
       stickerAlt="Thank You!"
       stickerClass="w-[320px] sm:w-[350px] h-auto flex items-center justify-center mb-[-36px] z-10 relative"
