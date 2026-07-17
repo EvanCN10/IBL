@@ -8,7 +8,7 @@ import Texture from "@/public/images/announcement/Texture.svg";
 import Image from "next/image";
 import TwoSixSection from "@/components/sections/Announcement/TwoSixSection";
 import PageScaleWrapper from "@/components/sections/Announcement/PageScaleWrapper";
-import PlayersAnimationWrapper from "@/components/sections/Announcement/PlayersAnimationWrapper";
+import PlayersAnimationResult from "@/components/sections/Announcement/PlayersAnimationResult";
 
 function ResultContent() {
   const searchParams = useSearchParams();
@@ -45,7 +45,7 @@ export default function ResultPage() {
           {/* TwoSix — DOM pertama di dalam wrapper = z paling bawah di atas texture */}
           <TwoSixSection />
           {/* Client animation wrapper for players SVGs */}
-          <PlayersAnimationWrapper />
+          <PlayersAnimationResult />
         </div>
       </PageScaleWrapper>
 
