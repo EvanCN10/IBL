@@ -1,6 +1,6 @@
 import React from "react";
 import ThankYouDesktop from "@/public/images/announcement/THANKYOU DESKTOP.svg";
-import ResultTicket from "../ResultTicket";
+import ResultTicket from "./ResultTicket";
 import PlayersAnimationResult from "./PlayersAnimationResult";
 interface TidakLolosSectionProps {
   nrp: string;

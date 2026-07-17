@@ -1,6 +1,6 @@
 import React from "react";
 import CongratsDesktop from "@/public/images/announcement/CONGRATS DESKTOP.svg";
-import ResultTicket from "../ResultTicket";
+import ResultTicket from "./ResultTicket";
 import WhatsAppContact from "./WhatsAppContact";
 import PlayersAnimationResult from "./PlayersAnimationResult";
 
