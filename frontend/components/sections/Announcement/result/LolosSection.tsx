@@ -6,10 +6,22 @@ import WhatsAppContact from "./WhatsAppContact";
 interface LolosSectionProps {
   nrp: string;
   urlName?: string;
+  subdivisi?: string;
+  cpName?: string;
+  cpPhone?: string;
 }
 
-export default function LolosSection({ nrp, urlName }: LolosSectionProps) {
+export default function LolosSection({
+  nrp,
+  urlName,
+  subdivisi,
+  cpName,
+  cpPhone,
+}: LolosSectionProps) {
   const displayName = urlName || "(nama)";
+  const acceptMessage = subdivisi
+    ? `Anda telah berhasil lolos Open Recruitment Staff IBL2K26 di subdivisi ${subdivisi}.`
+    : "Anda telah berhasil lolos Open Recruitment Staff IBL2K26.";
 
   return (
     <>
@@ -25,12 +37,15 @@ export default function LolosSection({ nrp, urlName }: LolosSectionProps) {
           fontSize: "clamp(12px, 2.5vw, 16px)",
           lineHeight: "1.4",
         }}
-        footerNode={<WhatsAppContact contactName="NAMA" phoneNumber="628000000000" />}
+        footerNode={
+          <WhatsAppContact
+            contactName={cpName || "NAMA"}
+            phoneNumber={cpPhone || "628000000000"}
+          />
+        }
       >
         <p className="mb-2 tracking-widest">Hi, {displayName}</p>
-        <p className="mb-2 tracking-widest">
-          Anda telah berhasil lolos Open Recruitment Staff IBL2K26.
-        </p>
+        <p className="mb-2 tracking-widest">{acceptMessage}</p>
         <p className="tracking-widest">Selamat datang di keluarga besar IBL2K26!</p>
       </ResultTicket>
     </>

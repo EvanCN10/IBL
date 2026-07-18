@@ -20,9 +20,20 @@ function ResultContent() {
   const nrp = searchParams.get("nrp") || "";
   const status = searchParams.get("status") || "";
   const urlName = searchParams.get("name") || searchParams.get("urlName") || "";
+  const subdivisi = searchParams.get("subdivisi") || "";
+  const cpName = searchParams.get("cpName") || "";
+  const cpPhone = searchParams.get("cpPhone") || "";
 
   if (status === "lolos") {
-    return <LolosSection nrp={nrp} urlName={urlName} />;
+    return (
+      <LolosSection
+        nrp={nrp}
+        urlName={urlName}
+        subdivisi={subdivisi}
+        cpName={cpName}
+        cpPhone={cpPhone}
+      />
+    );
   }
 
   return <TidakLolosSection nrp={nrp} urlName={urlName} />;

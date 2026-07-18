@@ -7,7 +7,7 @@ import PlayersAnimationWrapper from "@/components/sections/Announcement/PlayersA
 import LandingSection from "@/components/sections/Announcement/LandingSectionAnnouncement";
 import HeightSpacer from "@/components/sections/Announcement/HeightSpacer";
 
-export const page = () => {
+const page = () => {
   return (
     <div className="h-dvh min-[1440px]:h-auto min-[1440px]:min-h-dvh bg-bone relative w-full overflow-hidden min-[1440px]:overflow-y-auto min-[1440px]:overflow-x-hidden">
       {/* Invisible spacer to push page height dynamically on large screens */}
