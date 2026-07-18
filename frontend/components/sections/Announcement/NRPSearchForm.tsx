@@ -67,15 +67,16 @@ export default function NRPSearchForm() {
             type="tel"
             value={nrp}
             onChange={(e) => {
-              const value = e.target.value;
-              // Hanya menerima angka (0-9) dan panjangnya maksimal 10 karakter
-              if (/^\d*$/.test(value) && value.length <= 10) {
-                setNrp(value);
-              }
+               const value = e.target.value;
+               // Hanya menerima angka (0-9) dan panjangnya maksimal 10 karakter
+               if (/^\d*$/.test(value) && value.length <= 10) {
+                 setNrp(value);
+               }
             }}
             onKeyDown={handleKeyDown}
             className="bg-white w-full sm:w-[248px] h-[40px] sm:h-[44px] text-[18px] sm:text-[24px] border-1 border-gray-300 shadow-xl font-medium text-muted-foreground px-2 hover:border-bone active:border-bone mt-2 sm:mt-1"
             placeholder="502xxxxxxx"
+            suppressHydrationWarning
           />
         </div>
         <div className="pt-0 sm:pt-[44px]">
