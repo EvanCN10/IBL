@@ -2,7 +2,7 @@
 
 import React from "react";
 import OpenRecr from "@/public/texts/OPEN_RECRUITMENT_STAFF.svg";
-import TimeCard from "@/public/images/TimeCard.png";
+import TimeCard from "@/public/images/TimeCard.webp";
 import Jam from "@/public/texts/JAM.svg";
 import Menit from "@/public/texts/MENIT.svg";
 import Hari from "@/public/texts/HARI.svg";

@@ -19,9 +19,8 @@ export default function LolosSection({
   cpPhone,
 }: LolosSectionProps) {
   const displayName = urlName || "(nama)";
-  const acceptMessage = subdivisi
-    ? `Anda telah berhasil lolos Open Recruitment Staff IBL2K26 di subdivisi ${subdivisi}.`
-    : "Anda telah berhasil lolos Open Recruitment Staff IBL2K26.";
+  const acceptMessage = "Anda telah berhasil lolos Open Recruitment Staff IBL2K26.";
+
 
   return (
     <>
@@ -34,13 +33,14 @@ export default function LolosSection({
         contentStyle={{
           width: "80.1%",
           height: "44.9%",
-          fontSize: "clamp(12px, 2.5vw, 16px)",
-          lineHeight: "1.4",
+          fontSize: "clamp(9px, 2.5vw, 16px)",
+          lineHeight: "1.35",
         }}
         footerNode={
           <WhatsAppContact
             contactName={cpName || "NAMA"}
             phoneNumber={cpPhone || "628000000000"}
+            disablePrefill={true}
           />
         }
       >

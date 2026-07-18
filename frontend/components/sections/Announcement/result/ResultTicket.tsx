@@ -45,7 +45,7 @@ export default function ResultTicket({
 
       {/* Ticket wrapper (Animated Slide-up) */}
       <motion.div
-        className={`relative w-[575px] max-w-full aspect-[575/363] z-0 ${ticketMarginBottomClass}`}
+        className={`relative w-[575px] max-w-[95vw] aspect-[575/363] z-0 ${ticketMarginBottomClass}`}
         initial={{ y: 50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", bounce: 0.4, delay: 0.2, duration: 0.8 }}
@@ -66,8 +66,8 @@ export default function ResultTicket({
               fontFamily: "var(--font-hollywood), sans-serif",
               fontSize: "clamp(20px, 4.5vw, 30px)",
               lineHeight: "1.15",
-              width: "259px",
-              height: "34px",
+              width: "clamp(160px, 55vw, 259px)",
+              height: "auto",
               letterSpacing: "-0.02em",
               background:
                 "linear-gradient(180deg, #390100 30.77%, #770202 65.87%)",
@@ -87,7 +87,7 @@ export default function ResultTicket({
 
         {/* Text content area */}
         <div
-          className="absolute font-drowner text-black px-6 z-10 flex flex-col items-center justify-center text-center"
+          className="absolute font-drowner text-black z-10 flex flex-col items-center justify-center text-center"
           style={{
             left: "50%",
             top: "52.9%",
