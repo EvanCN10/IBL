@@ -98,14 +98,20 @@ def compile_staff():
                 continue
             
             row_str = [str(x).strip().lower() if x is not None else '' for x in row]
-            if 'nrp' in ''.join(row_str) or 'nama' in ''.join(row_str):
-                data_started = True
-                for idx, cell in enumerate(row_str):
-                    if 'nama' in cell:
-                        nama_idx = idx
-                    elif 'nrp' in cell:
-                        nrp_idx = idx
-                continue
+            
+            # Find header row
+            if not data_started:
+                # Check if this row looks like a header (contains cells exactly or almost equal to 'nama'/'nrp')
+                has_header = any(cell == 'nama' or cell == 'nrp' for cell in row_str)
+                
+                if has_header:
+                    data_started = True
+                    for idx, cell in enumerate(row_str):
+                        if cell == 'nama':
+                            nama_idx = idx
+                        elif cell == 'nrp':
+                            nrp_idx = idx
+                    continue
             
             if data_started:
                 if nama_idx != -1 and nrp_idx != -1 and len(row) > max(nama_idx, nrp_idx):

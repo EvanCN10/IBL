@@ -14,6 +14,7 @@ import PlayersAnimationResult from "@/components/sections/Announcement/result/Pl
 // Result Section Components (for customization)
 import LolosSection from "@/components/sections/Announcement/result/LolosSection";
 import TidakLolosSection from "@/components/sections/Announcement/result/TidakLolosSection";
+import TidakTerdaftarSection from "@/components/sections/Announcement/result/TidakTerdaftarSection";
 
 function ResultContent() {
   const searchParams = useSearchParams();
@@ -30,6 +31,16 @@ function ResultContent() {
         nrp={nrp}
         urlName={urlName}
         subdivisi={subdivisi}
+        cpName={cpName}
+        cpPhone={cpPhone}
+      />
+    );
+  }
+
+  if (status === "tidak_terdaftar") {
+    return (
+      <TidakTerdaftarSection
+        nrp={nrp}
         cpName={cpName}
         cpPhone={cpPhone}
       />

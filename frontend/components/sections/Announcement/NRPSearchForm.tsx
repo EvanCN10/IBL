@@ -10,7 +10,7 @@ export default function NRPSearchForm() {
   const [nrp, setNrp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [resultData, setResultData] = useState<{
-    status: "lolos" | "tidak_lolos";
+    status: "lolos" | "tidak_lolos" | "tidak_terdaftar";
     nama?: string;
     subdivisi?: string;
     cp_name?: string;

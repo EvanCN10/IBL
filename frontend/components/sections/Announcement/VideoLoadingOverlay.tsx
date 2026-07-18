@@ -31,6 +31,34 @@ export default function VideoLoadingOverlay({ onVideoEnd }: VideoLoadingOverlayP
           console.warn("Autoplay was blocked or audio play failed:", err);
         });
       }
+
+      // Prevent pausing when switching tabs/apps
+      const video = videoRef.current;
+      const audio = audioRef.current;
+
+      const forcePlay = () => {
+        if (video && video.paused && video.currentTime < (video.duration || 100)) {
+          video.play().catch(() => {});
+        }
+        if (audio && audio.paused && audio.currentTime < (audio.duration || 100)) {
+          audio.play().catch(() => {});
+        }
+      };
+
+      // Attach listeners to forcefully resume playback if the browser pauses it
+      if (video) video.addEventListener("pause", forcePlay);
+      if (audio) audio.addEventListener("pause", forcePlay);
+      document.addEventListener("visibilitychange", forcePlay);
+      window.addEventListener("blur", forcePlay);
+      window.addEventListener("focus", forcePlay);
+
+      return () => {
+        if (video) video.removeEventListener("pause", forcePlay);
+        if (audio) audio.removeEventListener("pause", forcePlay);
+        document.removeEventListener("visibilitychange", forcePlay);
+        window.removeEventListener("blur", forcePlay);
+        window.removeEventListener("focus", forcePlay);
+      };
     }
   }, [mounted]);
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import lolosStaff from "@/constants/lolos_staff.json";
+import tidakLolosStaff from "@/constants/tidak_lolos_staff.json";
 
 // Type definition for the compiled staff details
 interface StaffDetail {
@@ -10,8 +11,14 @@ interface StaffDetail {
   cp_phone: string;
 }
 
-// Cast lolosStaff import to the dictionary type
+// Type definition for tidak lolos staff (only has nama)
+interface TidakLolosDetail {
+  nama: string;
+}
+
+// Cast imports to their dictionary types
 const staffDatabase = lolosStaff as Record<string, StaffDetail>;
+const tidakLolosDatabase = tidakLolosStaff as Record<string, TidakLolosDetail>;
 
 export async function GET(request: NextRequest) {
   try {
@@ -35,7 +42,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Look up the staff member in the database
+    // 1. Check if staff passed (lolos)
     const staffMember = staffDatabase[normalizedNrp];
 
     if (staffMember) {
@@ -48,10 +55,22 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Candidate not found in the passed staff database
+    // 2. Check if staff was interviewed but did not pass (tidak lolos)
+    const tidakLolosMember = tidakLolosDatabase[normalizedNrp];
+
+    if (tidakLolosMember) {
+      return NextResponse.json({
+        status: "tidak_lolos",
+        nama: tidakLolosMember.nama,
+      });
+    }
+
+    // 3. NRP not found in any database — not registered
     return NextResponse.json({
-      status: "tidak_lolos",
-      nama: "",
+      status: "tidak_terdaftar",
+      nama: normalizedNrp,
+      cp_name: "Arya",
+      cp_phone: "6282258425646",
     });
   } catch (error: any) {
     console.error("Error in announcement check API:", error);
