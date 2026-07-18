@@ -9,6 +9,7 @@ interface VideoLoadingOverlayProps {
 
 export default function VideoLoadingOverlay({ onVideoEnd }: VideoLoadingOverlayProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -17,11 +18,47 @@ export default function VideoLoadingOverlay({ onVideoEnd }: VideoLoadingOverlayP
   }, []);
 
   useEffect(() => {
-    // Ensure the video plays on mount
-    if (mounted && videoRef.current) {
-      videoRef.current.play().catch((err) => {
-        console.warn("Autoplay was blocked or video play failed:", err);
-      });
+    // Ensure the video and audio play on mount
+    if (mounted) {
+      if (videoRef.current) {
+        videoRef.current.play().catch((err) => {
+          console.warn("Autoplay was blocked or video play failed:", err);
+        });
+      }
+      if (audioRef.current) {
+        audioRef.current.volume = 0.35; // Set volume to 35% (besarin dikit)
+        audioRef.current.play().catch((err) => {
+          console.warn("Autoplay was blocked or audio play failed:", err);
+        });
+      }
+
+      // Prevent pausing when switching tabs/apps
+      const video = videoRef.current;
+      const audio = audioRef.current;
+
+      const forcePlay = () => {
+        if (video && video.paused && video.currentTime < (video.duration || 100)) {
+          video.play().catch(() => {});
+        }
+        if (audio && audio.paused && audio.currentTime < (audio.duration || 100)) {
+          audio.play().catch(() => {});
+        }
+      };
+
+      // Attach listeners to forcefully resume playback if the browser pauses it
+      if (video) video.addEventListener("pause", forcePlay);
+      if (audio) audio.addEventListener("pause", forcePlay);
+      document.addEventListener("visibilitychange", forcePlay);
+      window.addEventListener("blur", forcePlay);
+      window.addEventListener("focus", forcePlay);
+
+      return () => {
+        if (video) video.removeEventListener("pause", forcePlay);
+        if (audio) audio.removeEventListener("pause", forcePlay);
+        document.removeEventListener("visibilitychange", forcePlay);
+        window.removeEventListener("blur", forcePlay);
+        window.removeEventListener("focus", forcePlay);
+      };
     }
   }, [mounted]);
 
@@ -46,6 +83,11 @@ export default function VideoLoadingOverlay({ onVideoEnd }: VideoLoadingOverlayP
             }
           `,
         }}
+      />
+      <audio
+        ref={audioRef}
+        src="/audio/bbc_drums---lo_07011243.mp3"
+        preload="auto"
       />
       <video
         ref={videoRef}

@@ -14,15 +14,37 @@ import PlayersAnimationResult from "@/components/sections/Announcement/result/Pl
 // Result Section Components (for customization)
 import LolosSection from "@/components/sections/Announcement/result/LolosSection";
 import TidakLolosSection from "@/components/sections/Announcement/result/TidakLolosSection";
+import TidakTerdaftarSection from "@/components/sections/Announcement/result/TidakTerdaftarSection";
 
 function ResultContent() {
   const searchParams = useSearchParams();
   const nrp = searchParams.get("nrp") || "";
   const status = searchParams.get("status") || "";
   const urlName = searchParams.get("name") || searchParams.get("urlName") || "";
+  const subdivisi = searchParams.get("subdivisi") || "";
+  const cpName = searchParams.get("cpName") || "";
+  const cpPhone = searchParams.get("cpPhone") || "";
 
   if (status === "lolos") {
-    return <LolosSection nrp={nrp} urlName={urlName} />;
+    return (
+      <LolosSection
+        nrp={nrp}
+        urlName={urlName}
+        subdivisi={subdivisi}
+        cpName={cpName}
+        cpPhone={cpPhone}
+      />
+    );
+  }
+
+  if (status === "tidak_terdaftar") {
+    return (
+      <TidakTerdaftarSection
+        nrp={nrp}
+        cpName={cpName}
+        cpPhone={cpPhone}
+      />
+    );
   }
 
   return <TidakLolosSection nrp={nrp} urlName={urlName} />;

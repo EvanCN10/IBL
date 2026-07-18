@@ -9,7 +9,13 @@ export default function NRPSearchForm() {
   const router = useRouter();
   const [nrp, setNrp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [statusResult, setStatusResult] = useState<"lolos" | "tidak_lolos">("tidak_lolos");
+  const [resultData, setResultData] = useState<{
+    status: "lolos" | "tidak_lolos" | "tidak_terdaftar";
+    nama?: string;
+    subdivisi?: string;
+    cp_name?: string;
+    cp_phone?: string;
+  } | null>(null);
 
   const handleSearch = async () => {
     const trimmedNrp = nrp.trim();
@@ -18,22 +24,30 @@ export default function NRPSearchForm() {
     setIsLoading(true);
 
     try {
-      // Mockup check: NRP ending with even digit is "lolos", odd is "tidak_lolos"
-      // TODO: replace with real API call (e.g., fetch(`/api/announcement/check?nrp=${trimmedNrp}`))
-      const lastChar = trimmedNrp.charAt(trimmedNrp.length - 1);
-      const isEven = !isNaN(parseInt(lastChar)) && parseInt(lastChar) % 2 === 0;
-      const mockStatus = isEven ? "lolos" : "tidak_lolos";
-      setStatusResult(mockStatus);
+      const response = await fetch(`/api/announcement/check?nrp=${encodeURIComponent(trimmedNrp)}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch NRP status");
+      }
+      const data = await response.json();
+      setResultData(data);
     } catch (err) {
       console.error("Failed to fetch NRP status:", err);
-      setStatusResult("tidak_lolos");
+      setResultData({ status: "tidak_lolos" });
     }
   };
 
   const handleVideoEnd = () => {
-    router.push(
-      `/announcement/result?nrp=${encodeURIComponent(nrp.trim())}&status=${statusResult}`
-    );
+    if (resultData) {
+      const params = new URLSearchParams();
+      params.set("nrp", nrp.trim());
+      params.set("status", resultData.status);
+      if (resultData.nama) params.set("name", resultData.nama);
+      if (resultData.subdivisi) params.set("subdivisi", resultData.subdivisi);
+      if (resultData.cp_name) params.set("cpName", resultData.cp_name);
+      if (resultData.cp_phone) params.set("cpPhone", resultData.cp_phone);
+      
+      router.push(`/announcement/result?${params.toString()}`);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -53,15 +67,16 @@ export default function NRPSearchForm() {
             type="tel"
             value={nrp}
             onChange={(e) => {
-              const value = e.target.value;
-              // Hanya menerima angka (0-9) dan panjangnya maksimal 10 karakter
-              if (/^\d*$/.test(value) && value.length <= 10) {
-                setNrp(value);
-              }
+               const value = e.target.value;
+               // Hanya menerima angka (0-9) dan panjangnya maksimal 10 karakter
+               if (/^\d*$/.test(value) && value.length <= 10) {
+                 setNrp(value);
+               }
             }}
             onKeyDown={handleKeyDown}
             className="bg-white w-full sm:w-[248px] h-[40px] sm:h-[44px] text-[18px] sm:text-[24px] border-1 border-gray-300 shadow-xl font-medium text-muted-foreground px-2 hover:border-bone active:border-bone mt-2 sm:mt-1"
             placeholder="502xxxxxxx"
+            suppressHydrationWarning
           />
         </div>
         <div className="pt-0 sm:pt-[44px]">
