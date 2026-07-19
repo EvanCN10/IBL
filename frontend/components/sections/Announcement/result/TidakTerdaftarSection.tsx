@@ -24,15 +24,17 @@ export default function TidakTerdaftarSection({
         contentStyle={{
           width: "71.65%",
           height: "30.85%",
-          fontSize: "clamp(10px, 2vw, 13px)",
-          lineHeight: "clamp(13px, 2.5vw, 15px)",
-          letterSpacing: "0.08em",
+          fontSize: "clamp(8px, 2vw, 13px)",
+          lineHeight: "1.35",
+          letterSpacing: "0.04em",
           opacity: 0.8,
         }}
         footerNode={
           <WhatsAppContact
             contactName={cpName || "Arya"}
             phoneNumber={cpPhone || "6282258425646"}
+            customText="PIC Website Backend - Database"
+            disablePrefill={true}
           />
         }
       >

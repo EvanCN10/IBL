@@ -21,18 +21,31 @@ export default function NRPSearchForm() {
     const trimmedNrp = nrp.trim();
     if (!trimmedNrp) return;
 
-    setIsLoading(true);
-
     try {
       const response = await fetch(`/api/announcement/check?nrp=${encodeURIComponent(trimmedNrp)}`);
       if (!response.ok) {
         throw new Error("Failed to fetch NRP status");
       }
       const data = await response.json();
+
+      if (data.status === "tidak_terdaftar") {
+        setIsLoading(false);
+        const params = new URLSearchParams();
+        params.set("nrp", trimmedNrp);
+        params.set("status", data.status);
+        if (data.cp_name) params.set("cpName", data.cp_name);
+        if (data.cp_phone) params.set("cpPhone", data.cp_phone);
+        
+        router.push(`/announcement/result?${params.toString()}`);
+        return;
+      }
+
       setResultData(data);
+      setIsLoading(true);
     } catch (err) {
       console.error("Failed to fetch NRP status:", err);
       setResultData({ status: "tidak_lolos" });
+      setIsLoading(true);
     }
   };
 
@@ -84,7 +97,12 @@ export default function NRPSearchForm() {
         </div>
       </div>
 
-      {isLoading && <VideoLoadingOverlay onVideoEnd={handleVideoEnd} />}
+      {isLoading && resultData && (
+        <VideoLoadingOverlay 
+          onVideoEnd={handleVideoEnd} 
+          videoType={resultData.status === "lolos" ? "lolos" : "tidak_lolos"} 
+        />
+      )}
     </>
   );
 }

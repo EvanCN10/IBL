@@ -5,9 +5,10 @@ import { createPortal } from "react-dom";
 
 interface VideoLoadingOverlayProps {
   onVideoEnd: () => void;
+  videoType: "lolos" | "tidak_lolos";
 }
 
-export default function VideoLoadingOverlay({ onVideoEnd }: VideoLoadingOverlayProps) {
+export default function VideoLoadingOverlay({ onVideoEnd, videoType }: VideoLoadingOverlayProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [mounted, setMounted] = useState(false);
@@ -91,7 +92,7 @@ export default function VideoLoadingOverlay({ onVideoEnd }: VideoLoadingOverlayP
       />
       <video
         ref={videoRef}
-        src="/video/AnnouncementVideo/Success.mp4"
+        src={videoType === "lolos" ? "/video/AnnouncementVideo/Success.mp4" : "/video/AnnouncementVideo/Miss.mp4"}
         style={{ width: "100%", height: "100%", objectFit: "cover" }}
         playsInline
         muted

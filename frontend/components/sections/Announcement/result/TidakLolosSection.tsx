@@ -20,9 +20,9 @@ export default function TidakLolosSection({ nrp, urlName }: TidakLolosSectionPro
         contentStyle={{
           width: "71.65%",
           height: "30.85%",
-          fontSize: "clamp(11px, 2.2vw, 14px)",
-          lineHeight: "clamp(13px, 2.5vw, 15px)",
-          letterSpacing: "0.08em",
+          fontSize: "clamp(8px, 2.2vw, 14px)",
+          lineHeight: "1.35",
+          letterSpacing: "0.04em",
           opacity: 0.8,
         }}
       >

@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import submittedText from "@/public/texts/form/Submitted.svg";
-import goodLuckSvg from "@/public/texts/GOOD LUCK.png";
+import goodLuckSvg from "@/public/texts/GOOD LUCK.webp";
 
 export const FormSuccessScreen = () => {
   return (
