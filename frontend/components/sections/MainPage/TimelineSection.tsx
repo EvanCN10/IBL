@@ -1,132 +1,70 @@
+"use client";
+
+import React from "react";
 import Image from "next/image";
-
-const tickets = [
-  {
-    src: "/images/timeline/ticket-roadshow-287-1165.svg",
-    alt: "Roadshow IBL2K26",
-    className: "left-[55%] top-[18%]",
-  },
-  {
-    src: "/images/timeline/ticket-registration-287-1190.svg",
-    alt: "Pendaftaran peserta",
-    className: "left-[7%] top-[38%]",
-  },
-  {
-    src: "/images/timeline/ticket-technical-287-1215.svg",
-    alt: "Technical meeting kompetisi dan supporter",
-    className: "left-[55%] top-[58%]",
-  },
-  {
-    src: "/images/timeline/ticket-competition-287-1281.svg",
-    alt: "Pelaksanaan kompetisi",
-    className: "left-[7%] top-[78%]",
-  },
-];
-
-const TimelineTicket = ({
-  src,
-  alt,
-  className,
-}: {
-  src: string;
-  alt: string;
-  className: string;
-}) => (
-  <div
-    className={`absolute z-20 aspect-[302/94] w-[37.8%] ${className}`}
-  >
-    <Image
-      src={src}
-      alt={alt}
-      fill
-      priority
-      className="object-contain"
-      sizes="(min-width: 768px) 370px, 82vw"
-    />
-  </div>
-);
+import { motion } from "framer-motion";
+import TimelineTitleSvg from "@/public/images/timeline/timeline-title-287-1145.svg";
+import TimelineDetailDesktopImg from "@/public/images/timeline/Timeline_Detail.png";
+import { popSpringVariants } from "@/lib/animations";
 
 export const TimelineSection = () => {
   return (
-    <section className="w-full overflow-hidden bg-transparent px-4 py-10 md:px-8 md:py-16">
-      <div className="relative mx-auto hidden aspect-[980/760] w-full max-w-[980px] md:block">
-        <div className="absolute left-1/2 top-[3%] z-30 aspect-[261/73] w-[42%] -translate-x-1/2">
-          <h2 className="sr-only">Timeline</h2>
-          <Image
-            src="/images/timeline/timeline-title-287-1145.svg"
-            alt="Timeline"
-            fill
-            priority
-            className="object-contain"
-            sizes="304px"
-          />
-        </div>
+    <section className="w-full max-w-[1440px] mx-auto flex flex-col items-center px-0 py-0 select-none">
+      {/* 
+        1. Timeline Title SVG
+        - Size: 685.96px x 201.69px (1440px scale)
+        - Gap to detail: 27.31px
+        - Pops in 1st (0.12s delay)
+      */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.2 }}
+        variants={popSpringVariants}
+        custom={0.12}
+        className="relative flex-shrink-0"
+        style={{
+          width: "calc(100% * 685.96 / 1440)",
+          aspectRatio: "685.96 / 201.69",
+          marginBottom: "calc(100% * 27.31 / 1440)",
+        }}
+      >
+        <Image
+          src={TimelineTitleSvg}
+          alt="TIMELINE"
+          className="w-full h-full object-contain"
+        />
+      </motion.div>
 
-        <svg
-          className="absolute inset-0 z-10 hidden h-full w-full md:block"
-          viewBox="0 0 100 100"
-          fill="none"
-          aria-hidden="true"
-          preserveAspectRatio="none"
+      {/* 
+        2. Timeline Detail Image - Unified Proportional Scaling across ALL viewports
+        - Size: 1116.04px x 618px (1440px scale)
+        - Pops in 2nd (0.30s delay) + FLOATING ANIMATION
+      */}
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.2 }}
+        variants={popSpringVariants}
+        custom={0.30}
+        className="relative flex-shrink-0 timeline-detail-container max-md:mb-[var(--timeline-detail-mb-mobile,50px)]"
+        style={{
+          width: "calc(100% * 1116.04 / 1440)",
+          aspectRatio: "1116.04 / 618",
+        }}
+      >
+        <motion.div
+          animate={{ y: [-4, 4, -4] }}
+          transition={{ duration: 5.0, repeat: Infinity, ease: "easeInOut" }}
+          className="w-full h-full"
         >
-          <path
-            d="M55 25.4H49V45.4H44.8M44.8 45.4H49V65.4H55M55 65.4H49V85.4H44.8"
-            stroke="#E00000"
-            strokeWidth="0.55"
-            strokeLinejoin="round"
-          />
-        </svg>
-
-        {tickets.map((ticket) => (
-          <TimelineTicket key={ticket.src} {...ticket} />
-        ))}
-      </div>
-
-      <div className="relative mx-auto aspect-[390/760] w-full max-w-[390px] md:hidden">
-        <div className="absolute left-1/2 top-[2%] z-30 aspect-[261/73] w-[68%] -translate-x-1/2">
-          <h2 className="sr-only">Timeline</h2>
           <Image
-            src="/images/timeline/timeline-title-287-1145.svg"
-            alt="Timeline"
-            fill
-            priority
-            className="object-contain"
-            sizes="68vw"
+            src={TimelineDetailDesktopImg}
+            alt="Timeline Detail IBL 2K26"
+            className="w-full h-full object-contain"
           />
-        </div>
-
-        <svg
-          className="absolute inset-0 z-10 h-full w-full"
-          viewBox="0 0 100 100"
-          fill="none"
-          aria-hidden="true"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M10 18V88M10 18H18M10 38H18M10 58H18M10 78H18"
-            stroke="#E00000"
-            strokeWidth="0.9"
-            strokeLinejoin="round"
-          />
-        </svg>
-
-        {tickets.map((ticket, index) => (
-          <div
-            key={ticket.src}
-            className="absolute left-[18%] z-20 aspect-[302/94] w-[78%]"
-            style={{ top: `${13 + index * 20}%` }}
-          >
-            <Image
-              src={ticket.src}
-              alt={ticket.alt}
-              fill
-              priority
-              className="object-contain"
-              sizes="78vw"
-            />
-          </div>
-        ))}
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

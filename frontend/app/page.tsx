@@ -1,29 +1,91 @@
-"use client";
-
 import React from "react";
-import { HeroSection } from "@/components/sections/MainPage/HeroSection";
+import Image from "next/image";
+import type { Metadata } from "next";
 import { AboutSection } from "@/components/sections/MainPage/AboutSection";
 import { ThemeSection } from "@/components/sections/MainPage/ThemeSection";
 import { CountdownSection } from "@/components/sections/MainPage/CountdownSection";
 import { TimelineSection } from "@/components/sections/MainPage/TimelineSection";
+import { Footer } from "@/components/layout/Footer";
+
+export const metadata: Metadata = {
+  title: "IBL 2K26 | ITS Basketball League",
+  description:
+    "ITS Basketball League 2026 (IBL 2K26) - Fastbreak Collector. Kompetisi bola basket antar Himpunan Mahasiswa Departemen (HMD) terbesar di Institut Teknologi Sepuluh Nopember, diselenggarakan oleh UKM Basket ITS.",
+  keywords: [
+    "IBL 2K26",
+    "ITS Basketball League",
+    "UKM Basket ITS",
+    "Basket ITS",
+    "Fastbreak Collector",
+    "Kompetisi Basket Mahasiswa",
+  ],
+  openGraph: {
+    title: "IBL 2K26 | ITS Basketball League",
+    description:
+      "Fastbreak Collector - Turnamen Basket Mahasiswa Terbesar Institut Teknologi Sepuluh Nopember 2026.",
+    url: "https://iblits.com",
+    siteName: "IBL 2K26",
+    locale: "id_ID",
+    type: "website",
+  },
+};
 
 export default function Home() {
   return (
-    <main className="w-full flex flex-col items-center">
-      {/* 1. Hero Section (GET TO KNOW IBL) */}
-      <HeroSection />
+    <main
+      id="home-page"
+      className="relative isolate w-full max-w-[1440px] mx-auto md:aspect-[1440/5036] md:overflow-hidden max-md:overflow-visible max-md:min-h-[calc(100vw*5036/1440)] max-lg:mt-[var(--about-bg-mt-mobile,27px)]"
+    >
+      {/* 
+        Unified Monolithic Background (1440 × 5036px):
+        Converted to WebP (233 KB, -93.5% payload) with responsive viewport sizes.
+      */}
+      <Image
+        src="/images/Bg_Home Page.webp"
+        alt="IBL 2K26 Homepage Background"
+        fill
+        priority
+        sizes="(max-width: 1440px) 100vw, 1440px"
+        className="object-cover object-top z-0 pointer-events-none select-none"
+      />
 
-      {/* 2. About Section */}
-      <AboutSection />
+      {/* Sections Flow - Layer 10 (above background) */}
+      <div className="relative z-10 w-full flex flex-col items-center">
+        {/* 1. About Section */}
+        <AboutSection />
 
-      {/* 3. Theme Section (3 Pilar) */}
-      <ThemeSection />
+        {/* 3. Theme Section */}
+        <ThemeSection />
 
-      {/* 4. Countdown Section (Scoreboard) */}
-      <CountdownSection />
+        {/* 4. Countdown Section */}
+        <div
+          className="w-full flex flex-col items-center"
+          style={{
+            marginTop: "calc(100% * 284 / 1440)",
+          }}
+        >
+          <CountdownSection />
+        </div>
 
-      {/* 5. Timeline Section */}
-      <TimelineSection />
+        {/* 5. Timeline Section */}
+        <div
+          className="w-full flex flex-col items-center"
+          style={{
+            marginTop: "calc(100% * 126 / 1440)",
+          }}
+        >
+          <TimelineSection />
+        </div>
+      </div>
+
+      {/* 
+        Footer:
+        - Desktop & Tablet (>= 768px): md:absolute md:bottom-0 md:left-0
+        - Mobile (< 768px): relative w-full (flows naturally below timeline)
+      */}
+      <div className="relative md:absolute md:bottom-0 md:left-0 w-full z-20 flex flex-col items-center">
+        <Footer />
+      </div>
     </main>
   );
 }

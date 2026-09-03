@@ -72,7 +72,29 @@ export default function RootLayout({
       className={`${hollywood.variable} ${crosner.variable} ${drowner.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <head>
+        {/* Scale up content proportionally for viewports wider than 1440px */}
+        {/* zoom = viewport/1440 so blank gutters disappear and content fills screen */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function applyZoom() {
+                  var w = window.innerWidth || document.documentElement.clientWidth;
+                  if (w > 1440) {
+                    document.documentElement.style.zoom = (w / 1440).toFixed(6);
+                  } else {
+                    document.documentElement.style.zoom = '';
+                  }
+                }
+                applyZoom();
+                window.addEventListener('resize', applyZoom);
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="relative min-h-full flex flex-col overflow-x-hidden">
         <Navbar />
         {children}
       </body>
