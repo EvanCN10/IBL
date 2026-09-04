@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "DSEG7ClassicMini";
+  src: url("/fonts/DSEG/DSEG7ClassicMini-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
 @theme {
   /* System/shadcn standard mappings */
   --color-border: hsl(var(--border));
@@ -80,6 +92,12 @@
   /* Keyframes & Animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-drawer-in: drawer-slide-in 0.35s cubic-bezier(0.32, 0.72, 0, 1)
+    forwards;
+  --animate-drawer-out: drawer-slide-out 0.3s cubic-bezier(0.32, 0.72, 0, 1)
+    forwards;
+  --animate-backdrop-in: backdrop-fade-in 0.3s ease forwards;
+  --animate-backdrop-out: backdrop-fade-out 0.25s ease forwards;
 
   @keyframes accordion-down {
     from {
@@ -95,6 +113,38 @@
     }
     to {
       height: 0;
+    }
+  }
+  @keyframes drawer-slide-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes drawer-slide-out {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes backdrop-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes backdrop-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
     }
   }
 }
@@ -156,7 +206,7 @@
   --form-error-font-size: 23px;
 
   /* Responsive Navbar Variables */
-  --navbar-height: 91px;
+  --navbar-height: 96px;
   --navbar-logo-width: 72.6px;
   --navbar-logo-height: 76px;
   --navbar-font-size: 24px;
@@ -178,10 +228,52 @@
   --nav-ball-active-size: 56px;
   --nav-ball-inactive-size: 36px;
   --nav-ball-gap: 16px;
+
+  /* About section responsive top shift for < 1024px:
+     Set to 0px so background and content touch navbar cleanly without blank gap.
+     Ubah nilai ini secara manual jika ingin memberi jarak ekstra di mobile/tablet. */
+  --about-top-shift: 0px;
+
+  /* Margin-top untuk About Section & Background:
+     - Desktop (>= 1024px) : 0px
+     - Layar < 1024px      : 27px (diatur via @media di bawah)
+     - Layar <= 670px      : 50px (diatur via @media di bawah) */
+  --about-bg-mt-mobile: 0px;
+
+  /* Margin-bottom untuk Timeline Detail pada layar < 768px.
+     Ubah nilai di bawah ini secara manual jika ingin mengatur jarak bawah timeline (misal: 30px, 50px, dst): */
+  --timeline-detail-mb-mobile: 50px;
+}
+
+/* Layar < 1024px: mt about 27px */
+@media (max-width: 1023px) {
+  :root {
+    --about-bg-mt-mobile: 27px;
+  }
+  #home-page {
+    margin-top: var(--about-bg-mt-mobile, 27px);
+  }
+}
+
+/* Layar <= 670px: mt about 50px */
+@media (max-width: 670px) {
+  :root {
+    --about-bg-mt-mobile: 61px;
+  }
+  #home-page {
+    margin-top: var(--about-bg-mt-mobile, 50px);
+  }
+}
+
+@media (max-width: 767px) {
+  .timeline-detail-container {
+    margin-bottom: var(--timeline-detail-mb-mobile, 50px);
+  }
 }
 
 @media (min-width: 1024px) {
   :root {
+    --about-top-shift: 0px;
     --form-font-size: calc(100vw * 26 / 1440);
     --form-padding-y: calc(100vw * 19 / 1440);
     --form-padding-x: calc(100vw * 30 / 1440);
@@ -199,10 +291,10 @@
     --form-title-font-size: calc(100vw * 83 / 1440);
     --form-error-font-size: calc(100vw * 23 / 1440);
 
-    --navbar-height: calc(100vw * 91 / 1440);
+    --navbar-height: clamp(72px, calc(100vw * 96 / 1440), 96px);
     --navbar-logo-width: calc(100vw * 72.6 / 1440);
     --navbar-logo-height: calc(100vw * 76 / 1440);
-    --navbar-font-size: calc(100vw * 24 / 1440);
+    --navbar-font-size: clamp(14px, calc(100vw * 22 / 1440), 22px);
     --navbar-padding: calc(100vw * 40 / 1440);
     --navbar-gap: calc(100vw * 12 / 1440);
 
@@ -222,15 +314,49 @@
   }
 }
 
-/* Kunci ukuran di atas 1440px */
-@media (min-width: 1220px) {
+/* Kunci ukuran tepat pada dan di atas 1440px */
+@media (min-width: 1440px) {
   :root {
-    --form-font-size: 26px;        /* Berhenti tumbuh dan terkunci di 26px */
-    --form-title-font-size: 64px;  /* Terkunci di 83px */
-    --form-error-font-size: 14px;  /* Terkunci di 23px */
+    --about-top-shift: 0px;
+    --form-font-size: 26px;
+    --form-padding-y: 19px;
+    --form-padding-x: 30px;
+    --form-margin-bottom: 7.5px;
+    --form-textarea-min-height: 106px;
+    --form-field-gap: 24px;
+    --form-radio-size: 38px;
+    --form-radio-dot-size: 19px;
+    --form-radio-gap: 23px;
+    --form-card-padding-x: 75px;
+    --form-card-padding-y: 38px;
+    --form-card-gap: 23px;
+    --form-card-width: 778px;
+    --form-card-height: 1230px;
+    --form-title-font-size: 83px;
+    --form-error-font-size: 23px;
+
+    --navbar-height: 96px;
+    --navbar-logo-width: 72.6px;
+    --navbar-logo-height: 76px;
+    --navbar-font-size: 24px;
+    --navbar-padding: 40px;
+    --navbar-gap: 12px;
+
+    --btn-width: 160px;
+    --btn-height: 48px;
+    --btn-font-size: 30px;
+    --btn-shadow: 8px;
+    --btn-active-shadow: 6px;
+    --btn-active-translate: 2px;
+    --btn-border: 2px;
+
+    --nav-height: 64px;
+    --nav-padding: 16px;
+    --nav-ball-active-size: 56px;
+    --nav-ball-inactive-size: 36px;
+    --nav-ball-gap: 16px;
   }
 }
-
 
 .dark {
   --background: 240 10% 3.9%;
@@ -270,8 +396,9 @@
   ::before {
     border-color: var(--border);
   }
+  html,
   body {
-    background-color: hsl(var(--background));
+    background-color: #fdf6dd;
     color: hsl(var(--foreground));
   }
 }
@@ -280,17 +407,17 @@
   font-family: var(--font-hollywood);
   color: white;
   -webkit-text-stroke: 2.5px #000;
-  text-shadow: 
-    1px 1px 0 #AC1F1A, 
-    2px 2px 0 #AC1F1A, 
-    3px 3px 0 #AC1F1A, 
-    4px 4px 0 #AC1F1A, 
-    5px 5px 0 #AC1F1A, 
-    6px 6px 0 #AC1F1A, 
-    7px 7px 0 #000, 
-    8px 8px 0 #000, 
-    9px 9px 0 #000, 
-    10px 10px 0 #000, 
-    11px 11px 0 #000, 
+  text-shadow:
+    1px 1px 0 #ac1f1a,
+    2px 2px 0 #ac1f1a,
+    3px 3px 0 #ac1f1a,
+    4px 4px 0 #ac1f1a,
+    5px 5px 0 #ac1f1a,
+    6px 6px 0 #ac1f1a,
+    7px 7px 0 #000,
+    8px 8px 0 #000,
+    9px 9px 0 #000,
+    10px 10px 0 #000,
+    11px 11px 0 #000,
     12px 12px 0 #000;
 }
