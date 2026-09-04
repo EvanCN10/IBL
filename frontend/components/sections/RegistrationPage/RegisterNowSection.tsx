@@ -2,28 +2,41 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { popSpringVariants } from "@/lib/animations";
 
 export const RegisterNowSection = () => {
   return (
-    <section className="relative w-full flex flex-col items-center justify-center -mt-[6%] sm:-mt-[8%] lg:-mt-[60px] z-30 px-4 pb-32">
-      
-      <div className="relative w-[84%] max-w-[776px] flex justify-center drop-shadow-[0_15px_30px_rgba(0,0,0,0.4)] hover:scale-[1.01] transition-transform duration-300">
+    <section className="relative w-full flex flex-col items-center justify-center -mt-[10%] sm:-mt-[12%] lg:-mt-[135px] z-30 px-4 pb-8 lg:pb-0">
+      <h2 className="sr-only">Formulir Pendaftaran Tim IBL 2K26</h2>
+
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.2 }}
+        variants={popSpringVariants}
+        custom={0.15}
+        whileHover={{ scale: 1.025, y: -3 }}
+        whileTap={{ scale: 0.98 }}
+        className="relative w-[84%] max-w-[776px] aspect-[776/527] flex justify-center drop-shadow-[0_15px_30px_rgba(0,0,0,0.4)] cursor-pointer"
+      >
         <Image 
-          src="/images/registration/clipboard.svg?v=6" 
+          src="/images/registration/clipboard.svg" 
           alt="Clipboard Background" 
           width={776} 
           height={527} 
           className="w-full h-auto"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center rotate-[3deg] ml-[2%]">
-          {/* Invisible clickable area for the button */}
-          <a 
+          {/* Invisible clickable area for the button with Next.js Link for instant SPA routing */}
+          <Link 
             href="/register" 
             className="absolute bottom-[20%] w-[40%] h-[15%] rounded-xl z-20 cursor-pointer"
-            aria-label="Register Now"
+            aria-label="Daftar Sekarang - Open Team Registration IBL 2K26"
           />
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

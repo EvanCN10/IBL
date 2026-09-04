@@ -2,24 +2,26 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import openTeamRegistrationImg from "@/public/images/registration/Open-Team-Registration.webp";
+import { popSpringVariants } from "@/lib/animations";
 
 export const RegistHeroSection = () => {
   return (
-    <section className="relative w-full flex flex-col items-center pt-[10%] md:pt-24 z-30 px-4">
-      {/* Decorative scribbles */}
-      <div className="absolute top-[10%] left-[5%] md:left-[15%] w-[15%] max-w-[150px] -z-10 pointer-events-none">
-        <Image src="/images/registration/lightning-left.png" alt="Lightning Left" width={200} height={200} className="w-full h-auto" />
-      </div>
-      <div className="absolute top-[25%] right-[5%] md:right-[15%] w-[15%] max-w-[150px] -z-10 pointer-events-none">
-        <Image src="/images/registration/lightning-right.png" alt="Lightning Right" width={200} height={200} className="w-full h-auto" />
-      </div>
-      <div className="absolute top-[35%] left-[2%] md:left-[10%] w-[20%] max-w-[200px] -z-10 pointer-events-none">
-        <Image src="/images/registration/ball-left.png" alt="Ball Left" width={200} height={200} className="w-full h-auto" />
-      </div>
+    <section className="relative w-full flex flex-col items-center pt-4 md:pt-[11px] z-30 px-4">
+      {/* Semantic H1 for SEO and Screen Readers */}
+      <h1 className="sr-only">Open Team Registration - ITS Basketball League 2026 (IBL 2K26)</h1>
 
       {/* Teal Banner / Title */}
       <div className="relative flex flex-col items-center justify-center w-full max-w-[928px]">
-        <div className="relative w-[82%] max-w-[763px] flex items-center justify-center">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, amount: 0.2 }}
+          variants={popSpringVariants}
+          custom={0.08}
+          className="relative w-[82%] max-w-[763px] aspect-[763/288] flex items-center justify-center mb-10"
+        >
           <Image 
             src="/images/registration/text-ornament.svg" 
             alt="Teal Banner" 
@@ -27,13 +29,27 @@ export const RegistHeroSection = () => {
             height={288} 
             className="w-full h-auto drop-shadow-2xl" 
           />
-          {/* Overlay text */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none pt-[1%]">
-             <h1 className="text-[28px] sm:text-[40px] md:text-[50px] lg:text-[68px] font-black text-white text-center leading-[1] drop-shadow-[0_4px_4px_rgba(0,0,0,0.4)]" style={{ fontFamily: 'var(--font-hollywood), Impact, sans-serif', letterSpacing: '4px', WebkitTextStroke: '2px rgba(0,0,0,0.1)' }}>
-               OPEN TEAM<br/>REGISTRATION
-             </h1>
+          {/* Overlay Open Team Registration (Static Import) with punchy staggered pop */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none pt-[1%]">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: false, amount: 0.2 }}
+              variants={popSpringVariants}
+              custom={0.22}
+              className="relative w-[76%] max-w-[579px] aspect-[579/169]"
+            >
+              <Image 
+                src={openTeamRegistrationImg} 
+                alt="Open Team Registration" 
+                fill
+                priority
+                sizes="(max-width: 768px) 80vw, 579px"
+                className="object-contain"
+              />
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -72,7 +72,7 @@ interface FooterNavItem {
 
 const NAV_COL_1: FooterNavItem[] = [
   { label: "Home", plainLabel: "Home", href: "/" },
-  { label: "Registration", plainLabel: "Registration", href: "/register" },
+  { label: "Registration", plainLabel: "Registration", href: "/registration" },
   {
     label: (
       <>

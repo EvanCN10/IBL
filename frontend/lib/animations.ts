@@ -18,48 +18,57 @@ export const popSpringVariants: Variants = {
       mass: 0.6,
     },
   },
-  visible: (customDelay: number = 0) => ({
-    scale: 1,
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 260,
-      damping: 18,
-      mass: 0.8,
-      delay: customDelay,
-    },
-  }),
+  visible: (customDelay: any = 0) => {
+    const delay = typeof customDelay === "number" ? customDelay : (customDelay?.delay ?? 0);
+    return {
+      scale: 1,
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 260,
+        damping: 18,
+        mass: 0.8,
+        delay,
+      },
+    };
+  },
 };
 
 /**
  * Punchy Pop Variants (with dynamic rotation for stickers/badges/shoes/ball)
  */
 export const popPunchVariants: Variants = {
-  hidden: (rotation: number = -4) => ({
-    scale: 0.5,
-    opacity: 0,
-    rotate: rotation * 2,
-    y: 25,
-    transition: {
-      type: "spring",
-      stiffness: 320,
-      damping: 24,
-    },
-  }),
-  visible: (custom: { delay?: number; rotation?: number } = {}) => ({
-    scale: 1,
-    opacity: 1,
-    rotate: 0,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 250,
-      damping: 16,
-      mass: 0.85,
-      delay: custom.delay ?? 0,
-    },
-  }),
+  hidden: (custom: any = -4) => {
+    const rot = typeof custom === "number" ? custom : (custom?.rotation ?? -4);
+    return {
+      scale: 0.5,
+      opacity: 0,
+      rotate: rot * 2,
+      y: 25,
+      transition: {
+        type: "spring",
+        stiffness: 320,
+        damping: 24,
+      },
+    };
+  },
+  visible: (custom: any = {}) => {
+    const delay = typeof custom === "number" ? custom : (custom?.delay ?? 0);
+    return {
+      scale: 1,
+      opacity: 1,
+      rotate: 0,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 250,
+        damping: 16,
+        mass: 0.85,
+        delay,
+      },
+    };
+  },
 };
 
 /**

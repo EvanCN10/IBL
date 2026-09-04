@@ -2,12 +2,21 @@
 
 import React from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { popSpringVariants } from "@/lib/animations";
 
 export const GuidebookSection = () => {
   return (
-    <section className="relative w-full flex flex-col items-center justify-center -mt-[6%] sm:-mt-[8%] lg:-mt-[80px] z-20 px-4">
+    <section className="relative w-full flex flex-col items-center justify-center -mt-[8%] sm:-mt-[10%] lg:-mt-[110px] z-20 px-4">
       
-      <div className="relative w-full max-w-[928px] flex justify-center drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] transition-transform duration-300">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.2 }}
+        variants={popSpringVariants}
+        custom={0.1}
+        className="relative w-full max-w-[928px] aspect-[928/491] flex justify-center drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]"
+      >
         <Image 
           src="/images/registration/ticket.svg" 
           alt="Ticket Background" 
@@ -23,14 +32,19 @@ export const GuidebookSection = () => {
             Kumpulkan tim terbaikmu dan daftarkan tim terbaikmu, bersaing dengan kompetitor terbaik, dan rebut gelar juara <span className="text-[#7F0303]">IBL2K26: Fastbreak Collector</span>.
           </h2>
           
-          <a 
+          <motion.a 
             href="#" 
-            className="inline-flex items-center justify-center bg-[#309898] text-white px-4 py-2 sm:px-8 sm:py-3 lg:px-12 lg:py-4 rounded-[20px] font-bold text-[10px] sm:text-sm lg:text-xl hover:bg-[#257d7d] transition-colors shadow-lg border-b-[3px] lg:border-b-4 border-[#1c5d5d] active:border-b-0 active:translate-y-1"
+            aria-label="Unduh Guidebook IBL 2K26"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.06, y: -3 }}
+            whileTap={{ scale: 0.95, y: 1 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            className="inline-flex items-center justify-center bg-[#309898] text-white px-4 py-2 sm:px-8 sm:py-3 lg:px-12 lg:py-4 rounded-[20px] font-bold text-[10px] sm:text-sm lg:text-xl hover:bg-[#257d7d] transition-colors shadow-lg border-b-[3px] lg:border-b-4 border-[#1c5d5d] active:border-b-0 active:translate-y-1 cursor-pointer"
           >
             Guidebook
-          </a>
+          </motion.a>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -5,7 +5,6 @@ import { AboutSection } from "@/components/sections/MainPage/AboutSection";
 import { ThemeSection } from "@/components/sections/MainPage/ThemeSection";
 import { CountdownSection } from "@/components/sections/MainPage/CountdownSection";
 import { TimelineSection } from "@/components/sections/MainPage/TimelineSection";
-import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "IBL 2K26 | ITS Basketball League",
@@ -34,7 +33,7 @@ export default function Home() {
   return (
     <main
       id="home-page"
-      className="relative isolate w-full max-w-[1440px] mx-auto md:aspect-[1440/5036] md:overflow-hidden max-md:overflow-visible max-md:min-h-[calc(100vw*5036/1440)] max-lg:mt-[var(--about-bg-mt-mobile,27px)]"
+      className="relative isolate w-full max-w-[1440px] mx-auto md:aspect-[1440/4716] md:overflow-hidden max-md:overflow-visible max-md:min-h-[calc(100vw*4716/1440)] max-lg:mt-[var(--about-bg-mt-mobile,27px)]"
     >
       {/* 
         Unified Monolithic Background (1440 × 5036px):
@@ -76,15 +75,6 @@ export default function Home() {
         >
           <TimelineSection />
         </div>
-      </div>
-
-      {/* 
-        Footer:
-        - Desktop & Tablet (>= 768px): md:absolute md:bottom-0 md:left-0
-        - Mobile (< 768px): relative w-full (flows naturally below timeline)
-      */}
-      <div className="relative md:absolute md:bottom-0 md:left-0 w-full z-20 flex flex-col items-center">
-        <Footer />
       </div>
     </main>
   );
